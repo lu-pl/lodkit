@@ -1,4 +1,4 @@
-![](./lodkit.png)
+![<img src="lodkit.png" width=50% height=50%>](./lodkit.png)
 
 # LODKit
 
