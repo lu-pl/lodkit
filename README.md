@@ -1,4 +1,4 @@
-![](./lodkit.svg)
+![](./lodkit.png)
 
 # LODKit
 
