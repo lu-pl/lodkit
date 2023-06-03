@@ -1,4 +1,4 @@
-<!-- ![](./medical-kit.svg) -->
+<!-- ![](./lodkit.svg) -->
 
 # LODKit
 
