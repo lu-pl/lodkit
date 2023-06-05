@@ -12,6 +12,8 @@ LODkit (includes|will include)
 
 ## Examples
 
+### lodkit.Graph
+
 ### lodkit.importer
 
 `lodkit.importer` is a custom importer for importing RDF files as if they where regular Python modules.
