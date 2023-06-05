@@ -1,7 +1,6 @@
 from rdflib import Graph
 from rdflib.compare import isomorphic
 
-# import lodkit.rdfimport
 import lodkit.rdfimport
 import rdftest_ttl, rdftest_xml
 
