@@ -15,7 +15,7 @@ LODkit (includes|will include)
 ### lodkit.importer
 
 `lodkit.importer` is a custom importer for importing RDF files as if they where regular Python modules.
-RDF files are parsed into an `rdflib.Graph` instance and made available in the module namespace.
+RDF files are parsed into `rdflib.Graph` instances and made available in the module namespace.
 
 E.g. in a directory structure
 
@@ -26,7 +26,7 @@ E.g. in a directory structure
 │   └── some_more_rdf.xml
 ```
 
-the following creates `rdflib.Graph` instances:
+the following creates `rdflib.Graph` instances in the current module namespace:
 
 ```python
 import lodkit.importer
