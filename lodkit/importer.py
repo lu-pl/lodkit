@@ -28,7 +28,7 @@ class RDFImporter:
 
         directories = sys.path if path is None else path
 
-        print("DEBUG: ", directories)
+        # print("DEBUG: ", directories)
 
         for directory in directories:
 
