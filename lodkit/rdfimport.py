@@ -11,10 +11,8 @@ import sys
 from rdflib import Graph
 
 
-#### todo: make this general (try: Graph.parse)
-
 class RDFImporter:
-    """Custom RDF importer. i
+    """Custom RDF importer.
 
     Allows to import RDF files as if they were modules.
 
@@ -36,6 +34,7 @@ class RDFImporter:
             # trust that something that rdflib.Graph.parse can handle is provided
             # is this naive? better check for rdf serialization extensions?
             # (this way also rdf files named like Python modules could be passed)
+            print("DEBUG: ", directory)
 
             for f in pathlib.Path(directory).glob(f"{name}.*"):
                 rdf_path = f.absolute()
@@ -52,5 +51,8 @@ class RDFImporter:
         return f"{self.__class__.__name__}({str(self.rdf_path)!r})"
 
 
+
+
 # module level side-effect
 sys.meta_path.append(RDFImporter)
+# sys.meta_path.insert(0, RDFImporter)

@@ -1,8 +1,13 @@
 from rdflib import Graph
 from rdflib.compare import isomorphic
 
+# import lodkit.rdfimport
 import lodkit.rdfimport
 import rdftest_ttl, rdftest_xml
+
+## this doesn't work yet..
+## the importer doesn't search in submodules. Why?
+# from graphs import rdftest_ttl, rdftest_xml
 
 
 def test_ttl_import():
