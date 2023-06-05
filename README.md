@@ -27,12 +27,12 @@ E.g. in a directory structure
 ```
 
 the following creates `rdflib.Graph` instances:
-  * [ ] 
+
 ```python
 import lodkit.importer
 
 import some_rdf
-imprt some_more_rdf
+import some_more_rdf
 
 print(type(some_rdf))       # <class 'rdflib.graph.Graph'>
 print(type(some_more_rdf))  # <class 'rdflib.graph.Graph'>
