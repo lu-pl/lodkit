@@ -36,6 +36,7 @@ class RDFImporter:
             # trust that something that rdflib.Graph.parse can handle is provided
             # is this naive? better check for rdf serialization extensions?
             # (this way also rdf files named like Python modules could be passed)
+
             for f in pathlib.Path(directory).glob(f"{name}.*"):
                 rdf_path = f.absolute()
                 return ModuleSpec(name, cls(rdf_path))
@@ -52,4 +53,4 @@ class RDFImporter:
 
 
 # module level side-effect
-sys.meta_path.append(TurtleImporter)
+sys.meta_path.append(RDFImporter)
