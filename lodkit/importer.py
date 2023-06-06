@@ -11,7 +11,7 @@ from rdflib import Graph
 
 
 class RDFImporter:
-    """Custom importer; allows to import RD files as if they were modules.
+    """Custom importer; allows to import RDF files as if they were modules.
 
     E.g. 'import some_rdf' looks for some_rdf.() in the import path,
     parses it into an rdflib.Graph instance and makes it available in the module namespace.
@@ -35,7 +35,6 @@ class RDFImporter:
             rdf_paths = pathlib.Path(directory).glob(f"{module_name}.*")
 
             for path in rdf_paths:
-
                 if path.exists():
                     return ModuleSpec(name, cls(path))
 
