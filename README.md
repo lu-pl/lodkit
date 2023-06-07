@@ -32,6 +32,7 @@ E.g. in a directory structure
 the following creates `rdflib.Graph` instances in the current module namespace:
 
 ```python
+# main.py
 import lodkit.importer
 
 import some_rdf
