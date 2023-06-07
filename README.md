@@ -23,10 +23,11 @@ RDF files are parsed into `rdflib.Graph` instances and made available in the mod
 E.g. in a directory structure
 
 ```text
-├── dir
+├── dir/
 │   ├── main.py
 │   ├── some_rdf.ttl
-│   └── some_more_rdf.xml
+│   ├── subdir/
+│   │   └── some_more_rdf.xml
 ```
 
 the following creates `rdflib.Graph` instances in the current module namespace:
@@ -36,7 +37,7 @@ the following creates `rdflib.Graph` instances in the current module namespace:
 import lodkit.importer
 
 import some_rdf
-import some_more_rdf
+from subdir import some_more_rdf
 
 print(type(some_rdf))       # <class 'rdflib.graph.Graph'>
 print(type(some_more_rdf))  # <class 'rdflib.graph.Graph'>
