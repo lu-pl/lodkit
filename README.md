@@ -42,5 +42,5 @@ from subdir import some_more_rdf
 print(type(some_rdf))       # <class 'rdflib.graph.Graph'>
 print(type(some_more_rdf))  # <class 'rdflib.graph.Graph'>
 ```
-
+I find this really convenient for bulk-parsing graphs ([example](https://gitlab.com/lupl/rdfdf/-/blob/main/tests/test_corpus_table/test_corpus_table.py#L18)).
 
