@@ -27,7 +27,7 @@ E.g. in a directory structure
 │   ├── main.py
 │   ├── some_rdf.ttl
 │   ├── subdir/
-│   │   └── some_more_rdf.xml
+│       └── some_more_rdf.xml
 ```
 
 the following creates `rdflib.Graph` instances in the current module namespace:
