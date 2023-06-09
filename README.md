@@ -27,12 +27,13 @@ graph = Graph()
 graph.add((ex.subj, ex.pred, ex.obj))
 graph.add((ex.inverse, OWL.inverseOf, ex.pred))
 
-print(len(graph))                             # 2
-print((ex.obj, ex.inverse, ex.subj) in graph) # False
+len(graph)                              # 2
+(ex.obj, ex.inverse, ex.subj) in graph  # False
 
 graph.inference(plugin="owlrl") 
-print(len(graph))                             # 359
-print((ex.obj, ex.inverse, ex.subj) in graph) # True
+
+len(graph)                              # 359
+(ex.obj, ex.inverse, ex.subj) in graph  # True
 ```
 
 ### lodkit.importer
