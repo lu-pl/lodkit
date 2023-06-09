@@ -1,7 +1,7 @@
 """Inference plugins for lodkit.Graph and the plugin registry."""
 
 from collections.abc import MutableMapping
-from typing import Protocol, runtime_checkable, Self
+from typing import Protocol, runtime_checkable
 
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_OWLRL_Semantics
@@ -12,10 +12,7 @@ class InferencePlugin(Protocol):
     """Protocol class for all lodkit.Graph inference plugins."""
 
     def inference(self, graph: Graph) -> Graph:
-        """Protocol method.
-
-        Defines logic for inferencing on an rdflib.Graph intance.
-        """
+        """Logic for inferencing on an rdflib.Graph intance."""
         ...
 
 
@@ -27,10 +24,16 @@ class OWLRLPlugin(InferencePlugin):
     """
 
     def inference(self, graph: Graph) -> Graph:
-        """Doc."""
+        """Perform RDFS/OWL-RL inferencing on a graph."""
         _graph = DeductiveClosure(RDFS_OWLRL_Semantics).expand(graph)
 
         return _graph
+
+
+class AllegroPlugin(InferencePlugin):
+    """InferencePlugin for the AllegroGraph inference engine."""
+
+    ...
 
 
 plugins: MutableMapping[str, InferencePlugin] = {
