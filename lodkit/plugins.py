@@ -17,7 +17,7 @@ class InferencePlugin(Protocol):
 
 
 class OWLRLPlugin(InferencePlugin):
-    """InferencePlugin for the Python owlrl inference engine.
+    """InferencePlugin for the Python owlrl inference engine
 
     The combined RDFS_OWLRL_Semantics closure type is used.
     See https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html.

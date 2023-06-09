@@ -13,7 +13,27 @@ LODkit (includes|will include)
 ## Examples
 
 ### lodkit.Graph
-[...]
+`lodkit.Graph` is an `rdflib.Graph` subclass that is cabable of RFDS and OWL-RL inferencing.
+
+The default plugin for inferencing is [owlrl](https://github.com/RDFLib/OWL-RL/)'s native Python inferencing engine. The deductive closure type used for `lodkit.Graph` is [RDFS_OWLRL_Semantics](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html) which allows for RDFS *and* OWL-RL reasoning.
+
+```python
+from lodkit import Graph
+from rdflib import Namespace
+
+ex = Namespace("http://example.org/")
+
+graph = Graph()
+graph.add((ex.subj, ex.pred, ex.obj))
+graph.add((ex.inverse, OWL.inverseOf, ex.pred))
+
+print(len(graph))                # 2
+# print(graph.serialize())
+
+graph.inference(plugin="owlrl") 
+print(len(graph))                # 359
+# print(graph.serialize())
+```
 
 ### lodkit.importer
 
