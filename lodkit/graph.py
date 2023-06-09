@@ -55,8 +55,11 @@ graph.add((ex.subj, ex.pred, ex.obj))
 graph.add((ex.inverse, OWL.inverseOf, ex.pred))
 
 print(len(graph))
+print((ex.obj, ex.inverse, ex.subj) in graph)
 # print(graph.serialize())
 
-graph.inference(plugin="owlrl")
+# graph.inference(plugin="owlrl")
+graph.inference(plugin=plugins.OWLRLPlugin())
 print(len(graph))
+print((ex.obj, ex.inverse, ex.subj) in graph)
 # print(graph.serialize())
