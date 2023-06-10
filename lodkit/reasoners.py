@@ -1,4 +1,4 @@
-"""Inference plugins for lodkit.Graph and the plugin registry."""
+"""Reasoners (inference plugins) for lodkit.Graph.."""
 
 from collections.abc import MutableMapping
 from typing import Protocol, runtime_checkable
@@ -8,16 +8,16 @@ from owlrl import DeductiveClosure, RDFS_OWLRL_Semantics
 
 
 @runtime_checkable
-class InferencePlugin(Protocol):
-    """Protocol class for all lodkit.Graph inference plugins."""
+class Reasoner(Protocol):
+    """Protocol class for lodkit.Graph reasoners."""
 
     def inference(self, graph: Graph) -> Graph:
         """Logic for inferencing on an rdflib.Graph intance."""
         ...
 
 
-class OWLRLPlugin(InferencePlugin):
-    """InferencePlugin for the Python owlrl inference engine
+class OWLRLReasoner(Reasoner):
+    """Reasoner plugin for the Python owlrl inference engine
 
     The combined RDFS_OWLRL_Semantics closure type is used.
     See https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html.
@@ -30,12 +30,12 @@ class OWLRLPlugin(InferencePlugin):
         return _graph
 
 
-class AllegroPlugin(InferencePlugin):
+class AllegroReasoner(Reasoner):
     """InferencePlugin for the AllegroGraph inference engine."""
 
     ...
 
 
-plugins: MutableMapping[str, InferencePlugin] = {
-    "owlrl": OWLRLPlugin(),
+reasoners: MutableMapping[str, Reasoner] = {
+    "owlrl": OWLRLReasoner(),
 }

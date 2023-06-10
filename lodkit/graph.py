@@ -4,44 +4,44 @@ from rdflib.namespace import OWL
 from rdflib import Namespace
 from typing import Optional
 import rdflib
-import plugins
+import reasoners
 
 
-_InferencePlugin = plugins.InferencePlugin
-_PluginReference = _InferencePlugin | str
+_Reasoner = reasoners.Reasoner
+_ReasonerReference = _Reasoner | str
 
 
 class Graph(rdflib.Graph):
-    """Subclass of rdflib.Graph with plugin-based inferencing capability."""
+    """Subclass of rdflib.Graph with inferencing capability."""
 
     def __init__(self,
-                 plugin: Optional[_PluginReference] = None,
+                 reasoner: Optional[_ReasonerReference] = None,
                  *args, **kwargs) -> None:
 
-        self.plugin: _PluginReference = plugin
+        self.reasoner = reasoner
         super().__init__(*args, **kwargs)
 
-    def _resolve_plugin(self,
-                        plugin: _PluginReference) -> _InferencePlugin:
-        """Get an InferencePlugin instance from a _PluginReference."""
-        if isinstance(plugin, str):
-            return plugins.plugins[plugin]
+    def _resolve_reasoner(self,
+                        reasoner: _ReasonerReference) -> _Reasoner:
+        """Get an actual _Reasoner instance from a _ReasonerReference."""
+        if isinstance(reasoner, str):
+            return reasoners.reasoners[reasoner]
 
-        elif isinstance(plugin, _InferencePlugin):
-            return plugin
+        elif isinstance(reasoner, _Reasoner):
+            return reasoner
 
-        raise Exception("InferencePlugin not seizable.")
+        raise Exception("Reasoner not seizable.")
 
     def inference(self,
-                  plugin: Optional[_PluginReference] = None) -> rdflib.Graph:
+                  reasoner: Optional[_ReasonerReference] = None) -> rdflib.Graph:
         """Perform inferencing according to an InferencePlugin."""
 
         # get an actual InferencePlugin
-        _plugin_reference: _PluginReference = plugin or self.plugin
-        _plugin: _InferencePlugin = self._resolve_plugin(_plugin_reference)
+        _reasoner_reference: _ReasonerReference = reasoner or self.reasoner
+        _reasoner: _Reasoner = self._resolve_reasoner(_reasoner_reference)
 
         # call the reasoner
-        return _plugin.inference(self)
+        return _reasoner.inference(self)
 
 
 # first tests
@@ -58,8 +58,8 @@ print(len(graph))
 print((ex.obj, ex.inverse, ex.subj) in graph)
 # print(graph.serialize())
 
-# graph.inference(plugin="owlrl")
-graph.inference(plugin=plugins.OWLRLPlugin())
+graph.inference(reasoner="owlrl")
+# graph.inference(reasoner=reasoners.OWLRLReasoner())
 print(len(graph))
 print((ex.obj, ex.inverse, ex.subj) in graph)
 # print(graph.serialize())

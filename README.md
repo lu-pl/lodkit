@@ -30,7 +30,7 @@ graph.add((ex.inverse, OWL.inverseOf, ex.pred))
 len(graph)                              # 2
 (ex.obj, ex.inverse, ex.subj) in graph  # False
 
-graph.inference(plugin="owlrl") 
+graph.inference(reasoner="owlrl") 
 
 len(graph)                              # 359
 (ex.obj, ex.inverse, ex.subj) in graph  # True
