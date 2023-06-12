@@ -30,9 +30,9 @@ class OWLRLReasoner(Reasoner):
 
     def inference(self, graph: Graph) -> Graph:
         """Perform inferencing on a graph."""
-        _graph = DeductiveClosure(self._closure_type).expand(graph)
+        DeductiveClosure(self._closure_type).expand(graph)
 
-        return _graph
+        return graph
 
 
 class RDFSReasoner(OWLRLReasoner):
