@@ -118,6 +118,28 @@ lxml = ["lxml (>=4.3.0,<5.0.0)"]
 networkx = ["networkx (>=2.0.0,<3.0.0)"]
 
 [[package]]
+name = "reasonable"
+version = "0.2.2"
+description = "An OWL 2 RL reasoner with reasonable performance"
+optional = false
+python-versions = "*"
+files = [
+    {file = "reasonable-0.2.2-cp37-abi3-macosx_10_7_x86_64.whl", hash = "sha256:14c841f415dc1b10d4e8fe030aa96f93203a6b37786cb1da09aa1c0dc98d5034"},
+    {file = "reasonable-0.2.2-cp37-abi3-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:5538e0e6990d6f49ae5daa1636f785c49e35e0a0a579bc6135fac453cb570dd8"},
+    {file = "reasonable-0.2.2-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d0f51693935388a16d68478b9939c5d887ca55db2320f50b9376dc7d24bafd40"},
+    {file = "reasonable-0.2.2-cp37-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:04f408117c775a095e37949f283f9d50fba469ecee55aab1b0256a57bcfb1ee6"},
+    {file = "reasonable-0.2.2-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7b4081dc7b37eeeb9c6d923a4adb06f6c85adae2db4233c49c373ed5a5c86853"},
+    {file = "reasonable-0.2.2-cp37-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:a37273bb55c60bb57251e04f73715a100500371f189476639747a0216d8204d6"},
+    {file = "reasonable-0.2.2-cp37-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:db0c338beccadcf989c5cc2c27794396fa16f3400255575dc9c43c5dc7d4b04b"},
+    {file = "reasonable-0.2.2-cp37-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:dce5daddeef9347195dcd7d4ddf7b08643f187f9d10f4b48b9751de6a4a595c1"},
+    {file = "reasonable-0.2.2-cp37-abi3-musllinux_1_2_i686.whl", hash = "sha256:002bec89b33725464f65a1d7bec7fb160f87d38f50722dd24cb7a71da72bb5f6"},
+    {file = "reasonable-0.2.2-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:38542a2f61903be0a40857a6e282b730c7552e6f99a69e3f57d3ed1c4eb2405e"},
+    {file = "reasonable-0.2.2-cp37-abi3-win32.whl", hash = "sha256:41463445d70cdd97535eed5341073e32572b6e42e96dc71c33e0d6a65176d315"},
+    {file = "reasonable-0.2.2-cp37-abi3-win_amd64.whl", hash = "sha256:bf553183aa45ecffd59638bf066c997ad297d6b5b90fb6ab2f7026b227fb5224"},
+    {file = "reasonable-0.2.2.tar.gz", hash = "sha256:63d98005b6a55a098d265e954ea50c596da7261a8ccdf5fabcc512186da0a52b"},
+]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -131,4 +153,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "796fa2b2738a5e235d07e2962b5bcf9550ce46d33052f6d3f997274a923c7909"
+content-hash = "4ba7ec3817e746bfa53e8a6f9a3d6c3a19c16cfa86c91f9710298ec45a3435d3"

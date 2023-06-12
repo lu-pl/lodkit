@@ -44,10 +44,8 @@ class Graph(rdflib.Graph):
         return _reasoner.inference(self)
 
 
-# first tests
-# q: is (ex.obj ex.inverse ex.subj) in the graph?
-# a: yet, it is! :)
 
+##################################################
 ex = Namespace("http://example.org/")
 
 graph = Graph()
@@ -58,7 +56,8 @@ print(len(graph))
 print((ex.obj, ex.inverse, ex.subj) in graph)
 # print(graph.serialize())
 
-graph.inference(reasoner="owlrl")
+# graph.inference(reasoner="owlrl")
+# graph.inference(reasoner="reasonable")
 # graph.inference(reasoner=reasoners.OWLRLReasoner())
 print(len(graph))
 print((ex.obj, ex.inverse, ex.subj) in graph)
