@@ -75,90 +75,10 @@ class ReasonableReasoner(Reasoner):
 class AllegroReasoner(Reasoner):
     """InferencePlugin for the AllegroGraph inference engine."""
 
-    _agraph_rule:str = "all"
-
-    @staticmethod
-    def _stop_all_containers(client: docker.client.DockerClient):
-        """Stop all container of a given docker client."""
-        for cli in client.containers.list():
-            logging.info(f"Stopping '{cli}'.")
-            cli.stop()
-
-    @staticmethod
-    def _start_agraph_docker() -> docker.client.DockerClient:
-        """Start a docker container running Allegrograph.
-
-        The Allegrograph port is mapped to 8080 on the host.
-        """
-        client = docker.from_env()
-
-        client.containers.run(
-            "franzinc/agraph:v7.1.0",
-            shm_size="1G",
-            ports={'10035/tcp': 8080},
-            environment={
-                "AGRAPH_SUPER_USER": "temp",
-                "AGRAPH_SUPER_PASSWORD": "temp"
-            },
-            detach=True,
-            remove=True
-        )
-
-        return client
-
-    @staticmethod
-    def _get_agraph_server() -> AllegroGraphServer:
-        """Create temporary Allegraph server and return a server object."""
-        server = AllegroGraphServer(
-            host="localhost",
-            port=8080,
-            user="temp",
-            password="temp"
-        )
-
-        return server
-
-    @staticmethod
-    def _connect_to_agraph(server: AllegroGraphServer) -> RepositoryConnection:
-        """Doc."""
-        # get catalog
-        catalog = server.openCatalog()
-        # get temporary repo
-        repo = catalog.getRepository("temp_repo", Repository.ACCESS)
-        # get connection
-        conn = repo.getConnection()
-
-        return conn
-
-    def _agraph_add_data(self, graph, connection: RepositoryConnection):
-        ...
-
-    # def inference(self, graph: Graph) -> Graph:
-    #     """Perform inferencing on a graph."""
-    #     try:
-    #         # run docker + agraph
-    #         client = self._start_agraph_docker()
-    #         agraph_server = self._get_agraph_server()
-    #         # connect to agraph
-    #         connection = self._connect_to_agraph(agraph_server)
-    #         # add data to agraph
-    #         ...
-    #         # do the inferencing
-    #         connection.materializeEntailed(_whith=self._agraph_rule)
-    #         # get entailed data
-    #         ...
-    #         # generate graph from entailed
-    #         ...
-
-    #     finally:
-    #         self._stop_all_containers(client)
-
-    #     # return entailed graph
-    #     return graph
+    _agraph_rule: str = "all"
 
     def inference(self, graph):
         """Perform inferencing on a graph."""
-
         with AllegroConnection as connection:
 
             # add data
