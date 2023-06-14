@@ -47,18 +47,35 @@ class Graph(rdflib.Graph):
 
 ##################################################
 ex = Namespace("http://example.org/")
+from rdflib.namespace import RDF, RDFS
 
-graph = Graph()
-graph.add((ex.subj, ex.pred, ex.obj))
-graph.add((ex.inverse, OWL.inverseOf, ex.pred))
+def generate_test_graph() -> Graph:
+    """Generate a fresh test graph."""
 
-# print(len(graph))
-# print((ex.obj, ex.inverse, ex.subj) in graph)
-# print(graph.serialize())
+    graph = Graph()
+    graph.add((ex.s, ex.p, ex.o))
+
+    # subclass: ex.individual should be inferred to be also of type ex.supersubj
+    graph.add((ex.s, RDFS.subClassOf, ex.super))
+    graph.add((ex.individual, RDF.type, ex.s))
+
+    # inverse: (ex.o, ex.pInverse, x.s) should be inferred
+    graph.add((ex.pInverse, OWL.inverseOf, ex.p))
+
+    return graph
+
+graph = generate_test_graph()
+# graph.add((ex.subj, ex.pred, ex.obj))
+# graph.add((ex.inverse, OWL.inverseOf, ex.pred))
+
+print(len(graph))
+print((ex.o, ex.p, ex.s) in graph)
+print(graph.serialize())
 
 # graph.inference(reasoner="owlrl")
-# graph.inference(reasoner="reasonable")
+graph.inference(reasoner="reasonable")
 # graph.inference(reasoner=reasoners.OWLRLReasoner())
-# print(len(graph))
-# print((ex.obj, ex.inverse, ex.subj) in graph)
-# print(graph.serialize())
+print(len(graph))
+print((ex.o, ex.pInverse, ex.s) in graph)
+print((ex.individual, RDF.type, ex.super) in graph)
+print(graph.serialize())
