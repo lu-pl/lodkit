@@ -8,7 +8,7 @@ from rdflib.namespace import OWL, RDFS, RDF
 ex = Namespace("http://example.org/")
 
 
-def generate_test_graph() -> Graph:
+def get_test_graph() -> Graph:
     """Generate a fresh test graph."""
 
     graph = Graph()
@@ -25,9 +25,9 @@ def generate_test_graph() -> Graph:
 
 
 def test_rdfs_subclass():
-    """Reason and check if expected inference is in the inferred graph."""
+    """Run reasoner and check if expected inference is in the inferred graph."""
 
-    test_graph = generate_test_graph()
+    test_graph = get_test_graph()
     expected_inference = ((ex.individual, RDF.type, ex.super))
 
     inferred_graph = test_graph.inference("rdfs")
@@ -36,9 +36,9 @@ def test_rdfs_subclass():
 
 
 def test_rdfs_inverse():
-    """Reason and check if expected inference is in the inferred graph."""
+    """Run reasoner and check if expected inference is in the inferred graph."""
 
-    test_graph = generate_test_graph()
+    test_graph = get_test_graph()
     expected_inference = ((ex.o, ex.pInverse, ex.s))
 
     inferred_graph = test_graph.inference("rdfs")
@@ -48,9 +48,8 @@ def test_rdfs_inverse():
 
 
 def test_owlrl_subclass():
-    """Reason and check if expected inference is in the inferred graph."""
-
-    test_graph = generate_test_graph()
+    """Run reasoner and check if expected inference is in the inferred graph."""
+    test_graph = get_test_graph()
     expected_inference = ((ex.individual, RDF.type, ex.super))
 
     inferred_graph = test_graph.inference("owlrl")
@@ -59,11 +58,57 @@ def test_owlrl_subclass():
 
 
 def test_owlrl_inverse():
-    """Reason and check if expected inference is in the inferred graph."""
+    """Run reasoner and check if expected inference is in the inferred graph."""
 
-    test_graph = generate_test_graph()
+    test_graph = get_test_graph()
     expected_inference = ((ex.o, ex.pInverse, ex.s))
 
     inferred_graph = test_graph.inference("owlrl")
 
     assert expected_inference in inferred_graph
+
+
+def test_reasonable_subclass():
+    """Run reasoner and check if expected inference is in the inferred graph."""
+
+    test_graph = get_test_graph()
+    expected_inference = ((ex.individual, RDF.type, ex.super))
+
+    inferred_graph = test_graph.inference("reasonable")
+
+    assert expected_inference in inferred_graph
+
+
+def test_reasonable_inverse():
+    """Run reasoner and check if expected inference is in the inferred graph."""
+
+    test_graph = get_test_graph()
+    expected_inference = ((ex.o, ex.pInverse, ex.s))
+
+    inferred_graph = test_graph.inference("reasonable")
+
+    assert expected_inference in inferred_graph
+
+
+def test_allegro_subclass():
+    """Run reasoner and check if expected inference is in the inferred graph."""
+
+    test_graph = get_test_graph()
+    expected_inference = ((ex.individual, RDF.type, ex.super))
+
+    inferred_graph = test_graph.inference("allegro")
+
+    assert expected_inference in inferred_graph
+
+
+def test_allegro_inverse():
+    """Run reasoner and check if expected inference is in the inferred graph."""
+
+    test_graph = get_test_graph()
+    expected_inference = ((ex.o, ex.pInverse, ex.s))
+
+    inferred_graph = test_graph.inference("allegro")
+
+    assert expected_inference in inferred_graph
+
+test_allegro_inverse()

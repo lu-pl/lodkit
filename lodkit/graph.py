@@ -1,7 +1,5 @@
 """An rdflib.Graph subclass with plugin-based inferencing capability."""
 
-from rdflib.namespace import OWL
-from rdflib import Namespace
 from typing import Optional
 import rdflib
 import reasoners
@@ -22,7 +20,7 @@ class Graph(rdflib.Graph):
         super().__init__(*args, **kwargs)
 
     def _resolve_reasoner(self,
-                        reasoner: _ReasonerReference) -> _Reasoner:
+                          reasoner: _ReasonerReference) -> _Reasoner:
         """Get an actual _Reasoner instance from a _ReasonerReference."""
         if isinstance(reasoner, str):
             return reasoners.reasoners[reasoner]
@@ -42,42 +40,3 @@ class Graph(rdflib.Graph):
 
         # call the reasoner
         return _reasoner.inference(self)
-
-
-
-##################################################
-##################################################
-ex = Namespace("http://example.org/")
-from rdflib.namespace import RDF, RDFS
-
-def generate_test_graph() -> Graph:
-    """Generate a fresh test graph."""
-
-    graph = Graph()
-    graph.add((ex.s, ex.p, ex.o))
-
-    # subclass: ex.individual should be inferred to be also of type ex.supersubj
-    graph.add((ex.s, RDFS.subClassOf, ex.super))
-    graph.add((ex.individual, RDF.type, ex.s))
-
-    # inverse: (ex.o, ex.pInverse, x.s) should be inferred
-    graph.add((ex.pInverse, OWL.inverseOf, ex.p))
-
-    return graph
-
-graph = generate_test_graph()
-# graph.add((ex.subj, ex.pred, ex.obj))
-# graph.add((ex.inverse, OWL.inverseOf, ex.pred))
-
-print(len(graph))
-print((ex.o, ex.p, ex.s) in graph)
-print(graph.serialize())
-
-# graph.inference(reasoner="owlrl")
-# graph.inference(reasoner="reasonable")
-graph.inference(reasoner=reasoners.AllegroReasoner())
-# graph.inference(reasoner=reasoners.OWLRLReasoner())
-print(len(graph))
-print((ex.o, ex.pInverse, ex.s) in graph)
-print((ex.individual, RDF.type, ex.super) in graph)
-print(graph.serialize())
