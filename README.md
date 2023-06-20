@@ -38,7 +38,7 @@ len(graph)                              # 359
 The `reasoner` parameter of `lodkit.Graph.inference` (so far) also takes 
 - "rdfs" for owlrl's [RDFS deductive closure type](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics), 
 - "reasonable" for the [reasonable](https://github.com/gtfierro/reasonable) inference engine and 
-- "allegro" for the Allegrograph reasoner (using the RDFS++ *and* OWL-RL). 
+- "allegro" for the [Allegrograph reasoner](https://franz.com/agraph/support/documentation/current/materializer.html) (using the RDFS++ *and* OWL-RL). 
 
 Also the `reasoner` parameter takes `Reasoner` objects directly, see [reasoners.py](https://github.com/lu-pl/lodkit/blob/main/lodkit/reasoners.py).
 
