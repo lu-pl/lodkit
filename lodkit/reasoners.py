@@ -84,7 +84,7 @@ class AllegroReasoner(Reasoner):
             # inference
             connection.materializeEntailed(_with=self._agraph_rule)
 
-            # get entailed data
+            # get entailed data + parse
             with NamedTemporaryFile() as f:
                 connection.getStatements(
                     output=f.name,
