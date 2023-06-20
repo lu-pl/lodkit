@@ -36,7 +36,7 @@ class Graph(rdflib.Graph):
                   reasoner: Optional[_ReasonerReference] = None) -> rdflib.Graph:
         """Perform inferencing according to an InferencePlugin."""
 
-        # get an actual InferencePlugin
+        # get an actual Reasoner
         _reasoner_reference: _ReasonerReference = reasoner or self.reasoner
         _reasoner: _Reasoner = self._resolve_reasoner(_reasoner_reference)
 
@@ -45,6 +45,7 @@ class Graph(rdflib.Graph):
 
 
 
+##################################################
 ##################################################
 ex = Namespace("http://example.org/")
 from rdflib.namespace import RDF, RDFS
@@ -73,7 +74,8 @@ print((ex.o, ex.p, ex.s) in graph)
 print(graph.serialize())
 
 # graph.inference(reasoner="owlrl")
-graph.inference(reasoner="reasonable")
+# graph.inference(reasoner="reasonable")
+graph.inference(reasoner=reasoners.AllegroReasoner())
 # graph.inference(reasoner=reasoners.OWLRLReasoner())
 print(len(graph))
 print((ex.o, ex.pInverse, ex.s) in graph)

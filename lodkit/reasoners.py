@@ -1,18 +1,16 @@
-"""Reasoners (inference plugins) for lodkit.Graph.."""
-
-import logging
+"""Reasoners (inference plugins) for lodkit.Graph."""
 
 from collections.abc import MutableMapping
+from tempfile import NamedTemporaryFile
 from typing import Protocol, runtime_checkable
 
-import docker
 import reasonable
 
+from franz.openrdf.rio.rdfformat import RDFFormat
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_OWLRL_Semantics, RDFS_Semantics
 
-from franz.openrdf.sail.allegrographserver import AllegroGraphServer, Repository
-from franz.openrdf.repository.repositoryconnection import RepositoryConnection
+from connections import AllegroConnection
 
 
 @runtime_checkable
@@ -20,7 +18,7 @@ class Reasoner(Protocol):
     """Protocol class for lodkit.Graph reasoners."""
 
     def inference(self, graph: Graph) -> Graph:
-        """Logic for inferencing on an rdflib.Graph intance."""
+        """Logic for inferencing on an rdflib.Graph instance."""
         ...
 
 
@@ -56,7 +54,6 @@ class ReasonableReasoner(Reasoner):
     OWL-RL and RFDS entailments are supported.
     See https://github.com/gtfierro/reasonable.
     """
-
     def inference(self, graph: Graph) -> Graph:
         """Perform inferencing on a graph."""
         reasoner = reasonable.PyReasoner()
@@ -70,8 +67,6 @@ class ReasonableReasoner(Reasoner):
         return graph
 
 
-
-
 class AllegroReasoner(Reasoner):
     """InferencePlugin for the AllegroGraph inference engine."""
 
@@ -79,18 +74,25 @@ class AllegroReasoner(Reasoner):
 
     def inference(self, graph):
         """Perform inferencing on a graph."""
-        with AllegroConnection as connection:
+        with AllegroConnection() as connection:
 
-            # add data
-            for triple in graph.triples():
-                connection.addTriple(triple)
+            # add asserted data
+            for triple in graph.triples((None, None, None)):
+                n3_triple = tuple(map(lambda x: x.n3(), triple))
+                connection.add(connection.createStatement(*n3_triple))
 
             # inference
             connection.materializeEntailed(_with=self._agraph_rule)
 
-            # get the data
-            for triple in connection.getStatements(): #?
-                graph.add(triple)
+            # get entailed data
+            with NamedTemporaryFile() as f:
+                connection.getStatements(
+                    output=f.name,
+                    includeInferred=True,
+                    output_format=RDFFormat.TURTLE
+                )
+
+                graph.parse(f)
 
         return graph
 
@@ -98,5 +100,6 @@ class AllegroReasoner(Reasoner):
 reasoners: MutableMapping[str, Reasoner] = {
     "owlrl": OWLRLReasoner(),
     "rdfs": RDFSReasoner(),
-    "reasonable": ReasonableReasoner()
+    "reasonable": ReasonableReasoner(),
+    "allegro": AllegroReasoner()
 }
