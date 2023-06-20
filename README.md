@@ -6,7 +6,9 @@
 LODKit is a collection of Linked Open Data related Python functionalities. 
 
 LODkit (includes|will include)
-- a custom `rdflib.Graph` subclass that is capable of RDFS and OWL-RL inferencing 
+- a custom `rdflib.Graph` subclass that is capable of 
+-- RDFS and OWL-RL inferencing 
+-- Bnode-safe graph merging [todo]
 - a custom importer for loading RDF files as if they where Python modules
 - [...]
 

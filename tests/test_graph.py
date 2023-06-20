@@ -110,5 +110,3 @@ def test_allegro_inverse():
     inferred_graph = test_graph.inference("allegro")
 
     assert expected_inference in inferred_graph
-
-test_allegro_inverse()
