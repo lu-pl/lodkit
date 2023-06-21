@@ -16,7 +16,10 @@ logger.addHandler(logging.StreamHandler())
 
 
 class AllegroConnection:
-    """Doc."""
+    """Connection abstraction for Allegrograph.
+
+    Starts a docker image of Allegrograph and connects to the server.
+    """
 
     def __init__(self, *, host_port=8080):
         """Parameterize docker and Allegro server."""
