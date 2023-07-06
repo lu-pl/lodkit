@@ -1,13 +1,14 @@
 """An rdflib.Graph subclass with plugin-based inferencing capability."""
 
-from typing import Optional
+from typing import Optional, Literal
 import rdflib
 
 from lodkit import reasoners
 
 
 _Reasoner = reasoners.Reasoner
-_ReasonerReference = _Reasoner | str
+_ReasonerLiterals = Literal[*reasoners.reasoners.keys()]
+_ReasonerReference = _Reasoner | _ReasonerLiterals
 
 
 class Graph(rdflib.Graph):
@@ -34,7 +35,6 @@ class Graph(rdflib.Graph):
     def inference(self,
                   reasoner: Optional[_ReasonerReference] = None) -> rdflib.Graph:
         """Perform inferencing according to an InferencePlugin."""
-
         # get an actual Reasoner
         _reasoner_reference: _ReasonerReference = reasoner or self.reasoner
         _reasoner: _Reasoner = self._resolve_reasoner(_reasoner_reference)
