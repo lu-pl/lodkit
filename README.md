@@ -20,8 +20,10 @@ LODkit (includes|will include)
 The default plugin for inferencing is the [owlrl](https://github.com/RDFLib/OWL-RL/) native Python inferencing engine. The deductive closure type used for `lodkit.Graph` is [RDFS_OWLRL_Semantics](https://owl-rl.readthedocs.io/en/latest/CombinedClosure.html) which allows for RDFS *and* OWL-RL reasoning.
 
 ```python
-from lodkit import Graph
+from lodkit.graph import Graph
+
 from rdflib import Namespace
+from rdflib.namespace import OWL
 
 ex = Namespace("http://example.org/")
 
@@ -29,14 +31,17 @@ graph = Graph()
 graph.add((ex.subj, ex.pred, ex.obj))
 graph.add((ex.inverse, OWL.inverseOf, ex.pred))
 
+
 len(graph)                              # 2
 (ex.obj, ex.inverse, ex.subj) in graph  # False
 
-graph.inference(reasoner="owlrl") 
+graph.inference(reasoner="owlrl")
 
 len(graph)                              # 359
-(ex.obj, ex.inverse, ex.subj) in graph  # True
+(ex.obj, ex.inverse, ex.subj) in graph
 ```
+
+
 The `reasoner` parameter of `lodkit.Graph.inference` (so far) also takes 
 - "rdfs" for owlrl's [RDFS deductive closure type](https://owl-rl.readthedocs.io/en/latest/RDFSClosure.html#owlrl.RDFSClosure.RDFS_Semantics), 
 - "reasonable" for the [reasonable](https://github.com/gtfierro/reasonable) inference engine and 
