@@ -10,6 +10,7 @@ LODkit (includes|will include)
   - RDFS and OWL-RL inferencing 
   - Bnode-safe graph merging [todo]
 - a custom importer for loading RDF files as if they where Python modules
+- LOD-specific type definitions
 - [...]
 
 ## Examples
