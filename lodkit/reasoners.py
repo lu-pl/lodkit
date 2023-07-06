@@ -10,7 +10,7 @@ from franz.openrdf.rio.rdfformat import RDFFormat
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_OWLRL_Semantics, RDFS_Semantics
 
-from connections import AllegroConnection
+from lodkit.connections import AllegroConnection
 
 
 @runtime_checkable

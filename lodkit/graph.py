@@ -2,7 +2,8 @@
 
 from typing import Optional
 import rdflib
-import reasoners
+
+from lodkit import reasoners
 
 
 _Reasoner = reasoners.Reasoner
