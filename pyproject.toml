@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lodkit"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["Lukas Plank <lupl@tuta.io>"]
 readme = "README.md"
