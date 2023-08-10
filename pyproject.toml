@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "lodkit"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Lukas Plank <lupl@tuta.io>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-rdflib = "^6.3.2"
+rdflib = "7.0.0"
 pytest = "^7.3.1"
 reasonable = "^0.2.2"
 owlrl = "^6.0.2"
