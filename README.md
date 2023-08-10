@@ -82,6 +82,8 @@ I find this really convenient for bulk-parsing graphs ([example](https://github.
 
 ### lodkit.utils
 
+`lodkit.utils` (is|will be) a general collection of LOD related utilities.
+
 #### plist
 
 [todo: add usage + example]
