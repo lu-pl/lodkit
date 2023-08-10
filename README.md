@@ -1,4 +1,4 @@
-![<img src="lodkit.png" width=50% height=50%>](./lodkit.png)
+![<img src="lodkit.png" width=50% height=50%>](https://raw.githubusercontent.com/lu-pl/lodkit/main/lodkit.png)
 
 # LODKit
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -80,3 +80,8 @@ print(type(some_more_rdf))  # <class 'rdflib.graph.Graph'>
 ```
 I find this really convenient for bulk-parsing graphs ([example](https://github.com/lu-pl/rdfdf/blob/fc86e928e8bc7b37b925d8d6e289a786e52436be/tests/test_corpus_table/test_corpus_table.py#L20)).
 
+### lodkit.utils
+
+#### plist
+
+[todo: add usage + example]
