@@ -86,4 +86,37 @@ I find this really convenient for bulk-parsing graphs ([example](https://github.
 
 #### plist
 
-[todo: add usage + example]
+`plist` is a simple shorthand for referencing a triple subject by multiple predicates i.e. basically a Python representation of what is expressed in ttl with ';' and what the Turtle docs call "[predicate lists](https://www.w3.org/TR/turtle/#predicate-lists)".). 
+
+E.g. the following creates a list of 3 triples relating to a single subject:
+
+```python
+from lodkit.utils import plist
+
+from rdflib import Literal, Namespace, URIRef
+from rdflib.namespace import RDF, FOAF
+
+
+REL = Namespace("http://www.perceive.net/schemas/relationship/")
+
+triples = plist(
+    URIRef("http://example.org/#green-goblin"),
+    (REL.enemyOF, URIRef("http://example.org/#spiderman")),
+    (RDF.type, FOAF.Person),
+    (FOAF.name, Literal("Green Goblin"))
+)
+
+graph = triples.to_graph()
+print(graph.serialize())
+```
+
+Output:
+
+```ttl
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ns1: <http://www.perceive.net/schemas/relationship/> .
+
+<http://example.org/#green-goblin> a foaf:Person ;
+    ns1:enemyOF <http://example.org/#spiderman> ;
+    foaf:name "Green Goblin" .
+```
