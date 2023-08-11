@@ -11,7 +11,7 @@ from lodkit.types import _TripleObject
 class plist(collections.UserList):
     """Shorthand for referencing a triple subject by multiple predicates.
 
-    Basically a Python representation what is expressed in ttl with ';'.
+    Basically a Python representation of what is expressed in ttl with ';'.
     See https://www.w3.org/TR/turtle/#predicate-lists.
 
     E.g. the following creates a list of 3 triples relating to a single subject:
