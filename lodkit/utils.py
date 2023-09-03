@@ -2,9 +2,11 @@
 
 
 import collections
+import hashlib
+
+from typing import Callable
 
 from rdflib import Graph, URIRef
-
 from lodkit.types import _TripleObject
 
 
@@ -44,3 +46,15 @@ class plist(collections.UserList):
 
     def __repr__(self):  # noqa D105
         return f"plist({self.data})"
+
+
+
+def genhash(input: str,
+            length: int | None = 10,
+            hash_function: Callable = hashlib.sha256) -> str:
+    """Generate a truncated URL-safe string hash.
+
+    Pass length=None for an untruncated hash.
+    """
+    _hash = hash_function(input.encode('utf-8')).hexdigest()
+    return _hash[:length]
