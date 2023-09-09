@@ -2,6 +2,7 @@
 
 # LODKit
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![PyPI version](https://badge.fury.io/py/lodkit.svg)](https://badge.fury.io/py/lodkit)
 
 LODKit is a collection of Linked Open Data related Python functionalities. 
 
@@ -39,7 +40,7 @@ len(graph)                              # 2
 graph.inference(reasoner="owlrl")
 
 len(graph)                              # 359
-(ex.obj, ex.inverse, ex.subj) in graph
+(ex.obj, ex.inverse, ex.subj) in graph  # True
 ```
 
 
