@@ -17,20 +17,20 @@ class Graph(rdflib.Graph):
     def __init__(self,
                  reasoner: Optional[_ReasonerReference] = None,
                  *args, **kwargs) -> None:
-
-        self.reasoner = reasoner
+        """Initialize a lodkit.Graph."""
+        self.reasoner = reasoner or "owlrl"
         super().__init__(*args, **kwargs)
 
     def _resolve_reasoner(self,
                           reasoner: _ReasonerReference) -> _Reasoner:
         """Get an actual _Reasoner instance from a _ReasonerReference."""
-        if isinstance(reasoner, str):
-            return reasoners.reasoners[reasoner]
-
-        elif isinstance(reasoner, _Reasoner):
-            return reasoner
-
-        raise Exception("Reasoner not seizable.")
+        match reasoner:
+            case str():
+                return reasoners.reasoners[reasoner]
+            case _Reasoner():
+                return reasoner
+            case _:
+                raise Exception("Reasoner not seizable.")
 
     def inference(self,
                   reasoner: Optional[_ReasonerReference] = None) -> rdflib.Graph:
