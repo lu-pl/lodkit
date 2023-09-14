@@ -1,6 +1,11 @@
 """An rdflib.Graph subclass with plugin-based inferencing capability."""
 
-from typing import Optional, Literal
+import inspect
+import sys
+
+from typing import Optional, Literal, Generator
+from types import ModuleType
+
 import rdflib
 
 from lodkit import reasoners
@@ -41,3 +46,54 @@ class Graph(rdflib.Graph):
 
         # call the reasoner
         return _reasoner.inference(self)
+
+
+def get_subclasses(klass: type,
+                   module: Optional[ModuleType] = None
+                   ) -> Generator:
+    """Get all subclasses of a type klass in a module.
+
+    Default for the module parameter is the module of the type klass.
+    """
+    if module is None:
+        module = sys.modules[klass.__module__]
+
+    yield from filter(
+        lambda cls: (
+            inspect.isclass(cls) and
+            issubclass(cls, klass) and
+            klass in cls.__mro__ and
+            cls is not klass
+        ),
+        (cls for cls_name, cls in inspect.getmembers(module))
+    )
+
+
+def get_direct_subclasses(klass: type,
+                          module: Optional[ModuleType] = None
+                          ) -> Generator:
+    """Get /direct/ subclasses of a type klass in a module.
+
+    Default for the module parameter is the module of the type klass.
+    """
+    yield from filter(
+        lambda cls: klass in cls.__bases__,
+        get_subclasses(klass, module)
+    )
+
+
+def subclass_bases_mapping() -> Generator[tuple[str, tuple], None, None]:
+    """Replace rdflib.Graph with lodkit.Graph in rdflib.Graph subclasses."""
+    for subclass in get_subclasses(rdflib.Graph):
+        # for direct subclasses swap rdflib.Graph with lodkit.Graph in bases
+        if subclass in get_direct_subclasses(rdflib.Graph):
+            bases = list(subclass.__bases__)
+            bases[bases.index(rdflib.Graph)] = Graph
+            subclass.__bases__ = tuple(bases)
+
+        yield (subclass.__name__, subclass)
+
+
+# add subclasses to the current module namespace (i.e. import them)
+_current_module_namespace = sys.modules[__name__].__dict__
+_current_module_namespace.update(subclass_bases_mapping())
