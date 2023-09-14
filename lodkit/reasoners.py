@@ -49,11 +49,12 @@ class RDFSReasoner(OWLRLReasoner):
 
 
 class ReasonableReasoner(Reasoner):
-    """ Reasoner plugin using the reasonable engine.
+    """Reasoner plugin using the reasonable engine.
 
     OWL-RL and RFDS entailments are supported.
     See https://github.com/gtfierro/reasonable.
     """
+
     def inference(self, graph: Graph) -> Graph:
         """Perform inferencing on a graph."""
         reasoner = reasonable.PyReasoner()
