@@ -1,4 +1,4 @@
-"""An rdflib.Graph subclass with plugin-based inferencing capability."""
+"""rdflib.Graph subclasses with plugin-based inferencing capability."""
 
 import inspect
 import sys
@@ -19,11 +19,13 @@ _ReasonerReference = _Reasoner | _ReasonerLiterals
 class Graph(rdflib.Graph):
     """Subclass of rdflib.Graph with inferencing capability."""
 
+    _default_reasoner = "owlrl"
+
     def __init__(self,
                  reasoner: Optional[_ReasonerReference] = None,
                  *args, **kwargs) -> None:
         """Initialize a lodkit.Graph."""
-        self.reasoner = reasoner or "owlrl"
+        self.reasoner = reasoner or self._default_reasoner
         super().__init__(*args, **kwargs)
 
     def _resolve_reasoner(self,
@@ -41,7 +43,7 @@ class Graph(rdflib.Graph):
                   reasoner: Optional[_ReasonerReference] = None) -> rdflib.Graph:
         """Perform inferencing according to an InferencePlugin."""
         # get an actual Reasoner
-        _reasoner_reference: _ReasonerReference = reasoner or self.reasoner
+        _reasoner_reference: _ReasonerReference = reasoner or self._default_reasoner
         _reasoner: _Reasoner = self._resolve_reasoner(_reasoner_reference)
 
         # call the reasoner
