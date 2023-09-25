@@ -2,7 +2,7 @@
 
 import hashlib
 
-from typing import Callable, Generator, Optional
+from typing import Callable, Generator, Iterator, Optional
 
 from rdflib import BNode, Graph, URIRef
 from lodkit.types import _TripleObject
@@ -23,7 +23,7 @@ class plist:
         (FOAF.name, Literal("Green Goblin"))
     )
 
-    Also BNodes are supported with the following notation:
+    BNodes are supported with the following notation:
 
     plist(
         URIRef("http://example.org/#green-goblin"),
@@ -34,6 +34,8 @@ class plist:
             (FOAF.name, Literal("Spiderman"))
         ]),
     )
+
+    Also Iterators of predicate-object-pairs are allowed to express bnodes.
 
     plist.to_graph generates and returns an rdflib.Graph instance.
     """
@@ -50,7 +52,7 @@ class plist:
     def __iter__(self) -> Generator:
         """Generate an iterator of tuple-based triple representations."""
         for pred, obj in self.predicate_object_pairs:
-            if isinstance(obj, list):
+            if isinstance(obj, list) or isinstance(obj, Iterator):
                 _b = BNode()
                 yield from plist(_b, *obj)
                 yield (self.uri, pred, _b)
