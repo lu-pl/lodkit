@@ -60,7 +60,6 @@ class plist:
     def to_graph(self) -> Graph:
         """Generate a graph instance."""
         for triple in self:
-            print(triple)
             self.graph.add(triple)
         return self.graph
 
