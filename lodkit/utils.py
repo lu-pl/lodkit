@@ -1,16 +1,14 @@
 """LODKit utilities."""
 
-
-import collections
 import hashlib
 
-from typing import Callable
+from typing import Callable, Generator, Optional
 
-from rdflib import Graph, URIRef
+from rdflib import BNode, Graph, URIRef
 from lodkit.types import _TripleObject
 
 
-class plist(collections.UserList):
+class plist:
     """Shorthand for referencing a triple subject by multiple predicates.
 
     Basically a Python representation of what is expressed in ttl with ';'.
@@ -22,31 +20,49 @@ class plist(collections.UserList):
         URIRef("http://example.org/#green-goblin"),
         (REL.enemyOF, URIRef("http://example.org/#spiderman")),
         (RDF.type, FOAF.Person),
-        (FOAF.name, "Green Goblin")
+        (FOAF.name, Literal("Green Goblin"))
     )
+
+    Also BNodes are supported with the following notation:
+
+    plist(
+        URIRef("http://example.org/#green-goblin"),
+        (RDF.type, FOAF.Person),
+        (FOAF.name, Literal("Green Goblin")),
+        (REL.enemyOF, [
+            (RDF.type, FOAF.Person),
+            (FOAF.name, Literal("Spiderman"))
+        ]),
+    )
+
+    plist.to_graph generates and returns an rdflib.Graph instance.
     """
 
     def __init__(self,
-                 subject: URIRef,
-                 *predicate_object_pairs: tuple[URIRef, _TripleObject],
-                 graph: Graph | None = None):
-        """Initialize a predicate list instance."""
-        super().__init__()
+                 uri: URIRef,
+                 *predicate_object_pairs: tuple[URIRef, _TripleObject | list],
+                 graph: Optional[Graph] = None):
+        """Initialize a plist object."""
+        self.uri = uri
+        self.predicate_object_pairs = predicate_object_pairs
         self.graph = Graph() if graph is None else graph
 
-        for pair in predicate_object_pairs:
-            self.data.append((subject, *pair))
+    def __iter__(self) -> Generator:
+        """Generate an iterator of tuple-based triple representations."""
+        for pred, obj in self.predicate_object_pairs:
+            if isinstance(obj, list):
+                _b = BNode()
+                yield from plist(_b, *obj)
+                yield (self.uri, pred, _b)
+                continue
+            yield (self.uri, pred, obj)
 
-    def to_graph(self):
-        """Add triples to a graph instance and return."""
-        for triple in self.data:
+    def to_graph(self) -> Graph:
+        """Generate a graph instance."""
+        for triple in self:
+            print(triple)
             self.graph.add(triple)
-
         return self.graph
-
-    def __repr__(self):  # noqa D105
-        return f"plist({self.data})"
-
 
 
 def genhash(input: str,
