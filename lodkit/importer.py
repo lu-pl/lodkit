@@ -7,7 +7,7 @@ from importlib.machinery import ModuleSpec
 import pathlib
 import sys
 
-from rdflib import Graph
+from lodkit.graph import Graph
 
 
 class RDFImporter:
