@@ -2,42 +2,37 @@
 
 import hashlib
 
-from typing import Callable, Generator, Iterator, Optional
+from itertools import repeat
+from typing import Callable, Iterator, Optional
 
 from rdflib import BNode, Graph, URIRef
-from lodkit.types import _TripleObject
+from lodkit.types import _TripleObject, _Triple
 
 
-class plist:
-    """Shorthand for referencing a triple subject by multiple predicates.
+class ttl:
+    """Triple/graph constructor implementing a ttl-like interface.
 
-    Basically a Python representation of what is expressed in ttl with ';'.
-    See https://www.w3.org/TR/turtle/#predicate-lists.
+    The callable interface aims to provide a Python representation of
+    Turtle predicate and object list syntax (';' and ',').
+    See https://www.w3.org/TR/rdf12-turtle/#predicate-lists and
+    https://www.w3.org/TR/rdf12-turtle/#object-lists.
 
-    E.g. the following creates a list of 3 triples relating to a single subject:
+    Example:
 
-    plist(
-        URIRef("http://example.org/#green-goblin"),
-        (REL.enemyOF, URIRef("http://example.org/#spiderman")),
-        (RDF.type, FOAF.Person),
-        (FOAF.name, Literal("Green Goblin"))
+    triples = ttl(
+        # 1. subject
+        URIRef("https://subject.uri"),
+        # 2. predicate lists
+        # 2.1 predicate + object list
+        (RDF.type, (lrm["F3_Manifestation"], crmdig["D1_Digital_Object"])),
+        # 2.2 predicate + blank node object
+        (crm["P1_is_identified_by"], [
+            (RDF.type, crm["E41_Appellation"]),
+            (crm["P190_has_symbolic_content"], Literal("Have more fun!"))
+        ])
     )
 
-    BNodes are supported with the following notation:
-
-    plist(
-        URIRef("http://example.org/#green-goblin"),
-        (RDF.type, FOAF.Person),
-        (FOAF.name, Literal("Green Goblin")),
-        (REL.enemyOF, [
-            (RDF.type, FOAF.Person),
-            (FOAF.name, Literal("Spiderman"))
-        ]),
-    )
-
-    Also Iterators of predicate-object-pairs are allowed to express bnodes.
-
-    plist.to_graph generates and returns an rdflib.Graph instance.
+    to_graph generates and returns an rdflib.Graph instance.
     """
 
     def __init__(self,
@@ -48,22 +43,40 @@ class plist:
         self.uri = uri
         self.predicate_object_pairs = predicate_object_pairs
         self.graph = Graph() if graph is None else graph
+        self._iter = iter(self)
 
-    def __iter__(self) -> Generator:
+    def __iter__(self) -> Iterator[_Triple]:
         """Generate an iterator of tuple-based triple representations."""
         for pred, obj in self.predicate_object_pairs:
-            if isinstance(obj, list) or isinstance(obj, Iterator):
-                _b = BNode()
-                yield from plist(_b, *obj)
-                yield (self.uri, pred, _b)
-                continue
-            yield (self.uri, pred, obj)
+            match obj:
+                case list() | Iterator():
+                    _b = BNode()
+                    yield (self.uri, pred, _b)
+                    yield from ttl(_b, *obj)
+                case tuple():
+                    _object_list = zip(repeat(pred), obj)
+                    yield from ttl(self.uri, *_object_list)
+                case _:
+                    yield (self.uri, pred, obj)
+
+    def __next__(self) -> _Triple:
+        """Return the next triple from the iterator."""
+        return next(self._iter)
 
     def to_graph(self) -> Graph:
         """Generate a graph instance."""
         for triple in self:
             self.graph.add(triple)
         return self.graph
+
+
+class plist(ttl):
+    """Deprecated alias to ttl.
+
+    This is for backwards api compatibility only.
+    Since ttl also implements Turtle object lists now,
+    refering to the class as "plist" is inaccurate/misleading.
+    """
 
 
 def genhash(input: str,
