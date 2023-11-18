@@ -14,7 +14,7 @@ class RDFImporter:
     """Custom importer; allows to import RDF files as if they were modules.
 
     E.g. 'import some_rdf' looks for some_rdf.() in the import path,
-    parses it into an rdflib.Graph instance and makes it available in the module namespace.
+    parses it into a lodkit.Graph instance and makes it available in the module namespace.
     """
 
     def __init__(self, rdf_path):
@@ -25,13 +25,9 @@ class RDFImporter:
     def find_spec(cls, name, path, target=None):
 
         *_, module_name = name.rpartition(".")
-
         directories = sys.path if path is None else path
 
-        # print("DEBUG: ", directories)
-
         for directory in directories:
-
             rdf_paths = pathlib.Path(directory).glob(f"{module_name}.*")
 
             for path in rdf_paths:
