@@ -2,13 +2,13 @@
 
 from typing import Literal as PyLiteral
 
-from rdflib import Literal, URIRef
+from rdflib import Literal, URIRef, BNode
 
 from rdflib.plugin import plugins
 from rdflib.serializer import Serializer
 
 
-_TripleObject = Literal | URIRef
+_TripleObject = Literal | URIRef | BNode
 
 _Triple = tuple[URIRef, URIRef, _TripleObject]
 
