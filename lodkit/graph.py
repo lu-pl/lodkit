@@ -50,7 +50,7 @@ class Graph(rdflib.Graph):
         return _reasoner.inference(self)
 
 
-def get_subclasses(klass: type,
+def _get_subclasses(klass: type,
                    module: Optional[ModuleType] = None
                    ) -> Generator:
     """Get all subclasses of a type klass in a module.
@@ -71,7 +71,7 @@ def get_subclasses(klass: type,
     )
 
 
-def get_direct_subclasses(klass: type,
+def _get_direct_subclasses(klass: type,
                           module: Optional[ModuleType] = None
                           ) -> Generator:
     """Get /direct/ subclasses of a type klass in a module.
@@ -80,15 +80,15 @@ def get_direct_subclasses(klass: type,
     """
     yield from filter(
         lambda cls: klass in cls.__bases__,
-        get_subclasses(klass, module)
+        _get_subclasses(klass, module)
     )
 
 
-def subclass_bases_mapping() -> Generator[tuple[str, tuple], None, None]:
+def _subclass_bases_mapping() -> Generator[tuple[str, tuple], None, None]:
     """Replace rdflib.Graph with lodkit.Graph in rdflib.Graph subclasses."""
-    for subclass in get_subclasses(rdflib.Graph):
+    for subclass in _get_subclasses(rdflib.Graph):
         # for direct subclasses swap rdflib.Graph with lodkit.Graph in bases
-        if subclass in get_direct_subclasses(rdflib.Graph):
+        if subclass in _get_direct_subclasses(rdflib.Graph):
             bases = list(subclass.__bases__)
             bases[bases.index(rdflib.Graph)] = Graph
             subclass.__bases__ = tuple(bases)
@@ -98,4 +98,4 @@ def subclass_bases_mapping() -> Generator[tuple[str, tuple], None, None]:
 
 # add subclasses to the current module namespace (i.e. import them)
 _current_module_namespace = sys.modules[__name__].__dict__
-_current_module_namespace.update(subclass_bases_mapping())
+_current_module_namespace.update(_subclass_bases_mapping())
