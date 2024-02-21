@@ -1,16 +1,28 @@
 """Reasoners (inference plugins) for lodkit.Graph."""
 
+import traceback
+
 from collections.abc import MutableMapping
 from tempfile import NamedTemporaryFile
 from typing import Protocol, runtime_checkable
 
 import reasonable
 
+from loguru import logger
 from franz.openrdf.rio.rdfformat import RDFFormat
 from rdflib import Graph
 from owlrl import DeductiveClosure, RDFS_OWLRL_Semantics, RDFS_Semantics
 
-from lodkit.connections import AllegroConnection
+# pycurl quick fix
+try:
+    from lodkit.connections import AllegroConnection
+except ImportError:
+    logger.warning(
+        """Unable to import connection for AllegroGraph reasoner.
+        This is may be due to pycurl missing the openssl backend.
+        See http://pycurl.io/docs/latest/install.html#ssl.
+        """
+    )
 
 
 @runtime_checkable
