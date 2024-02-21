@@ -3,9 +3,11 @@
 import hashlib
 
 from itertools import repeat
-from typing import Callable, Iterator, Optional
+from collections.abc import Callable, Iterator
+from typing import Self, Optional
+from uuid import uuid4
 
-from rdflib import BNode, Graph, URIRef
+from rdflib import BNode, Graph, URIRef, Namespace
 from lodkit.types import _TripleObject, _Triple
 
 
@@ -37,7 +39,7 @@ class ttl:
 
     def __init__(self,
                  uri: URIRef,
-                 *predicate_object_pairs: tuple[URIRef, _TripleObject | list],
+                 *predicate_object_pairs: tuple[URIRef, _TripleObject | list | Self],
                  graph: Optional[Graph] = None):
         """Initialize a plist object."""
         self.uri = uri
@@ -49,6 +51,9 @@ class ttl:
         """Generate an iterator of tuple-based triple representations."""
         for pred, obj in self.predicate_object_pairs:
             match obj:
+                case ttl():
+                    yield (self.uri, pred, obj.uri)
+                    yield from obj
                 case list() | Iterator():
                     _b = BNode()
                     yield (self.uri, pred, _b)
@@ -88,3 +93,28 @@ def genhash(input: str,
     """
     _hash = hash_function(input.encode('utf-8')).hexdigest()
     return _hash[:length]
+
+
+def mkuri_factory(namespace: Namespace) -> Callable:
+    """Factory for generating URI constructor callables.."""
+    def mkuri(
+            hash_value: str | None = None,
+            length: int | None = 10,
+            hash_function: Callable = hashlib.sha256,
+            uuid_function: Callable = uuid4
+    ) -> URIRef:
+        """Create a namespaced URI.
+
+        If a hash value is give, the path is generated using
+        a hash function, else the path is generated using uuid4.
+        """
+        _path: str = (
+            str(uuid_function()) if hash_value is None
+            else genhash(
+                    hash_value,
+                    length=length,
+                    hash_function=hash_function
+            )
+        )
+        return namespace[_path]
+    return mkuri
