@@ -2,9 +2,11 @@
 
 import hashlib
 
+from collections.abc import Callable, Iterator, Iterable
 from itertools import repeat
-from collections.abc import Callable, Iterator
+from functools import partial
 from typing import Self, Optional
+from types import SimpleNamespace
 from uuid import uuid4
 
 from rdflib import BNode, Graph, URIRef, Namespace
@@ -95,26 +97,90 @@ def genhash(input: str,
     return _hash[:length]
 
 
-def mkuri_factory(namespace: Namespace) -> Callable:
-    """Factory for generating URI constructor callables.."""
-    def mkuri(
-            hash_value: str | None = None,
-            length: int | None = 10,
-            hash_function: Callable = hashlib.sha256,
-            uuid_function: Callable = uuid4
-    ) -> URIRef:
-        """Create a namespaced URI.
+def mkuri_path(
+        hash_value: str | None = None,
+        length: int | None = 10,
+        hash_function: Callable = hashlib.sha256,
+        uuid_function: Callable = uuid4
+) -> str:
+    """Generate a URI path.
 
-        If a hash value is give, the path is generated using
-        a hash function, else the path is generated using uuid4.
-        """
-        _path: str = (
-            str(uuid_function()) if hash_value is None
-            else genhash(
-                    hash_value,
-                    length=length,
-                    hash_function=hash_function
-            )
+    If a hash value is given, the path is generated using
+    a hash function, else the path is generated using a uuid.
+    """
+    _path: str = (
+        str(uuid_function()) if hash_value is None
+        else genhash(
+                hash_value,
+                length=length,
+                hash_function=hash_function
         )
-        return namespace[_path]
-    return mkuri
+    )
+    return _path
+
+def mkuri_factory(
+        namespace: Namespace,
+        path_callback: Callable = mkuri_path
+) -> Callable:
+    """Factory for generating URI constructor callables.
+
+    The generated callable takes args and kwargs
+    which are passed to the path_callback.
+    """
+    return lambda *args, **kwargs: namespace[path_callback(*args, **kwargs)]
+
+
+class URINamespace(SimpleNamespace):
+    """A SimpleNamespace for binding URIRefs to names.
+
+    Example:
+    uris = URINamespace(
+        namespace=Namespace("https://namespace.test"),
+        names = (
+            "test_uri",
+            ("hashed_uri", "hash_value")
+        )
+    )
+
+    print(uris.test_uri)
+    print(uris.hashed_uri)
+    """
+    def __init__(
+            self,
+            *,
+            namespace: str | Namespace,
+            names: Iterable[str | tuple[str, str]],
+            path_callback: Callable = mkuri_path,
+            **kwargs
+    ) -> None:
+        self.namespace = (
+            Namespace(namespace)
+            if isinstance(namespace, str)
+            else namespace
+        )
+        self._names = names
+        self._path_callback = path_callback
+        self._kwargs = kwargs
+
+        self._uris: dict[str, URIRef] = self._generate_uri_mapping()
+        super().__init__(**self._uris)
+
+
+    def _generate_uri_mapping(self) -> dict[str, URIRef]:
+        _mkuri = mkuri_factory(
+            self.namespace,
+            partial(self._path_callback, **self._kwargs)
+        )
+
+        def _uris():
+            for name in self._names:
+                match name:
+                    case str():
+                        yield name, _mkuri()
+                    case tuple():
+                        _name, _hash_value = name
+                        yield _name, _mkuri(_hash_value)
+                    case _:
+                        raise Exception("Args must be of type str | tuple[str, str]")
+
+        return dict(_uris())
