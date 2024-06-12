@@ -1,16 +1,16 @@
 """LODKit utilities."""
 
 import hashlib
-
-from collections.abc import Callable, Iterator, Iterable
-from itertools import repeat
+from collections.abc import Callable, Iterable, Iterator
 from functools import partial
-from typing import Self, Optional
+from itertools import repeat
 from types import SimpleNamespace
+from typing import Optional, Self
 from uuid import uuid4
 
-from rdflib import BNode, Graph, URIRef, Namespace
-from lodkit.types import _TripleObject, _Triple
+from rdflib import BNode, Graph, Namespace, URIRef
+
+from lodkit.types import _Triple, _TripleObject
 
 
 class ttl:
