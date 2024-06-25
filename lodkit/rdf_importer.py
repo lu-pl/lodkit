@@ -4,8 +4,14 @@ from importlib.machinery import ModuleSpec
 import pathlib
 import sys
 
+from loguru import logger
 from rdflib import Graph
 from rdflib.plugin import PluginException
+from rdflib.exceptions import ParserError
+
+
+class RDFImporterException(Exception):
+    """Exception indicating that RDFImporter ran but failed to import a graph."""
 
 
 class RDFImporter:
@@ -44,9 +50,14 @@ class RDFImporter:
     def create_module(self, spec):
         try:
             graph = Graph().parse(self.rdf_path)
-        except PluginException:
-            return None
-        return graph
+            if not graph:
+                logger.warning(f"Graph parsed from '{self.rdf_path}' is empty.")
+        except Exception as e:
+            raise RDFImporterException(
+                f"Importing graph failed due to '{e.__class__.__name__}' (see stack trace)."
+            )
+        else:
+            return graph
 
     def exec_module(self, module):
         pass

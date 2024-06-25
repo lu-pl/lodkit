@@ -8,6 +8,7 @@ from lodkit.lod_types import (
     _Triple,
     _TripleBNodeObject,
     _TripleBNodeObject,
+    _TripleLiteralObject,
     _TripleObject,
     _TripleSubject,
     _TripleURIObject,

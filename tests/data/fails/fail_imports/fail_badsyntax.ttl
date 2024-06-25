@@ -1,0 +1,16 @@
+BASE <http://example.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rel: <http://www.perceive.net/schemas/relationship/>
+
+<#green-goblin>
+    rel:enemyOf <#spiderman> ;
+    a foaf:Person ;
+    foaf:name "Green Goblin" .
+
+<#spiderman>
+    rel:enemyOf <#green-goblin> ;
+    a # bad syntax ;
+    foaf:name "Spiderman" .
+

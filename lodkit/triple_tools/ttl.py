@@ -1,8 +1,11 @@
 """LODKit Triple utilities."""
 
 from collections.abc import Iterator
+from copy import deepcopy
 from itertools import repeat
 from typing import Self, override
+
+from typeguard import typechecked
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
 from loguru import logger
@@ -35,16 +38,20 @@ class ttl:
     ttl.to_graph generates and returns an rdflib.Graph instance.
     """
 
+    @typechecked
     def __init__(
         self,
         uri: _TripleSubject,
-        *predicate_object_pairs: tuple[URIRef, _TripleObject | list | Self | str],
+        *predicate_object_pairs: tuple[
+            URIRef,
+            _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...],
+        ],
         graph: Graph | None = None,
     ) -> None:
         """Initialize a ttl object."""
         self.uri = uri
         self.predicate_object_pairs = predicate_object_pairs
-        self.graph = Graph() if graph is None else graph
+        self.graph = Graph() if graph is None else deepcopy(graph)
         self._iter = iter(self)
 
     def __iter__(self) -> Iterator[_Triple]:
@@ -73,7 +80,8 @@ class ttl:
     def to_graph(self, graph: Graph | None = None) -> Graph:
         """Generate a graph instance from a ttl Iterator."""
         if graph is not None:
-            self.graph = graph
+            graph_copy = deepcopy(graph)
+            self.graph = graph_copy
 
         for triple in self:
             self.graph.add(triple)
