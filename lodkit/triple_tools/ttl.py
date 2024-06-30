@@ -3,7 +3,7 @@
 from collections.abc import Iterator
 from copy import deepcopy
 from itertools import repeat
-from typing import Self, override
+from typing import Self
 
 from typeguard import typechecked
 
@@ -96,7 +96,6 @@ class plist(ttl):
     refering to the class as "plist" is inaccurate/misleading.
     """
 
-    @override
     def __init__(self, *args, **kwargs):
         logger.warning("Class 'plist' is a deprecated alias. Use 'ttl' instead.")
         super().__init__(*args, **kwargs)
