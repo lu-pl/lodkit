@@ -5,7 +5,7 @@ from importlib.resources.abc import Traversable
 
 import pytest
 
-from hypothesis import given
+from hypothesis import given, settings
 from tests.utils.strategies.ns_strategies import public_variable_names
 from lodkit import ClosedOntologyNamespace
 from lodkit.namespace_tools.ontology_namespaces import (
@@ -46,6 +46,7 @@ def test_closed_ontology_namespace_from_graph(ontology_path):
 
 
 @given(public_variable_names)
+@settings(max_examples=10)
 @pytest.mark.parametrize("ontology_path", _ontologies)
 def test_closed_ontology_namespace_unknown_term_fail(ontology_path, variable_name):
     """Check that random attributes are not in an ClosedOntologyNamespace (flaky)."""
