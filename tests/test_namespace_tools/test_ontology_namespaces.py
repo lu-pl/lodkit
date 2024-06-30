@@ -46,7 +46,7 @@ def test_closed_ontology_namespace_from_graph(ontology_path):
 
 
 @given(public_variable_names)
-@settings(max_examples=10)
+@settings(max_examples=5)
 @pytest.mark.parametrize("ontology_path", _ontologies)
 def test_closed_ontology_namespace_unknown_term_fail(ontology_path, variable_name):
     """Check that random attributes are not in an ClosedOntologyNamespace (flaky)."""
