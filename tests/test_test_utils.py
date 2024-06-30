@@ -4,13 +4,15 @@ from pathlib import Path
 
 from rdflib import Graph
 from tests.utils.paths import ontologies_path
+from tests.utils.paths import ontologies_path
 from tests.utils.utils import (
     parametrize_graphs_from_glob,
     parametrize_paths_from_glob,
     parametrize_serializations_from_graph,
 )
 
-test_graph = Graph().parse("./data/graphs/ontologies/owl.ttl")
+
+test_graph = Graph().parse(ontologies_path / "owl.ttl")
 
 
 @parametrize_serializations_from_graph(test_graph, "whatever")
