@@ -2,6 +2,7 @@
 
 # LODKit
 ![tests](https://github.com/lu-pl/lodkit/actions/workflows/tests.yaml/badge.svg)
+[![coverage](https://coveralls.io/repos/github/lu-pl/lodkit/badge.svg?branch=main)](https://coveralls.io/github/lu-pl/lodkit?branch=main)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![PyPI version](https://badge.fury.io/py/lodkit.svg)](https://badge.fury.io/py/lodkit)
 [![code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
