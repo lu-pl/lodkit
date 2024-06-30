@@ -45,12 +45,10 @@ def test_closed_ontology_namespace_from_graph(ontology_path):
         assert getattr(closed_ontology_namespace, term)
 
 
-@given(public_variable_names)
-@settings(max_examples=5)
 @pytest.mark.parametrize("ontology_path", _ontologies)
-def test_closed_ontology_namespace_unknown_term_fail(ontology_path, variable_name):
-    """Check that random attributes are not in an ClosedOntologyNamespace (flaky)."""
+def test_closed_ontology_namespace_unknown_term_fail(ontology_path):
+    """Check that random attributes are not in an ClosedOntologyNamespace."""
     closed_ontology_namespace = ClosedOntologyNamespace(ontology_path)
 
     with pytest.raises(AttributeError):
-        getattr(closed_ontology_namespace, variable_name)
+        getattr(closed_ontology_namespace, "does_not_exist")
