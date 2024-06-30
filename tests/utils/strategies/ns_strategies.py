@@ -1,5 +1,6 @@
 """Hypothesis strategies for lodkit.namespace_tools testing."""
 
+import keyword
 from typing import Annotated
 from typing import Annotated
 
@@ -11,7 +12,9 @@ from tests.utils.strategies.ttl_strategies import rdflib_namespaces
 
 public_variable_names: Annotated[
     SearchStrategy, "Strategy for public Python variable names"
-] = st.from_regex(r"^[a-z]+[a-z_]*$", fullmatch=True)
+] = st.from_regex(r"^[a-z]+[a-z_]*$", fullmatch=True).filter(
+    lambda x: not keyword.iskeyword(x)
+)
 
 name_namespace_pairs: Annotated[
     SearchStrategy, "Strategy for variable_name/rdflib.Namespace tuples."
