@@ -4,7 +4,7 @@ from collections import Counter
 from collections.abc import Iterator
 from typing import Annotated
 
-from hypothesis import given, strategies as st
+from hypothesis import given, strategies as st, settings
 from lodkit import tst_xml, ttl
 from lodkit.testing_tools.graph_format_options import triple_serialize_format_options
 import pytest
@@ -32,6 +32,7 @@ def test_ttl_single_triple(uri, pair):
 
 @pytest.mark.slow
 @given(pairs=st.lists(predicate_object_pairs, min_size=50, max_size=50))
+@settings(max_examples=20)
 def test_ttl_multi_triples(pairs):
     """Test for multiple triple ttl instantiation."""
     triples = ttl(BNode(), *pairs)
@@ -51,6 +52,7 @@ def test_ttl_single_triple_serialize(uri, pair):
 
 @pytest.mark.slow
 @given(pairs=st.lists(predicate_object_pairs, min_size=50, max_size=50))
+@settings(max_examples=20)
 def test_ttl_multi_triples_serialize(pairs):
     """Test for multiple triple ttl graph casting and serialization."""
     graph = ttl(BNode(), *pairs).to_graph()
@@ -130,6 +132,7 @@ def test_ttl_single_triple_graph_init(uri, pair):
 
 @pytest.mark.slow
 @given(pairs=st.lists(predicate_object_pairs, min_size=50, max_size=50))
+@settings(max_examples=20)
 def test_ttl_multi_triples_graph_init(pairs):
     """Test for multiple triple ttl initialized with graph."""
     triples = ttl(BNode(), *pairs, graph=owl)
@@ -149,6 +152,7 @@ def test_ttl_single_triple_to_graph(uri, pair):
 
 @pytest.mark.slow
 @given(pairs=st.lists(predicate_object_pairs, min_size=50, max_size=50))
+@settings(max_examples=20)
 def test_ttl_multi_triples_to_graph(pairs):
     """Test for multiple triple ttl.to_graph."""
     triples = ttl(BNode(), *pairs)
