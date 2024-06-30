@@ -64,7 +64,6 @@ def uribase(namespace: str) -> type:
     and that linters will (rightfully!) flag 'loose' class attributes.
 
     Example:
-
     class namespace(uribase("https://some.namespace/test/)):
         x, y, z
         another_uri="hash value"

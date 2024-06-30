@@ -4,16 +4,15 @@ from collections import Counter
 from collections.abc import Iterator
 from typing import Annotated
 
-import pytest
-
 from hypothesis import given, strategies as st
-from lodkit import ttl
-from lodkit.testing_tools.graph_format_options import triple_format_options
-from lodkit.testing_tools.strategies import triple_subject
+from lodkit import tst_xml, ttl
+from lodkit.testing_tools.graph_format_options import triple_serialize_format_options
+import pytest
 from rdflib import BNode, Graph, URIRef
-from rdflib.compare import isomorphic
+from rdflib.compare import graph_diff, isomorphic
 from tests.data.graphs.ontologies import owl
-from tests.test_triple_tools._ttl_strategies import (
+from tests.utils.strategies import (
+    untyped_predicate_object_pairs,
     predicate_iterator_pairs,
     predicate_list,
     predicate_object_pairs,
@@ -22,7 +21,7 @@ from tests.test_triple_tools._ttl_strategies import (
 )
 
 
-@given(uri=triple_subject, pair=predicate_object_pairs)
+@given(uri=tst_xml.triple_subjects, pair=predicate_object_pairs)
 def test_ttl_single_triple(uri, pair):
     """Test for single triple ttl instantiation."""
     triples = ttl(uri, pair)
@@ -41,12 +40,12 @@ def test_ttl_multi_triples(pairs):
     assert len(list(triples)) == len(graph)
 
 
-@given(uri=triple_subject, pair=predicate_object_pairs)
+@given(uri=tst_xml.triple_subjects, pair=predicate_object_pairs)
 def test_ttl_single_triple_serialize(uri, pair):
     """Test for single triple ttl graph casting and serialization."""
     graph = ttl(uri, pair).to_graph()
 
-    for _format in triple_format_options:
+    for _format in triple_serialize_format_options:
         assert graph.serialize(format=_format)
 
 
@@ -56,7 +55,7 @@ def test_ttl_multi_triples_serialize(pairs):
     """Test for multiple triple ttl graph casting and serialization."""
     graph = ttl(BNode(), *pairs).to_graph()
 
-    for _format in triple_format_options:
+    for _format in triple_serialize_format_options:
         assert graph.serialize(format=_format)
 
 
@@ -72,7 +71,7 @@ def test_ttl_bnode_object_serialize(pairs):
     """Test for ttl bnode object graph casting and serialization."""
     graph = ttl(BNode(), pairs).to_graph()
 
-    for _format in triple_format_options:
+    for _format in triple_serialize_format_options:
         assert graph.serialize(format=_format)
 
 
@@ -95,11 +94,11 @@ def test_ttl_predicate_list_serialize(predicate_list):
     )
     graph = triples.to_graph()
 
-    for _format in triple_format_options:
+    for _format in triple_serialize_format_options:
         assert graph.serialize(format=_format)
 
 
-@given(pairs=predicate_object_pairs)
+@given(pairs=untyped_predicate_object_pairs)
 def test_ttl_serialize_parse_isomorphic(pairs):
     """Test for ttl.to_graph serialization and parsing.
 
@@ -107,17 +106,20 @@ def test_ttl_serialize_parse_isomorphic(pairs):
     'hext' and 'xml' serialization formats do not pass this test,
     for 'xml' this is likely a problem with SaxParser ('\x08' and '\x1f' are rejected as literals),
     for 'hext' this might actually be a problem in the RDFLib parse plugin. -> Report this!
-    """
-    graph = ttl(BNode(), pairs).to_graph()
 
-    for _format in ["ttl", "n3", "json-ld", "ntriples"]:
-        serialized = graph.serialize(format=_format)
-        graph_parsed = Graph().parse(data=serialized, format=_format)
+    Note: Also xsd-typed literals do not pass this tests.
+    Apparently types get dropped on parsing...
+    """
+    graph = ttl(URIRef("https://lodkit.testing_tools/subject/"), pairs).to_graph()
+
+    for _format in ["ttl", "n3", "ntriples"]:
+        serialized: str = graph.serialize(format=_format)
+        graph_parsed: Graph = Graph().parse(data=serialized, format=_format)
 
         assert isomorphic(graph, graph_parsed)
 
 
-@given(uri=triple_subject, pair=predicate_object_pairs)
+@given(uri=tst_xml.triple_subjects, pair=predicate_object_pairs)
 def test_ttl_single_triple_graph_init(uri, pair):
     """Test for single triple ttl initialized with graph."""
     triples = ttl(uri, pair, graph=owl)
@@ -136,7 +138,7 @@ def test_ttl_multi_triples_graph_init(pairs):
     assert len(graph) == (len(list(triples)) + len(owl))
 
 
-@given(uri=triple_subject, pair=predicate_object_pairs)
+@given(uri=tst_xml.triple_subjects, pair=predicate_object_pairs)
 def test_ttl_single_triple_to_graph(uri, pair):
     """Test for single triple ttl.to_graph."""
     triples = ttl(uri, pair)

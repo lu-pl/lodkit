@@ -14,7 +14,7 @@ b = BNode()
 
 fail_triples: Annotated[
     list[tuple[Any, Any, Any]],
-    """Fails cases:
+    """Fail cases:
     1. Literal in s, p
     2. BNode in p
     3. str in o

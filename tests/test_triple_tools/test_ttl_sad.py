@@ -6,7 +6,7 @@ from typeguard import TypeCheckError
 from hypothesis import given
 from lodkit import ttl
 from rdflib import BNode
-from tests.test_triple_tools._ttl_strategies import (
+from tests.utils.strategies import (
     fail_object_pairs,
     fail_predicate_pairs,
     fail_uris,

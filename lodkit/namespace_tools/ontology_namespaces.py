@@ -86,15 +86,16 @@ def _get_namespace_from_ontology(
             namespace_assertion = _namespace_assertions[0]
             if _delimited_namespace_p(namespace_assertion):
                 namespace = Namespace(namespace_assertion)
+                return namespace
             else:
+                # note: case "no delimiter + not in namespaces" is not handled
                 for _, ns in ontology.namespaces():
                     if namespace_assertion in ns:
                         namespace = Namespace(ns)
                         _delimiter_check_invoke_side_effects(
                             namespace, strict_delimiters
                         )
-
-            return namespace
+                        return namespace
 
         case [URIRef(), *rest]:  # noqa
             raise MultiOntologyHeadersException(
@@ -157,9 +158,11 @@ class ClosedOntologyNamespace(ClosedNamespace):
     crm.E39_Author  # AttributeError
     """
 
-    def __new__(cls, ontology: _TGraphOrPath):
+    def __new__(cls, ontology: _TGraphOrPath, strict_delimiters: bool = True):
         _ontology: Graph = _get_ontology_graph(ontology)
-        _namespace: Namespace = _get_namespace_from_ontology(_ontology)
+        _namespace: Namespace = _get_namespace_from_ontology(
+            _ontology, strict_delimiters
+        )
         _terms: set[str] = _get_terms_from_ontology(_ontology, _namespace)
 
         return super().__new__(cls, uri=_namespace, terms=_terms)
