@@ -252,30 +252,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="__init__">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#lodkit.triple_tools.ttl.ttl.__init__--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lodkit.triple_tools.ttl.ttl.__init__--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
           <li class="md-nav__item">
@@ -397,30 +373,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="__init__">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#lodkit.triple_tools.ttl.ttl.__init__--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parameters
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lodkit.triple_tools.ttl.ttl.__init__--examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
           <li class="md-nav__item">
@@ -518,7 +470,8 @@ refering to the class as "plist" is inaccurate/misleading.</p>
 
               <details class="quote">
                 <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
+<span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -527,8 +480,7 @@ refering to the class as "plist" is inaccurate/misleading.</p>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">plist</span><span class="p">(</span><span class="n">ttl</span><span class="p">):</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">plist</span><span class="p">(</span><span class="n">ttl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated alias to ttl.</span>
 
 <span class="sd">    This is for backwards api compatibility only.</span>
@@ -654,8 +606,7 @@ refering to the class as "plist" is inaccurate/misleading.</p>
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ttl</span><span class="p">:</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ttl</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Triple constructor implementing a Turtle-like interface.&quot;&quot;&quot;</span>
 
     <span class="nd">@typechecked</span>
@@ -673,26 +624,25 @@ refering to the class as "plist" is inaccurate/misleading.</p>
 <span class="sd">        The callable interface aims to provide a Python representation</span>
 <span class="sd">        fo Turtle predicate and object list syntax.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        uri : _TripleSubject</span>
-<span class="sd">            The subject of a triple</span>
-<span class="sd">        *predicate_object_pairs : tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...], ]</span>
-<span class="sd">            Predicate-object pairs</span>
-<span class="sd">        graph : Graph, optional</span>
-<span class="sd">            An optional rdflib.Graph instance</span>
+<span class="sd">        Args:</span>
+<span class="sd">            uri (_TripleSubject): The subject of a triple</span>
+<span class="sd">            *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs</span>
+<span class="sd">            graph (Graph | None): An optional rdflib.Graph instance</span>
 
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        triples: Iterator[lodkit._Triple] = ttl(</span>
-<span class="sd">            URIRef(&#39;https://subject&#39;),</span>
-<span class="sd">            (RDF.type, URIRef(&#39;https://some_type&#39;)),</span>
-<span class="sd">            (RDFS.label, Literal(&#39;label 1&#39;), &#39;label 2&#39;),</span>
-<span class="sd">            (RDFS.seeAlso, [(RDFS.label, &#39;label 3&#39;)]),</span>
-<span class="sd">            (RDFS.isDefinedBy, ttl(URIRef(&#39;https://subject_2&#39;), (RDF.type, URI(&#39;https://another_type&#39;))))</span>
-<span class="sd">        )</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
 
-<span class="sd">        graph: Graph = triples.to_graph()</span>
+<span class="sd">        Examples:</span>
+
+<span class="sd">            triples: Iterator[lodkit._Triple] = ttl(</span>
+<span class="sd">                URIRef(&#39;https://subject&#39;),</span>
+<span class="sd">                (RDF.type, URIRef(&#39;https://some_type&#39;)),</span>
+<span class="sd">                (RDFS.label, Literal(&#39;label 1&#39;), &#39;label 2&#39;),</span>
+<span class="sd">                (RDFS.seeAlso, [(RDFS.label, &#39;label 3&#39;)]),</span>
+<span class="sd">                (RDFS.isDefinedBy, ttl(URIRef(&#39;https://subject_2&#39;), (RDF.type, URI(&#39;https://another_type&#39;))))</span>
+<span class="sd">            )</span>
+
+<span class="sd">            graph: Graph = triples.to_graph()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">predicate_object_pairs</span> <span class="o">=</span> <span class="n">predicate_object_pairs</span>
@@ -760,22 +710,97 @@ refering to the class as "plist" is inaccurate/misleading.</p>
       <p>Initialize a ttl triple constructor.</p>
 <p>The callable interface aims to provide a Python representation
 fo Turtle predicate and object list syntax.</p>
-<h5 id="lodkit.triple_tools.ttl.ttl.__init__--parameters">Parameters</h5>
-<p>uri : _TripleSubject
-    The subject of a triple
-*predicate_object_pairs : tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...], ]
-    Predicate-object pairs
-graph : Graph, optional
-    An optional rdflib.Graph instance</p>
-<h5 id="lodkit.triple_tools.ttl.ttl.__init__--examples">Examples</h5>
-<p>triples: Iterator[lodkit._Triple] = ttl(
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>uri</code></td>
+            <td>
+                  <code><span title="lodkit.lod_types._TripleSubject">_TripleSubject</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The subject of a triple</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>*predicate_object_pairs</code></td>
+            <td>
+                  <code>tuple[<span title="rdflib.URIRef">URIRef</span>, <span title="lodkit.lod_types._TripleObject">_TripleObject</span> | list | <span title="collections.abc.Iterator">Iterator</span> | <span title="typing.Self">Self</span> | str | tuple[<span title="lodkit.lod_types._TripleObject">_TripleObject</span>, ...]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Predicate-object pairs</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>graph</code></td>
+            <td>
+                  <code><span title="rdflib.Graph">Graph</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>An optional rdflib.Graph instance</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>None</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+      <p>Examples:</p>
+<pre><code>triples: Iterator[lodkit._Triple] = ttl(
     URIRef('https://subject'),
     (RDF.type, URIRef('https://some_type')),
     (RDFS.label, Literal('label 1'), 'label 2'),
     (RDFS.seeAlso, [(RDFS.label, 'label 3')]),
     (RDFS.isDefinedBy, ttl(URIRef('https://subject_2'), (RDF.type, URI('https://another_type'))))
-)</p>
-<p>graph: Graph = triples.to_graph()</p>
+)
+
+graph: Graph = triples.to_graph()
+</code></pre>
 
             <details class="quote">
               <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
@@ -817,8 +842,7 @@ graph : Graph, optional
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@typechecked</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@typechecked</span>
 <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">uri</span><span class="p">:</span> <span class="n">_TripleSubject</span><span class="p">,</span>
@@ -833,26 +857,25 @@ graph : Graph, optional
 <span class="sd">    The callable interface aims to provide a Python representation</span>
 <span class="sd">    fo Turtle predicate and object list syntax.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    uri : _TripleSubject</span>
-<span class="sd">        The subject of a triple</span>
-<span class="sd">    *predicate_object_pairs : tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...], ]</span>
-<span class="sd">        Predicate-object pairs</span>
-<span class="sd">    graph : Graph, optional</span>
-<span class="sd">        An optional rdflib.Graph instance</span>
+<span class="sd">    Args:</span>
+<span class="sd">        uri (_TripleSubject): The subject of a triple</span>
+<span class="sd">        *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs</span>
+<span class="sd">        graph (Graph | None): An optional rdflib.Graph instance</span>
 
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    triples: Iterator[lodkit._Triple] = ttl(</span>
-<span class="sd">        URIRef(&#39;https://subject&#39;),</span>
-<span class="sd">        (RDF.type, URIRef(&#39;https://some_type&#39;)),</span>
-<span class="sd">        (RDFS.label, Literal(&#39;label 1&#39;), &#39;label 2&#39;),</span>
-<span class="sd">        (RDFS.seeAlso, [(RDFS.label, &#39;label 3&#39;)]),</span>
-<span class="sd">        (RDFS.isDefinedBy, ttl(URIRef(&#39;https://subject_2&#39;), (RDF.type, URI(&#39;https://another_type&#39;))))</span>
-<span class="sd">    )</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 
-<span class="sd">    graph: Graph = triples.to_graph()</span>
+<span class="sd">    Examples:</span>
+
+<span class="sd">        triples: Iterator[lodkit._Triple] = ttl(</span>
+<span class="sd">            URIRef(&#39;https://subject&#39;),</span>
+<span class="sd">            (RDF.type, URIRef(&#39;https://some_type&#39;)),</span>
+<span class="sd">            (RDFS.label, Literal(&#39;label 1&#39;), &#39;label 2&#39;),</span>
+<span class="sd">            (RDFS.seeAlso, [(RDFS.label, &#39;label 3&#39;)]),</span>
+<span class="sd">            (RDFS.isDefinedBy, ttl(URIRef(&#39;https://subject_2&#39;), (RDF.type, URI(&#39;https://another_type&#39;))))</span>
+<span class="sd">        )</span>
+
+<span class="sd">        graph: Graph = triples.to_graph()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">predicate_object_pairs</span> <span class="o">=</span> <span class="n">predicate_object_pairs</span>
@@ -879,7 +902,8 @@ graph : Graph, optional
 
             <details class="quote">
               <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -895,8 +919,7 @@ graph : Graph, optional
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_Triple</span><span class="p">]:</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">_Triple</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate an iterator of tuple-based triple representations.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">predicate_object_pairs</span><span class="p">:</span>
         <span class="k">match</span> <span class="n">obj</span><span class="p">:</span>
@@ -935,9 +958,9 @@ graph : Graph, optional
 
             <details class="quote">
               <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Triple</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Triple</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the next triple from the iterator.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iter</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -961,15 +984,15 @@ graph : Graph, optional
 
             <details class="quote">
               <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
+<span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a graph instance from a ttl Iterator.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">graph_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
