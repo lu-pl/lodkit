@@ -295,6 +295,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#lodkit.triple_tools.ttl.plist" class="md-nav__link">
+    <span class="md-ellipsis">
+      plist
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -420,6 +429,15 @@
   <a href="#lodkit.triple_tools.ttl.ttl.to_graph" class="md-nav__link">
     <span class="md-ellipsis">
       to_graph
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lodkit.triple_tools.ttl.plist" class="md-nav__link">
+    <span class="md-ellipsis">
+      plist
     </span>
   </a>
   
@@ -895,6 +913,67 @@ graph : Graph, optional
     </div>
 
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="lodkit.triple_tools.ttl.plist"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="lodkit.triple_tools.ttl.ttl" href="#lodkit.triple_tools.ttl.ttl">ttl</a></code></p>
+
+
+      <p>Deprecated alias to ttl.</p>
+<p>This is for backwards api compatibility only.
+Since ttl also implements Turtle object lists now,
+refering to the class as "plist" is inaccurate/misleading.</p>
+
+              <details class="quote">
+                <summary>Source code in <code>lodkit/triple_tools/ttl.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">plist</span><span class="p">(</span><span class="n">ttl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated alias to ttl.</span>
+
+<span class="sd">    This is for backwards api compatibility only.</span>
+<span class="sd">    Since ttl also implements Turtle object lists now,</span>
+<span class="sd">    refering to the class as &quot;plist&quot; is inaccurate/misleading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Class &#39;plist&#39; is a deprecated alias. Use &#39;ttl&#39; instead.&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 
 
