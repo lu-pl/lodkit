@@ -157,11 +157,9 @@ class TripleStrategies:
         )
 
 
-tst: Annotated[TripleStrategies, "Pre-instantiated TripleStrategies."] = (
-    TripleStrategies()
-)
+tst: Annotated[TripleStrategies, "TripleStrategies Singleton."] = TripleStrategies()
 
 tst_xml: Annotated[
     TripleStrategies,
-    "Pre-instantiated TripleStrategies with XML 1.0 compliant literals.",
+    "TripleStrategies Singleton with XML 1.0 compliant literals.",
 ] = TripleStrategies(xml_parsable=True)
