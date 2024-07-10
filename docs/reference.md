@@ -2,3 +2,4 @@ This part of the project documentation provides information about the technical 
 
 
 ::: lodkit.triple_tools.ttl_constructor
+::: lodkit.uri_tools.uriclass
