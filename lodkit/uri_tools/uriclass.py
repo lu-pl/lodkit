@@ -11,8 +11,8 @@ class uriclass:
     """Dataclass-inspired URI constructor.
 
     Class-level attributes are converted to URIs according to uri_constructor.
-    For class attribute with just type information, URIs are constructed using UUIDs,
-    for class attributes with string value, URIs are constructed using hashing based on that string.
+    For class attributes with just type information, URIs are constructed using UUIDs,
+    for class attributes with string values, URIs are constructed using hashing based on that string.
 
     Example:
 
@@ -33,6 +33,7 @@ class uriclass:
         namespace: str,
         uri_constructor: _TURIConstructorFactory = mkuri_factory,
     ) -> None:
+
         self._mkuri = uri_constructor(namespace)
 
     def __call__[T](self, cls: T) -> T:
