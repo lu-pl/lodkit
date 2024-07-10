@@ -1150,15 +1150,18 @@ graph: Graph = triples.to_graph()
 <p>Class-level attributes are converted to URIs according to uri_constructor.
 For class attributes with just type information, URIs are constructed using UUIDs,
 for class attributes with string values, URIs are constructed using hashing based on that string.</p>
-<p>Example:</p>
-<p>@uriclass(Namespace("https://test.org/test/"))
+<p>Examples:</p>
+<pre><code>@uriclass(Namespace("https://test.org/test/"))
 class uris:
-    x1: str</p>
-<pre><code>y1 = "hash value 1"
-y2 = "hash value 1"
+    x1: str
+
+    y1 = "hash value 1"
+    y2 = "hash value 1"
+
+
+print(uris.x1)             # Namespace("https://test.org/test/&lt;UUID&gt;")
+print(uris.y1 == uris.y2)  # True
 </code></pre>
-<p>print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-print(uris.y1 == uris.y2)  # True</p>
 
               <details class="quote">
                 <summary>Source code in <code>lodkit/uri_tools/uriclass.py</code></summary>
@@ -1207,18 +1210,18 @@ print(uris.y1 == uris.y2)  # True</p>
 <span class="sd">    For class attributes with just type information, URIs are constructed using UUIDs,</span>
 <span class="sd">    for class attributes with string values, URIs are constructed using hashing based on that string.</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 
-<span class="sd">    @uriclass(Namespace(&quot;https://test.org/test/&quot;))</span>
-<span class="sd">    class uris:</span>
-<span class="sd">        x1: str</span>
+<span class="sd">        @uriclass(Namespace(&quot;https://test.org/test/&quot;))</span>
+<span class="sd">        class uris:</span>
+<span class="sd">            x1: str</span>
 
-<span class="sd">        y1 = &quot;hash value 1&quot;</span>
-<span class="sd">        y2 = &quot;hash value 1&quot;</span>
+<span class="sd">            y1 = &quot;hash value 1&quot;</span>
+<span class="sd">            y2 = &quot;hash value 1&quot;</span>
 
 
-<span class="sd">    print(uris.x1)             # Namespace(&quot;https://test.org/test/&lt;UUID&gt;&quot;)</span>
-<span class="sd">    print(uris.y1 == uris.y2)  # True</span>
+<span class="sd">        print(uris.x1)             # Namespace(&quot;https://test.org/test/&lt;UUID&gt;&quot;)</span>
+<span class="sd">        print(uris.y1 == uris.y2)  # True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -1277,14 +1280,17 @@ print(uris.y1 == uris.y2)  # True</p>
       <p>Constructor for dynamic URI class creation.</p>
 <p>make_uriclass provides functionality structurally equivalent to @uriclass,
 but fields are read from an Iterable[str | tuple[str, str]].</p>
-<p>Example:</p>
-<p>uris = make_uriclass(
+<p>Examples:</p>
+<pre><code>uris = make_uriclass(
     cls_name="TestURIFun",
     namespace="https://test.org/test/",
     fields=("x", ("y1", "hash value 1"), ("y2", "hash value 1")),
-)</p>
-<p>print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-print(uris.y1 == uris.y2)  # True</p>
+)
+
+
+print(uris.x1)             # Namespace("https://test.org/test/&lt;UUID&gt;")
+print(uris.y1 == uris.y2)  # True
+</code></pre>
 
             <details class="quote">
               <summary>Source code in <code>lodkit/uri_tools/uriclass.py</code></summary>
@@ -1340,17 +1346,17 @@ print(uris.y1 == uris.y2)  # True</p>
 <span class="sd">    make_uriclass provides functionality structurally equivalent to @uriclass,</span>
 <span class="sd">    but fields are read from an Iterable[str | tuple[str, str]].</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Examples:</span>
 
-<span class="sd">    uris = make_uriclass(</span>
-<span class="sd">        cls_name=&quot;TestURIFun&quot;,</span>
-<span class="sd">        namespace=&quot;https://test.org/test/&quot;,</span>
-<span class="sd">        fields=(&quot;x&quot;, (&quot;y1&quot;, &quot;hash value 1&quot;), (&quot;y2&quot;, &quot;hash value 1&quot;)),</span>
-<span class="sd">    )</span>
+<span class="sd">        uris = make_uriclass(</span>
+<span class="sd">            cls_name=&quot;TestURIFun&quot;,</span>
+<span class="sd">            namespace=&quot;https://test.org/test/&quot;,</span>
+<span class="sd">            fields=(&quot;x&quot;, (&quot;y1&quot;, &quot;hash value 1&quot;), (&quot;y2&quot;, &quot;hash value 1&quot;)),</span>
+<span class="sd">        )</span>
 
 
-<span class="sd">    print(uris.x1)             # Namespace(&quot;https://test.org/test/&lt;UUID&gt;&quot;)</span>
-<span class="sd">    print(uris.y1 == uris.y2)  # True</span>
+<span class="sd">        print(uris.x1)             # Namespace(&quot;https://test.org/test/&lt;UUID&gt;&quot;)</span>
+<span class="sd">        print(uris.y1 == uris.y2)  # True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_mkuri</span> <span class="o">=</span> <span class="n">uri_constructor</span><span class="p">(</span><span class="n">namespace</span><span class="p">)</span>
 
