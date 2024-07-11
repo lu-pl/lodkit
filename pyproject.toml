@@ -22,6 +22,7 @@ hypofuzz = "^24.2.3"
 mkdocs = "^1.6.0"
 mkdocstrings = {extras = ["python"], version = "^0.25.1"}
 mkdocs-material = "^9.5.27"
+pytest-randomly = "^3.15.0"
 
 [build-system]
 requires = ["poetry-core"]
