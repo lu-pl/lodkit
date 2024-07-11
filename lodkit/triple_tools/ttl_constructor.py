@@ -13,7 +13,30 @@ from rdflib import BNode, Graph, Literal, URIRef
 
 
 class ttl:
-    """Triple constructor implementing a Turtle-like interface."""
+    """Triple constructor implementing a Turtle-like interface.
+    The callable interface aims to provide a Python representation
+    fo Turtle predicate and object list syntax.
+
+    Args:
+        uri (_TripleSubject): The subject of a triple
+        *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs
+        graph (Graph | None): An optional rdflib.Graph instance
+
+    Returns:
+        None
+
+    Examples:
+
+        triples: Iterator[lodkit._Triple] = ttl(
+            URIRef('https://subject'),
+            (RDF.type, URIRef('https://some_type')),
+            (RDFS.label, Literal('label 1'), 'label 2'),
+            (RDFS.seeAlso, [(RDFS.label, 'label 3')]),
+            (RDFS.isDefinedBy, ttl(URIRef('https://subject_2'), (RDF.type, URI('https://another_type'))))
+        )
+
+        graph: Graph = triples.to_graph()
+    """
 
     @typechecked
     def __init__(
@@ -25,31 +48,6 @@ class ttl:
         ],
         graph: Graph | None = None,
     ) -> None:
-        """Initialize a ttl triple constructor.
-
-        The callable interface aims to provide a Python representation
-        fo Turtle predicate and object list syntax.
-
-        Args:
-            uri (_TripleSubject): The subject of a triple
-            *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs
-            graph (Graph | None): An optional rdflib.Graph instance
-
-        Returns:
-            None
-
-        Examples:
-
-            triples: Iterator[lodkit._Triple] = ttl(
-                URIRef('https://subject'),
-                (RDF.type, URIRef('https://some_type')),
-                (RDFS.label, Literal('label 1'), 'label 2'),
-                (RDFS.seeAlso, [(RDFS.label, 'label 3')]),
-                (RDFS.isDefinedBy, ttl(URIRef('https://subject_2'), (RDF.type, URI('https://another_type'))))
-            )
-
-            graph: Graph = triples.to_graph()
-        """
         self.uri = uri
         self.predicate_object_pairs = predicate_object_pairs
         self.graph = Graph() if graph is None else deepcopy(graph)
@@ -69,10 +67,12 @@ class ttl:
                 case tuple():
                     _object_list = zip(repeat(pred), obj)
                     yield from ttl(self.uri, *_object_list)
+                case obj if isinstance(obj, _TripleObject):
+                    yield (self.uri, pred, obj)
                 case str():
                     yield (self.uri, pred, Literal(obj))
-                case _:
-                    yield (self.uri, pred, obj)
+                case _:  # pragma: no cover
+                    raise Exception("This should never happen.")
 
     def __next__(self) -> _Triple:
         """Return the next triple from the iterator."""
