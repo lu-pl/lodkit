@@ -107,7 +107,6 @@ def parametrize_graphs_from_glob(
 
 def _get_tests_import_path_from_path(path: str | os.PathLike) -> tuple[str, Path]:
     _path = Path(path)
-    # _split = str(_path).split("/")
     _split = re.split(r"/|\.", str(_path))
     _index = _split.index("tests")
 
