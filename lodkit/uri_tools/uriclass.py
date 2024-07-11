@@ -14,18 +14,17 @@ class uriclass:
     For class attributes with just type information, URIs are constructed using UUIDs,
     for class attributes with string values, URIs are constructed using hashing based on that string.
 
-    Example:
+    Examples:
 
-    @uriclass(Namespace("https://test.org/test/"))
-    class uris:
-        x1: str
+        @uriclass(Namespace("https://test.org/test/"))
+        class uris:
+            x1: str
 
-        y1 = "hash value 1"
-        y2 = "hash value 1"
+            y1 = "hash value 1"
+            y2 = "hash value 1"
 
-
-    print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-    print(uris.y1 == uris.y2)  # True
+        print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
+        print(uris.y1 == uris.y2)  # True
     """
 
     def __init__(
@@ -33,7 +32,6 @@ class uriclass:
         namespace: str,
         uri_constructor: _TURIConstructorFactory = mkuri_factory,
     ) -> None:
-
         self._mkuri = uri_constructor(namespace)
 
     def __call__[T](self, cls: T) -> T:
@@ -59,17 +57,16 @@ def make_uriclass(
     make_uriclass provides functionality structurally equivalent to @uriclass,
     but fields are read from an Iterable[str | tuple[str, str]].
 
-    Example:
+    Examples:
 
-    uris = make_uriclass(
-        cls_name="TestURIFun",
-        namespace="https://test.org/test/",
-        fields=("x", ("y1", "hash value 1"), ("y2", "hash value 1")),
-    )
+        uris = make_uriclass(
+            cls_name="TestURIFun",
+            namespace="https://test.org/test/",
+            fields=("x", ("y1", "hash value 1"), ("y2", "hash value 1")),
+        )
 
-
-    print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-    print(uris.y1 == uris.y2)  # True
+        print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
+        print(uris.y1 == uris.y2)  # True
     """
     _mkuri = uri_constructor(namespace)
 
