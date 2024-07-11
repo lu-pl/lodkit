@@ -20,7 +20,7 @@ def get_xsd_type_strategies(
         XSD.boolean: st.sampled_from(["true", "false"]),
         XSD.integer: st.integers(),
         XSD.int: st.integers().filter(lambda n: -2147483648 <= n <= 2147483647),
-        XSD.decimal: st.decimals(allow_nan=False),
+        XSD.decimal: st.decimals(allow_nan=False, allow_infinity=None),
         # double vs. float might need numpy based strategy
         XSD.double: st.floats(allow_nan=False),
         XSD.float: st.floats(allow_nan=False),
