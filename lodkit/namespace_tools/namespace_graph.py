@@ -13,19 +13,19 @@ class NamespaceGraph(Graph):
 
     Example:
 
-    class CLSGraph(NamespaceGraph):
-        crm = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
-        crmcls = Namespace("https://clscor.io/ontologies/CRMcls/")
-        clscore = Namespace("https://clscor.io/entity/")
+        class CLSGraph(NamespaceGraph):
+            crm = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
+            crmcls = Namespace("https://clscor.io/ontologies/CRMcls/")
+            clscore = Namespace("https://clscor.io/entity/")
 
-    graph = CLSGraph()
+        graph = CLSGraph()
 
-    ns_check: bool = all(
-        ns in map(lambda x: x[0], graph.namespaces())
-        for ns in ("crm", "crmcls", "clscore")
-    )
+        ns_check: bool = all(
+            ns in map(lambda x: x[0], graph.namespaces())
+            for ns in ("crm", "crmcls", "clscore")
+        )
 
-    print(ns_check)  # True
+        print(ns_check)  # True
     """
 
     def __init__(self, *args, **kwargs) -> None:
