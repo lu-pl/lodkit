@@ -3,7 +3,7 @@
 from lodkit.namespace_tools._exceptions import MissingOntologyClassAttributeException
 from lodkit.namespace_tools._messages import _missing_ontology_attribute_message
 from lodkit.namespace_tools.utils import (
-    _TGraphOrPath,
+    _TGraphParseSource,
     _get_namespace_from_ontology,
     _get_ontology_graph,
     _get_terms_from_ontology,
@@ -29,7 +29,7 @@ class ClosedOntologyNamespace(ClosedNamespace):
     crm.E39_Author  # AttributeError
     """
 
-    def __new__(cls, ontology: _TGraphOrPath, strict_delimiters: bool = True):
+    def __new__(cls, ontology: _TGraphParseSource, strict_delimiters: bool = True):
         _ontology: Graph = _get_ontology_graph(ontology)
         _namespace: Namespace = _get_namespace_from_ontology(
             _ontology, strict_delimiters
@@ -60,7 +60,7 @@ class DefinedOntologyNamespace(DefinedNamespace):
     """
 
     def __init_subclass__(cls) -> None:
-        ontology: _TGraphOrPath = cls._get_ontology_attribute()
+        ontology: _TGraphParseSource = cls._get_ontology_attribute()
 
         _ontology: Graph = _get_ontology_graph(ontology)
         _namespace: Namespace = _get_namespace_from_ontology(_ontology)
@@ -70,9 +70,9 @@ class DefinedOntologyNamespace(DefinedNamespace):
         cls.__annotations__ = cls.__annotations__ | {term: URIRef for term in _terms}
 
     @classmethod
-    def _get_ontology_attribute(cls) -> _TGraphOrPath:
+    def _get_ontology_attribute(cls) -> _TGraphParseSource:
         try:
-            ontology: _TGraphOrPath = cls.ontology
+            ontology: _TGraphParseSource = cls.ontology
         except AttributeError:
             raise MissingOntologyClassAttributeException(
                 _missing_ontology_attribute_message

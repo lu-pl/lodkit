@@ -2,9 +2,9 @@
 
 from collections.abc import Iterator
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import re
-from typing import TypeAlias, cast
+from typing import Annotated, TypeAlias, cast, IO, TextIO
 
 from lodkit.namespace_tools._exceptions import (
     MultiOntologyHeadersException,
@@ -21,25 +21,26 @@ from lodkit.namespace_tools._messages import (
 )
 from loguru import logger
 from rdflib import Graph, Namespace, OWL, RDF, RDFS, URIRef
+from rdflib.parser import InputSource
 
 
-_TPath: TypeAlias = str | os.PathLike
-_TGraphOrPath: TypeAlias = Graph | _TPath
+_TGraphParseSource: Annotated[
+    TypeAlias,
+    "Source parameter type for rdflib.Graph.parse. This is the exact type defined in RDFLib.",
+] = (
+    IO[bytes] | TextIO | InputSource | str | bytes | PurePath
+)
 
 
-def _get_ontology_graph(ontology_reference: _TGraphOrPath) -> Graph:
+def _get_ontology_graph(ontology_reference: Graph | _TGraphParseSource) -> Graph:  # type: ignore
     """Get a graph object from a _TGraphOrPath."""
-    match ontology_reference:
-        case Graph():
-            return ontology_reference
-        case ont if isinstance(ont, _TPath):
-            ontology_path = Path(ontology_reference).expanduser()
-            graph = Graph().parse(ontology_path)
-            return graph
-        case _:
-            raise OntologyReferenceException(
-                _ontology_reference_message(str(ontology_reference))
-            )
+    graph = (
+        ontology_reference
+        if isinstance(ontology_reference, Graph)
+        else Graph().parse(source=ontology_reference)
+    )
+
+    return graph
 
 
 def _delimited_namespace_p(namespace: str) -> bool:
@@ -60,7 +61,7 @@ def _delimiter_check_invoke_side_effects(
             logger.warning(_namespace_delimiter_warning_message(namespace))
 
 
-def _resolve_namespace_from_namespace_assertions(
+def _resolve_namespace_from_namespace_assertion(
     namespace_assertion: Namespace, ontology: Graph, strict_delimiters: bool
 ) -> Namespace:
     """Helper for _get_namespace_from_ontology.
@@ -106,7 +107,7 @@ def _get_namespace_from_ontology(
     match namespace_assertions:
         case [URIRef()]:
             namespace_assertion = namespace_assertions[0]
-            namespace = _resolve_namespace_from_namespace_assertions(
+            namespace = _resolve_namespace_from_namespace_assertion(
                 namespace_assertion=namespace_assertion,
                 ontology=ontology,
                 strict_delimiters=strict_delimiters,
