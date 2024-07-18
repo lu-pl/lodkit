@@ -53,7 +53,7 @@ triple_parse_format_options: Annotated[
 
 
 def get_parse_format_from_serialize_format(parse_option: str) -> str:
-    """Get the corresponding parse format given a serialize format."""
+    """Get the corresponding parse format given a serialization format."""
     match parse_option:
         case "pretty-xml":
             return "xml"
