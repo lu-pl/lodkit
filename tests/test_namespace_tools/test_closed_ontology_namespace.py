@@ -21,7 +21,7 @@ _ontologies: list[Traversable] = list(ontologies_path.iterdir())
 
 @pytest.mark.parametrize("ontology_path", _ontologies)
 def test_closed_ontology_namespace_from_path(ontology_path):
-    """Define a ClosedOntologyNamespace from a path and check for all terms."""
+    """Initialize a ClosedOntologyNamespace from a path and check for all terms."""
     closed_ontology_namespace = ClosedOntologyNamespace(ontology_path)
 
     _graph = Graph().parse(ontology_path)
@@ -47,8 +47,14 @@ def test_closed_ontology_namespace_from_graph(ontology_path):
 
 @pytest.mark.parametrize("ontology_path", _ontologies)
 def test_closed_ontology_namespace_unknown_term_fail(ontology_path):
-    """Check that random attributes are not in an ClosedOntologyNamespace."""
+    """Check that an unknown attribute fails when requested from a ClosedOntologyNamespace."""
     closed_ontology_namespace = ClosedOntologyNamespace(ontology_path)
 
     with pytest.raises(AttributeError):
         getattr(closed_ontology_namespace, "does_not_exist")
+
+
+# note: just realized that _TGraphOrPath is too strict because Graph.parse also takes URLs
+# either update _TGraphOrPath to _TGraphParsable or copy type from rdflib.parse source parameter
+# @given()
+# def test_closed_ontology_namespace_reference_exception(ontology_path):
