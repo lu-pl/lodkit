@@ -1,0 +1,9 @@
+@base <http://www.cidoc-crm.org/cidoc-crm>.
+
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+<http://www.cidoc-crm.org/cidoc-crm> a owl:Ontology ;
+    rdfs:comment "Pseudo-Ontology defining a namespace without delimiters both in the header and in the an ontology namespace declaration." .
+
+
