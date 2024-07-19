@@ -28,16 +28,6 @@ def _namespace_delimiter_warning_message(namespace: str) -> str:
     return _message
 
 
-def _ontology_reference_message(ontology_reference: str) -> str:
-    """Error message constructor for OntologyReferenceExceptions."""
-    _message = (
-        "The ontology parameter expects a string denoting a path, "
-        "an os.PathLike object or an rdflib.Graph instance. "
-        f"Received '{type(ontology_reference)}' instead."
-    )
-    return _message
-
-
 def _multi_header_message(namespace_assertions: list[str]) -> str:
     """Error message constructor for MultiOntologyHeadersExceptions."""
     _message = (

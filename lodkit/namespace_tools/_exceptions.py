@@ -5,10 +5,6 @@ class OntologyNamespaceException(Exception):
     """Base exception for indicating errors during OntologyNamespace construction."""
 
 
-class OntologyReferenceException(OntologyNamespaceException):
-    """Exception indicating that obtaining a graph object from an ontology reference failed."""
-
-
 class NamespaceDelimiterException(OntologyNamespaceException):
     """Exception indicating that determining a delimiter failed."""
 
