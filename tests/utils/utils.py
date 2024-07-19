@@ -1,6 +1,7 @@
 """General testing LODKit utils."""
 
 from collections.abc import Callable, Iterator
+from importlib.resources.abc import Traversable
 import os
 from pathlib import Path
 import re
@@ -78,7 +79,7 @@ def parametrize_paths_from_glob(
 
             yield from (
                 pytest.param(parameter_callback(glob), id=glob.name)
-                for glob in _glob_callable(directory, glob_pattern)
+                for glob in _glob_callable(_directory, glob_pattern)
             )
 
     parametrizer = pytest.mark.parametrize(param, list(_parameter_values()))
@@ -106,6 +107,7 @@ def parametrize_graphs_from_glob(
 
 
 def _get_tests_import_path_from_path(path: str | os.PathLike) -> tuple[str, Path]:
+    """Get module notation from a pathlike object."""
     _path = Path(path)
     _split = re.split(r"/|\.", str(_path))
     _index = _split.index("tests")
@@ -121,7 +123,13 @@ def parametrize_import_paths_from_glob(
     recursive: bool = False,
     parameter_callback: Callable[[Path], Any] = _get_tests_import_path_from_path,
 ) -> pytest.MarkDecorator:
-    """"""
+    """Constructor for pytest.Markdecorator.
+
+    Binds the result of a glob against a directory to param,
+    a tuple of import path and the pathlike path.
+
+    This is for importer testing which needs the import path notation.
+    """
     return parametrize_paths_from_glob(
         *directories,
         param=param,
