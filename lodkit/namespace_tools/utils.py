@@ -4,20 +4,18 @@ from collections.abc import Iterator
 import os
 from pathlib import Path, PurePath
 import re
-from typing import Annotated, TypeAlias, cast, IO, TextIO
+from typing import Annotated, IO, TextIO, TypeAlias, cast
 
 from lodkit.namespace_tools._exceptions import (
     MultiOntologyHeadersException,
     NamespaceDelimiterException,
     NoOntologyHeaderException,
-    OntologyReferenceException,
 )
 from lodkit.namespace_tools._messages import (
     _multi_header_message,
     _namespace_delimiter_exception_message,
     _namespace_delimiter_warning_message,
     _no_ontology_header_message,
-    _ontology_reference_message,
 )
 from loguru import logger
 from rdflib import Graph, Namespace, OWL, RDF, RDFS, URIRef
@@ -26,7 +24,9 @@ from rdflib.parser import InputSource
 
 _TGraphParseSource: Annotated[
     TypeAlias,
-    "Source parameter type for rdflib.Graph.parse. This is the exact type defined in RDFLib.",
+    """Source parameter type for rdflib.Graph.parse.
+    This is the exact type defined in RDFLib.
+    """,
 ] = (
     IO[bytes] | TextIO | InputSource | str | bytes | PurePath
 )
@@ -71,15 +71,13 @@ def _resolve_namespace_from_namespace_assertion(
         namespace = Namespace(namespace_assertion)
         return namespace
     else:
-        # try to get the namespace from RDF namespace definitions
         for _, ns in ontology.namespaces():
             if namespace_assertion in ns:
                 namespace = Namespace(ns)
-                _delimiter_check_invoke_side_effects(namespace, strict_delimiters)
-                return namespace
+                break
+        else:
+            namespace = namespace_assertion
 
-        # case "no delimiter + not in namespaces"
-        namespace = namespace_assertion
         _delimiter_check_invoke_side_effects(namespace, strict_delimiters)
         return namespace
 
