@@ -29,6 +29,8 @@ def test_mkuri_factory(hash_value):
     mkuri = mkuri_factory(namespace)
     uri = mkuri(hash_value=hash_value)
 
+    # __repr__ test
+    assert str(mkuri) == f"mkuri_factory(namespace='{namespace}')"
     assert isinstance(uri, URIRef)
 
     if hash_value is not None:
