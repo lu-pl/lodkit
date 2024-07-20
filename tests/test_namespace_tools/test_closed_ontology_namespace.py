@@ -2,7 +2,7 @@
 
 from importlib.resources.abc import Traversable
 
-from hypothesis import given, strategies as st
+from hypothesis import strategies as st
 from lodkit import ClosedOntologyNamespace
 from lodkit.namespace_tools._exceptions import NamespaceDelimiterException
 from lodkit.namespace_tools.utils import (
@@ -12,9 +12,8 @@ from lodkit.namespace_tools.utils import (
     _get_terms_from_ontology,
 )
 import pytest
-from rdflib import Graph, Namespace
+from rdflib import Graph
 from tests.utils.paths import fail_ontologies_path, ontologies_path
-from tests.utils.strategies.ns_strategies import public_variable_names
 from tests.utils.utils import parametrize_paths_from_glob
 
 
