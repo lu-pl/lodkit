@@ -6,6 +6,10 @@ from lodkit.uri_tools.utils import mkuri_factory
 from rdflib import Namespace, URIRef
 
 
+class InstantiationException(Exception):
+    """Exception for indicating that instantiating a class is not permitted."""
+
+
 def _URIConstructorMetaFactory(namespace: str) -> type:
     """Factory for creating a URINamespace Metaclass."""
     _namespace = Namespace(namespace)
@@ -74,6 +78,8 @@ def uribase(namespace: str) -> type:
 
     class URIConstructor(metaclass=_URIConstructorMetaFactory(namespace)):
         def __init__(self):
-            raise Exception(f"'{type(self).__name__}' must not be instantiated.")
+            raise InstantiationException(
+                f"'{type(self).__name__}' must not be instantiated."
+            )
 
     return URIConstructor

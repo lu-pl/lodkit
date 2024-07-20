@@ -79,7 +79,7 @@ def make_uriclass(
                     name, value = field
                     yield (name, _mkuri(value))
                 case _:
-                    raise Exception(
+                    raise TypeError(
                         "Fields must be of type Iterable[str | tuple[str, str]]."
                     )
 
