@@ -44,7 +44,12 @@ class ttl:
         uri: _TripleSubject,
         *predicate_object_pairs: tuple[
             URIRef,
-            _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...],
+            _TripleObject
+            | list
+            | Iterator
+            | Self
+            | str
+            | tuple[_TripleObject | str, ...],
         ],
         graph: Graph | None = None,
     ) -> None:
