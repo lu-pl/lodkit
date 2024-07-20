@@ -1,7 +1,6 @@
 """A collection of useful types for working with LOD."""
 
-from typing import TypeAlias
-from typing import Literal as TypingLiteral
+from typing import Literal as TypingLiteral, TypeAlias
 
 from rdflib import BNode, Literal, URIRef
 
