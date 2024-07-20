@@ -4,6 +4,7 @@ from types import new_class
 
 from hypothesis import given, strategies as st
 from lodkit import make_uriclass, mkuri_factory, uriclass
+import pytest
 from rdflib import Namespace, URIRef
 from tests.utils.strategies.ns_strategies import public_variable_names
 
@@ -60,3 +61,11 @@ def test_make_uriclass_uuids(variable_name):
     namespace = Namespace("https://lodkit.testing/")
     uricls = make_uriclass("uricls", namespace, fields=(variable_name))
     assert uricls
+
+
+@pytest.mark.parametrize("x, y", ((1, "test"), ("test", 1), (1, 2)))
+def test_make_uriclass_generate_pairs_type_fail(x, y):
+    """Simple case for triggering a TyperError in make_uriclass."""
+    with pytest.raises(TypeError):
+        namespace = Namespace("https://lodkit.testing/")
+        uricls = make_uriclass("uricls", namespace, fields=((x, y),))
