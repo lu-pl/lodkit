@@ -71,17 +71,6 @@ class TripleStrategies:
         return st.sampled_from(list(cldr_lang_codes))
 
     @property
-    def xsd_types(self) -> SearchStrategy[str]:
-        """Strategy for XSD types."""
-        _xsd_types: list[str] = [
-            XSD[name]
-            for name in [
-                name for name, value in get_type_hints(XSD).items() if value == URIRef
-            ]
-        ]
-        return st.sampled_from(_xsd_types)
-
-    @property
     def triple_uris(self) -> SearchStrategy[URIRef]:
         """Strategy for generating rdflib.URIRefs."""
         return st.builds(
