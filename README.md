@@ -14,13 +14,13 @@ LODKit is a collection of Linked Open Data related Python functionalities.
 
 # Installation
 
-# Functionality
+# Usage
 
 ## RDF Importer
 
 `lodkit.RDFImporter` is a custom importer for importing RDF files as if they were modules.
 
-Assuming e.g. 'graphs/some_graph.ttl' exists in the import path one can do the following:
+Assuming 'graphs/some_graph.ttl' exists in the import path, `lodkit.RDFImporter` makes it possible to do the following:
 ```python
 import lodkit
 from graphs import some_graph
@@ -39,7 +39,7 @@ Note that `lodkit.RDFImporter` is available on `import lodkit`.
 
 `uriclass` and `make_uriclass` provide dataclass-inspired URI constructor functionality.
 
-Class-level attributes are converted to URIs according to uri_constructor.
+With `uriclass`, class-level attributes are converted to URIs according to uri_constructor.
 For class attributes with just type information, URIs are constructed using UUIDs,
 for class attributes with string values, URIs are constructed using hashing based on that string.
 
@@ -56,6 +56,8 @@ class uris:
     print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
     print(uris.y1 == uris.y2)  # True
 ```
+
+`make_uriclass` provides equalent functionality but is more apt for dynamic use.
 
 ```python
 from lodkit import make_uriclass
@@ -88,13 +90,13 @@ print(mkuri("test") == mkuri("test"))  # True
 ## Triple Tools
 Triple tools (so far only) defines `lodkit.ttl`, a triple constructor implementing a Turtle-like interface.
 
-`lodkit.ttl` aims to implement [turtle predicate lists](https://www.w3.org/TR/turtle/#predicate-lists) notation by taking a triple subject and predicate-object pairs;
+`lodkit.ttl` aims to implement [turtle predicate list notation](https://www.w3.org/TR/turtle/#predicate-lists) by taking a triple subject and predicate-object pairs;
 objects in a predicate-object pair can be 
 
 - objects of type `lodkit._TripleObject` (strings are also permissible and are interpreted as `rdflib.Literal`),
 - tuples of `lodkit._TripleObject` (see [turtle object lists](https://www.w3.org/TR/turtle/#object-lists)),
 - lists of predicate-object pairs, emulating [turtle blank node notation](https://www.w3.org/TR/turtle/#BNodes).
-- `lodkit.ttl`
+- `lodkit.ttl` objects.
 
 ```python
 from collections.abc import Iterator
@@ -154,9 +156,9 @@ ns_check: bool = all(
 print(ns_check)  # True
 ```
 
-### ClosedOntologyNamespace, DefinedOntologyNamespace
-`lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace` are `rdflib.ClosedNamespace` and `rdflib.DefinedNameSpace` subclasses respectively
-which are able to load namespace members based on an ontology.
+## ClosedOntologyNamespace, DefinedOntologyNamespace
+`lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace` are `rdflib.ClosedNamespace` and `rdflib.DefinedNameSpace` subclasses 
+that are able to load namespace members based on an ontology.
 
 ```python
 crm = ClosedOntologyNamespace(ontology="./CIDOC_CRM_v7.1.3.ttl")
@@ -173,8 +175,13 @@ crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
 crm.E39_Author  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Author') + UserWarning
 ```
 
+
+Note that `rdflib.ClosedNamespaces` are meant to be instantiated and `rdflib.DefinedNameSpaces` are meant to be extended,
+which is reflected in `lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace`.
+
+
 ## Testing Tools
-`lodkit.testing_tools` aims to provide general definitions (e.g Graph format options) and Hypothesis strategies useful for testing RDFLib-based Python and code.
+`lodkit.testing_tools` aims to provide general definitions (e.g Graph format options) and [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) strategies useful for testing RDFLib-based Python and code.
 
 E.g. the `TripleStrategies.triples` strategy generates random triples utilizing all permissible subject, predicate and object types including lang-tagged and xsd-typed literals.
 The following uses the triples strategies together with a Hypothesis strategy to create random graphs:
@@ -196,4 +203,4 @@ def test_some_function(triples):
 
 The strategy generates up to 100 (by default, see [settings](https://hypothesis.readthedocs.io/en/latest/settings.html)) lists of 1-10 `tuple[_TripleSubject, URIRef, _TripleObject]` and passes them to the test function.
 
-> Warning: The API of lodkit.tesing_tools is very likely to change soon!
+> Warning: The API of lodkit.tesing_tools is very likely to change soon! Strategies should be module-level callables and not properties of a Singleton.
