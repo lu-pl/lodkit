@@ -47,8 +47,8 @@ def mkuri_factory(
 ) -> _TURIConstructor:
     """Factory for generating URI constructor callables.
 
-    The generated callable takes args and kwargs
-    which are passed to the segment_callback.
+    The returned callable takes an optional str argument 'hash_value';
+    If a hash value is given, the segment is generated using a hash function, else the path is generated using a uuid.
     """
 
     class _mkuri:

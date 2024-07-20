@@ -23,12 +23,14 @@ class RDFImporter:
      Note that RDFImporter is added to the meta_path in lodkit.__init__
      so this functionality is available as soon as any lodkit import runs.
 
-     Example (assuming e.g. 'graphs/some_graph.ttl' exists in the import path):
+    Examples:
 
-    import lodkit
-    from graphs import some_graph
+        # assuming e.g. 'graphs/some_graph.ttl' exists in the import path
 
-    type(some_graph)  # <class 'rdflib.graph.Graph'>
+        import lodkit
+        from graphs import some_graph
+
+        type(some_graph)  # <class 'rdflib.graph.Graph'>
     """
 
     def __init__(self, rdf_path):
