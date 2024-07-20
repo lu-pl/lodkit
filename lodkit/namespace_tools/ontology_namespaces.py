@@ -24,9 +24,9 @@ class ClosedOntologyNamespace(ClosedNamespace):
 
     Example:
 
-    crm = ClosedOntologyNamespace(ontology="./CIDOC_CRM_v7.1.3.ttl")
-    crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
-    crm.E39_Author  # AttributeError
+        crm = ClosedOntologyNamespace(ontology="./CIDOC_CRM_v7.1.3.ttl")
+        crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
+        crm.E39_Author  # AttributeError
     """
 
     def __new__(cls, ontology: _TGraphParseSource, strict_delimiters: bool = True):
@@ -52,11 +52,11 @@ class DefinedOntologyNamespace(DefinedNamespace):
 
     Example:
 
-    class crm(DefinedOntologyNamespace):
-        ontology = "./CIDOC_CRM_v7.1.3.ttl"
+        class crm(DefinedOntologyNamespace):
+            ontology = "./CIDOC_CRM_v7.1.3.ttl"
 
-    crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
-    crm.E39_Author  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Author') + UserWarning
+        crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
+        crm.E39_Author  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Author') + UserWarning
     """
 
     def __init_subclass__(cls) -> None:
