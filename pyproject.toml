@@ -11,6 +11,7 @@ loguru = "^0.7.2"
 rdflib = "^7.0.0"
 hypothesis = "^6.103.3"
 langcodes = "^3.4.0"
+typeguard = "^4.3.0"
 
 
 [tool.poetry.group.dev.dependencies]
