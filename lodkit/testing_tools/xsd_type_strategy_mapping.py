@@ -3,14 +3,13 @@
 import re
 
 from hypothesis import strategies as st
-from hypothesis.extra.pytz import timezones
 from hypothesis.provisional import urls
 from hypothesis.strategies._internal.strategies import SearchStrategy
 from rdflib import URIRef, XSD
 
 
-_fill = lambda x: str(x).zfill(2)
-_base_date_time: SearchStrategy = st.datetimes(timezones=timezones())
+# _fill = lambda x: str(x).zfill(2)
+# _base_date_time: SearchStrategy = st.datetimes(timezones=timezones())
 
 
 def get_xsd_type_strategies(
@@ -29,16 +28,16 @@ def get_xsd_type_strategies(
         XSD.nonNegativeInteger: st.integers(min_value=0),
         XSD.nonPositiveInteger: st.integers(max_value=0),
         XSD.positiveInteger: st.integers(min_value=1),
-        XSD.dateTime: _base_date_time.map(lambda dt: dt.isoformat()),
-        XSD.time: _base_date_time.map(lambda dt: str(dt.time())),
-        XSD.date: _base_date_time.map(lambda dt: str(dt.date())),
-        XSD.gDay: _base_date_time.map(lambda dt: f"---{_fill(dt.day)}"),
-        XSD.gMonth: _base_date_time.map(lambda dt: f"--{_fill(dt.month)}"),
-        XSD.gYear: _base_date_time.map(lambda dt: str(dt.year)),
-        XSD.gMonthDay: _base_date_time.map(
-            lambda dt: f"--{_fill(dt.month)}-{_fill(dt.day)}"
-        ),
-        XSD.gYearMonth: _base_date_time.map(lambda dt: f"{dt.year}-{dt.month}"),
+        # XSD.dateTime: _base_date_time.map(lambda dt: dt.isoformat()),
+        # XSD.time: _base_date_time.map(lambda dt: str(dt.time())),
+        # XSD.date: _base_date_time.map(lambda dt: str(dt.date())),
+        # XSD.gDay: _base_date_time.map(lambda dt: f"---{_fill(dt.day)}"),
+        # XSD.gMonth: _base_date_time.map(lambda dt: f"--{_fill(dt.month)}"),
+        # XSD.gYear: _base_date_time.map(lambda dt: str(dt.year)),
+        # XSD.gMonthDay: _base_date_time.map(
+        #     lambda dt: f"--{_fill(dt.month)}-{_fill(dt.day)}"
+        # ),
+        # XSD.gYearMonth: _base_date_time.map(lambda dt: f"{dt.year}-{dt.month}"),
         # language
     }
 
