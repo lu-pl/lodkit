@@ -14,6 +14,12 @@ LODKit is a collection of Linked Open Data related Python functionalities.
 
 # Installation
 
+LODKit is available on PyPI:
+
+```shell
+pip install lodkit
+```
+
 # Usage
 
 ## RDF Importer
