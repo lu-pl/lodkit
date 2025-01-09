@@ -1,8 +1,9 @@
 """Sad path tests for ttl triple constructor."""
 
-from hypothesis import given
-from lodkit import ttl
 import pytest
+from typeguard import TypeCheckError
+
+from hypothesis import given
 from rdflib import BNode
 from tests.utils.fixtures import constructor
 from tests.utils.strategies import (
@@ -11,7 +12,6 @@ from tests.utils.strategies import (
     fail_uris,
     predicate_object_pairs,
 )
-from typeguard import TypeCheckError
 
 
 @given(uri=fail_uris, pair=predicate_object_pairs)
