@@ -1,26 +1,15 @@
 """LODKit Triple utilities."""
 
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from copy import deepcopy
 from itertools import repeat
-from typing import Any, Self, TypeAlias
+from typing import Self
 
-from typeguard import check_type
+from typeguard import typechecked
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
 from loguru import logger
 from rdflib import BNode, Graph, Literal, URIRef
-
-
-_TPredicateObjectPair: TypeAlias = tuple[
-    URIRef,
-    _TripleObject
-    | list
-    | Iterator
-    | Self  # type: ignore
-    | str
-    | tuple[_TripleObject | str, ...],
-]
 
 
 class ttl:
@@ -32,8 +21,6 @@ class ttl:
         uri (_TripleSubject): The subject of a triple
         *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs
         graph (Graph | None): An optional rdflib.Graph instance
-        skip_if (Callable[[Any, Any, Any], bool]): Predicate for skipping triples. If True for a triple, the triple is skipped.
-        Note that runtime checking for triple terms does not run if a skip_if predicate is provided.
 
     Returns:
         None
@@ -51,31 +38,29 @@ class ttl:
         graph: Graph = triples.to_graph()
     """
 
+    @typechecked
     def __init__(
         self,
         uri: _TripleSubject,
-        *predicate_object_pairs: _TPredicateObjectPair,
+        *predicate_object_pairs: tuple[
+            URIRef,
+            _TripleObject
+            | list
+            | Iterator
+            | Self
+            | str
+            | tuple[_TripleObject | str, ...],
+        ],
         graph: Graph | None = None,
-        skip_if: Callable[[Any, Any, Any], bool] | None = None,
     ) -> None:
         self.uri = uri
         self.predicate_object_pairs = predicate_object_pairs
         self.graph = Graph() if graph is None else deepcopy(graph)
         self._iter = iter(self)
-        self.skip_if = skip_if
-
-        if self.skip_if is None:
-            check_type(self.uri, _TripleSubject)
-            check_type(self.predicate_object_pairs, tuple[_TPredicateObjectPair, ...])
 
     def __iter__(self) -> Iterator[_Triple]:
         """Generate an iterator of tuple-based triple representations."""
-        _skip_if = (lambda s, p, o: False) if self.skip_if is None else self.skip_if
-
         for pred, obj in self.predicate_object_pairs:
-            if _skip_if(self.uri, pred, obj):
-                continue
-
             match obj:
                 case ttl():
                     yield (self.uri, pred, obj.uri)
@@ -91,12 +76,8 @@ class ttl:
                     yield (self.uri, pred, obj)
                 case str():
                     yield (self.uri, pred, Literal(obj))
-                case _:
-                    raise TypeError(
-                        f"Unable to process triple object '{obj}'. "
-                        "See the ttl docs and type annotation for applicable types "
-                        "or skip respective triples using the skip_if predicate."
-                    )
+                case _:  # pragma: no cover
+                    raise Exception("This should never happen.")
 
     def __next__(self) -> _Triple:
         """Return the next triple from the iterator."""
