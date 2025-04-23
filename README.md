@@ -1,4 +1,4 @@
-![<img src="lodkit.svg" width=50% height=50%>](https://raw.githubusercontent.com/lu-pl/lodkit/main/lodkit.svg)
+<img src="lodkit.svg" width="50%" height="50%" />
 
 # LODKit
 ![tests](https://github.com/lu-pl/lodkit/actions/workflows/tests.yaml/badge.svg)
