@@ -1,5 +1,8 @@
 """Functionality for Ontology Derived Dynamic (ODD) namespaces."""
 
+from rdflib import Graph, Namespace, URIRef
+from rdflib.namespace import ClosedNamespace, DefinedNamespace
+
 from lodkit.namespace_tools._exceptions import MissingOntologyClassAttributeException
 from lodkit.namespace_tools._messages import _missing_ontology_attribute_message
 from lodkit.namespace_tools.utils import (
@@ -8,8 +11,6 @@ from lodkit.namespace_tools.utils import (
     _get_ontology_graph,
     _get_terms_from_ontology,
 )
-from rdflib import Graph, Namespace, URIRef
-from rdflib.namespace import ClosedNamespace, DefinedNamespace
 
 
 class ClosedOntologyNamespace(ClosedNamespace):
@@ -29,12 +30,23 @@ class ClosedOntologyNamespace(ClosedNamespace):
         crm.E39_Author  # AttributeError
     """
 
-    def __new__(cls, ontology: _TGraphParseSource, strict_delimiters: bool = True):
+    def __new__(
+        cls,
+        ontology: _TGraphParseSource,
+        namespace: str | None = None,
+        strict_delimiters: bool = True,
+    ):
         _ontology: Graph = _get_ontology_graph(ontology)
-        _namespace: Namespace = _get_namespace_from_ontology(
-            _ontology, strict_delimiters
+        _namespace: Namespace = (
+            _get_namespace_from_ontology(_ontology, strict_delimiters)
+            if namespace is None
+            else Namespace(namespace)
         )
         _terms: list[str] = _get_terms_from_ontology(_ontology, _namespace)
+
+        if not _terms:
+            # warn
+            print("No terms found...")
 
         return super().__new__(cls, uri=_namespace, terms=_terms)
 
