@@ -1,34 +1,34 @@
-[tool.poetry]
+[project]
 name = "lodkit"
 version = "0.2.7"
 description = ""
-authors = ["Lukas Plank <lupl@tuta.io>"]
+authors = [{ name = "Lukas Plank", email = "lupl@tuta.io" }]
+requires-python = "~=3.11"
 readme = "README.md"
+dependencies = [
+    "loguru>=0.7.2,<0.8",
+    "rdflib>=7.0.0,<8",
+    "langcodes>=3.4.0,<4",
+    "typeguard>=4.3.0,<5",
+    "pytz~=2024.2",
+    "hypothesis[pytz]>=6.112.2,<7",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-loguru = "^0.7.2"
-rdflib = "^7.0.0"
-langcodes = "^3.4.0"
-typeguard = "^4.3.0"
-pytz = "^2024.2"
-hypothesis = {extras = ["pytz"], version = "^6.112.2"}
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.2"
-pytest-cov = "^5.0.0"
-typeguard = "^4.3.0"
-pytest-loguru = "^0.4.0"
-hypofuzz = "^24.2.3"
-mkdocs = "^1.6.0"
-mkdocstrings = {extras = ["python"], version = "^0.25.1"}
-mkdocs-material = "^9.5.27"
-pytest-randomly = "^3.15.0"
+[dependency-groups]
+dev = [
+    "pytest>=8.2.2,<9",
+    "pytest-cov>=5.0.0,<6",
+    "typeguard>=4.3.0,<5",
+    "pytest-loguru>=0.4.0,<0.5",
+    "mkdocs>=1.6.0,<2",
+    "mkdocstrings[python]>=0.25.1,<0.26",
+    "mkdocs-material>=9.5.27,<10",
+    "pytest-randomly>=3.15.0,<4",
+]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 addopts = [
