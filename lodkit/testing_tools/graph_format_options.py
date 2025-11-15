@@ -1,6 +1,5 @@
 """rdflib.Graph format options."""
 
-from collections.abc import Iterator
 from typing import Annotated
 
 from rdflib.parser import Parser

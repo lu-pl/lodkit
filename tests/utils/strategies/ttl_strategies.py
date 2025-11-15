@@ -3,10 +3,10 @@
 from functools import partial
 from typing import Annotated
 
-from hypothesis import given, provisional as pr, settings, strategies as st
+from hypothesis import provisional as pr, strategies as st
 from hypothesis.strategies._internal.strategies import SearchStrategy
 from lodkit import tst_xml, ttl
-from rdflib import BNode, Namespace, URIRef
+from rdflib import Namespace, URIRef
 
 
 untyped_predicate_object_pairs: Annotated[

@@ -1,6 +1,6 @@
 """Hypothesis strategies for LOD testing."""
 
-from typing import Annotated, cast, get_type_hints
+from typing import Annotated, cast
 from xml.sax.saxutils import escape
 
 from hypothesis import strategies as st
@@ -9,7 +9,6 @@ from langcodes.language_lists import CLDR_LANGUAGES as cldr_lang_codes
 from lodkit import _Triple, _TripleObject, _TripleSubject
 from lodkit.testing_tools.xsd_type_strategy_mapping import get_xsd_type_strategies
 from rdflib import BNode, Literal, URIRef
-from rdflib.namespace import XSD
 
 
 class GraphStrategies:

@@ -6,8 +6,6 @@ import sys
 
 from loguru import logger
 from rdflib import Graph
-from rdflib.plugin import PluginException
-from rdflib.exceptions import ParserError
 
 
 class RDFImporterException(Exception):

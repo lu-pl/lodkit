@@ -5,7 +5,7 @@ from xml.sax import make_parser
 
 from typeguard import check_type
 
-from hypothesis import given, strategies as st
+from hypothesis import given
 from lodkit import (
     _Triple,
     _TripleObject,

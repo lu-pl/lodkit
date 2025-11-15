@@ -2,7 +2,6 @@
 
 from importlib.resources.abc import Traversable
 
-from hypothesis import strategies as st
 from lodkit import ClosedOntologyNamespace
 from lodkit.namespace_tools._exceptions import NamespaceDelimiterException
 from lodkit.namespace_tools.utils import (

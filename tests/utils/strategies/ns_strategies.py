@@ -2,7 +2,6 @@
 
 import keyword
 from typing import Annotated
-from typing import Annotated
 
 from hypothesis import provisional as pr, strategies as st
 from hypothesis.strategies._internal.strategies import SearchStrategy
