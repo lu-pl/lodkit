@@ -1,39 +1,33 @@
 """LODKit Triple utilities."""
 
-from collections.abc import Callable, Iterator
-from copy import deepcopy
+from collections.abc import Iterable, Iterator
 from itertools import repeat
-from typing import Any, Self, TypeAlias
-
-from typeguard import check_type
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
-from loguru import logger
 from rdflib import BNode, Graph, Literal, URIRef
 
 
-_TPredicateObjectPair: TypeAlias = tuple[
+type _TPredicateObjectPair = tuple[
     URIRef,
-    _TripleObject
-    | list
-    | Iterator
-    | Self  # type: ignore
-    | str
-    | tuple[_TripleObject | str, ...],
+    ttl | _TripleObject | list | Iterator | str | tuple[_TripleObject | str, ...],
 ]
 
 
-class ttl:
-    """Triple constructor implementing a Turtle-like interface.
-    The callable interface aims to provide a Python representation
-    fo Turtle predicate and object list syntax.
+class ttl(Iterable[_Triple]):
+    """Triple generation facility that implements a Turtle-like interface.
+
+    The generator takes a triple subject and an aribitrary number of predicate/object pairs
+    and produces an Iterator of RDFLib object 3-tuples.
+
+    Triple objects passed to the constructor can be
+    - URIRefs, BNodes, Literals
+    - Python lists of predicate/object tuples (resolved as blank nodes),
+    - tuples (resolved as Turtle object lists)
+    - ttl constructors (resolved recursively)
 
     Args:
         uri (_TripleSubject): The subject of a triple
         *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs
-        graph (Graph | None): An optional rdflib.Graph instance
-        skip_if (Callable[[Any, Any, Any], bool]): Predicate for skipping triples. If True for a triple, the triple is skipped.
-        Note that runtime checking for triple terms does not run if a skip_if predicate is provided.
 
     Returns:
         None
@@ -55,27 +49,14 @@ class ttl:
         self,
         uri: _TripleSubject,
         *predicate_object_pairs: _TPredicateObjectPair,
-        graph: Graph | None = None,
-        skip_if: Callable[[Any, Any, Any], bool] | None = None,
     ) -> None:
         self.uri = uri
         self.predicate_object_pairs = predicate_object_pairs
-        self.graph = Graph() if graph is None else deepcopy(graph)
-        self._iter = iter(self)
-        self.skip_if = skip_if
-
-        if self.skip_if is None:
-            check_type(self.uri, _TripleSubject)
-            check_type(self.predicate_object_pairs, tuple[_TPredicateObjectPair, ...])
 
     def __iter__(self) -> Iterator[_Triple]:
-        """Generate an iterator of tuple-based triple representations."""
-        _skip_if = (lambda s, p, o: False) if self.skip_if is None else self.skip_if
+        """Generate an iterator of 3-tuple triple representations."""
 
         for pred, obj in self.predicate_object_pairs:
-            if _skip_if(self.uri, pred, obj):
-                continue
-
             match obj:
                 case ttl():
                     yield (self.uri, pred, obj.uri)
@@ -94,33 +75,13 @@ class ttl:
                 case _:
                     raise TypeError(
                         f"Unable to process triple object '{obj}'. "
-                        "See the ttl docs and type annotation for applicable types "
-                        "or skip respective triples using the skip_if predicate."
+                        "See the ttl docs and type annotation for applicable object types."
                     )
-
-    def __next__(self) -> _Triple:
-        """Return the next triple from the iterator."""
-        return next(self._iter)
 
     def to_graph(self, graph: Graph | None = None) -> Graph:
         """Generate a graph instance from a ttl Iterator."""
-        if graph is not None:
-            graph_copy = deepcopy(graph)
-            self.graph = graph_copy
+        _graph = Graph() if graph is None else graph
 
         for triple in self:
-            self.graph.add(triple)
-        return self.graph
-
-
-class plist(ttl):
-    """Deprecated alias to ttl.
-
-    This is for backwards api compatibility only.
-    Since ttl also implements Turtle object lists now,
-    refering to the class as "plist" is inaccurate/misleading.
-    """
-
-    def __init__(self, *args, **kwargs):
-        logger.warning("Class 'plist' is a deprecated alias. Use 'ttl' instead.")
-        super().__init__(*args, **kwargs)
+            _graph.add(triple)
+        return _graph
