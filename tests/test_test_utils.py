@@ -4,7 +4,6 @@ from pathlib import Path
 
 from rdflib import Graph
 from tests.utils.paths import ontologies_path
-from tests.utils.paths import ontologies_path
 from tests.utils.utils import (
     parametrize_graphs_from_glob,
     parametrize_paths_from_glob,

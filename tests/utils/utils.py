@@ -1,7 +1,6 @@
 """General testing LODKit utils."""
 
 from collections.abc import Callable, Iterator
-from importlib.resources.abc import Traversable
 import os
 from pathlib import Path
 import re

@@ -2,7 +2,6 @@
 
 from inspect import get_annotations
 
-from hypothesis import given, settings
 from lodkit import DefinedOntologyNamespace
 from lodkit.namespace_tools.ontology_namespaces import (
     MissingOntologyClassAttributeException,
@@ -11,7 +10,6 @@ from lodkit.namespace_tools.utils import _TGraphParseSource, _get_terms_from_ont
 import pytest
 from rdflib import Graph, URIRef
 from tests.utils.paths import ontologies_path
-from tests.utils.strategies.ns_strategies import public_variable_names
 from tests.utils.utils import parametrize_paths_from_glob
 
 

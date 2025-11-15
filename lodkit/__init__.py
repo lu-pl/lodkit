@@ -10,7 +10,6 @@ from lodkit.lod_types import (
     _RDFTerm,
     _Triple,
     _TripleBNodeObject,
-    _TripleBNodeObject,
     _TripleLiteralObject,
     _TripleObject,
     _TripleParseFormatOptions,

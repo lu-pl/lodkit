@@ -1,8 +1,7 @@
 """Utility functions for Ontology Namespaces."""
 
 from collections.abc import Iterator
-import os
-from pathlib import Path, PurePath
+from pathlib import PurePath
 import re
 from typing import Annotated, IO, TextIO, TypeAlias, cast
 

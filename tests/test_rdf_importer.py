@@ -4,9 +4,7 @@ import importlib
 
 import pytest
 
-import lodkit
 from lodkit.rdf_importer import RDFImporterException
-from loguru import logger
 from rdflib import Graph
 from rdflib.compare import isomorphic
 from tests.utils.paths import fails_path, ontologies_path, side_effects_path
