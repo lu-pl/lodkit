@@ -7,10 +7,16 @@ from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
 from rdflib import BNode, Graph, Literal, URIRef
 
 
-type _TPredicateObjectPair = tuple[
-    URIRef,
-    ttl | _TripleObject | list | Iterator | str | tuple[_TripleObject | str, ...],
-]
+type _TPredicateObjectPairObject = (
+    _TripleObject
+    | str
+    | list[_TPredicateObjectPair]
+    | Iterator[_TPredicateObjectPair]
+    | tuple[_TPredicateObjectPairObject, ...]
+    | ttl
+)
+
+type _TPredicateObjectPair = tuple[URIRef, _TPredicateObjectPairObject]
 
 
 class ttl(Iterable[_Triple]):
