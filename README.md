@@ -95,49 +95,156 @@ print(mkuri("test") == mkuri("test"))  # True
 ```
 
 ## Triple Tools
-Triple tools (so far only) defines `lodkit.ttl`, a triple constructor implementing a Turtle-like interface.
 
-`lodkit.ttl` aims to implement [turtle predicate list notation](https://www.w3.org/TR/turtle/#predicate-lists) by taking a triple subject and predicate-object pairs;
-objects in a predicate-object pair can be 
+Triple tools defines `lodkit.ttl`, a triple constructor implementing a Turtle-like interface.
 
-- objects of type `lodkit._TripleObject` (strings are also permissible and are interpreted as `rdflib.Literal`),
-- tuples of `lodkit._TripleObject` (see [turtle object lists](https://www.w3.org/TR/turtle/#object-lists)),
-- lists of predicate-object pairs, emulating [turtle blank node notation](https://www.w3.org/TR/turtle/#BNodes).
-- `lodkit.ttl` objects.
+The `lodkit.ttl` constructor takes a triple subject and arbitrary predicate-object pairs (emulating [Turtle Predicate List notation](https://www.w3.org/TR/turtle/#predicate-lists)) and generates 3-tuples of RDFLib objects. 
+
+
+Objects in predicate-objects pairs can be
+
+- `URIRef`, `BNode`, `Literal` (`lodkit._TripleObject`); 
+strings are also permissible and are interpreted as `Literal`
+- `ttl` objects (resolved recursively)
+- tuples of any object accepted by `ttl` in the object position (resolved as [Turtle Object Lists](https://www.w3.org/TR/turtle/#object-lists))
+- lists of any predicate-object pairs accepted by `ttl` (resolved as [Turtle Blank Nodes](https://www.w3.org/TR/turtle/#BNodes))
+
+More formally, the type of a predicate-object pair accepted by `lodkit.ttl` is expressed like so:
 
 ```python
-from collections.abc import Iterator
-
-from lodkit import _Triple, ttl
-from rdflib import Graph, Literal, RDF, RDFS, URIRef
-
-
-triples: Iterator[_Triple] = ttl(
-    URIRef("https://subject"),
-    (RDF.type, URIRef("https://some_type")),
-    (RDFS.label, (Literal("label 1"), "label 2")),
-    (RDFS.seeAlso, [(RDFS.label, "label 3")]),
-    (
-        RDFS.isDefinedBy,
-        ttl(URIRef("https://subject_2"), (RDF.type, URIRef("https://another_type"))),
-    ),
+type _TPredicateObjectPairObject = (
+    _TripleObject
+    | str
+    | list[_TPredicateObjectPair]
+    | Iterator[_TPredicateObjectPair]
+    | tuple[_TPredicateObjectPairObject, ...]
+    | ttl
 )
 
-graph: Graph = triples.to_graph()
+type _TPredicateObjectPair = tuple[URIRef, _TPredicateObjectPairObject]
 ```
 
-The above graph serialized to turtle:
+Note that `lodkit.ttl` objects implement the `Iterable` protocol and thus can be *chained*. 
+
+> One of the main ideas of `lodkit.ttl` is to provide a functional DSL for RDF generation that allows to lazily generate triple streams that can be composed into adaptable and modular RDF generation pipelines.
+
+The `lodkit.ttl.to_graph` method allows to generate an `rdflib.Graph` instance from a `lodkit.ttl` object.
+
+### Examples and Usage
+
+The following snippets provide examples of triple generation using `lodkit.ttl`; the corresponding Turtle RDF output produced by calling `lodkit.ttl.to_graph` is shown after each snippet.
+
+- Turtle Predicate List notation	
+```python
+from lodkit import _Triple, ttl
+
+triples: Iterable[_Triple] = ttl(
+    ex.s,
+    (ex.p, ex.o),
+    (ex.p2, "literal")
+)
+```
 ```ttl
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <https://example.com/> .
 
-<https://subject> a <https://some_type> ;
-    rdfs:label "label 1",
-        "label 2" ;
-    rdfs:isDefinedBy <https://subject_2> ;
-    rdfs:seeAlso [ rdfs:label "label 3" ] .
-
-<https://subject_2> a <https://another_type> .
+ex:s ex:p ex:o ;
+    ex:p2 "literal" .
 ```
+- Turtle Object List notation
+```python
+triples: Iterable[_Triple] = ttl(
+    ex.s,
+    (ex.p, (ex.o, ex.o2)),
+)
+```
+```ttl
+@prefix ex: <https://example.com/> .
+
+ex:s ex:p ex:o, ex:o2 .
+```
+- Turtle Blank Node notation
+```python
+triples: Iterable[_Triple] = ttl(
+    ex.s,
+    (ex.p, [(ex.p2, "literal")])
+)	
+```
+```ttl
+@prefix ex: <https://example.com/> .
+
+ex:s ex:p [ ex:p2 "literal" ] .
+```
+- Nested `lodkit.ttl` object
+```python
+triples: Iterable[_Triple] = ttl(
+    ex.s,
+    (ex.p, ttl(ex.s2, (ex.p2, "literal")))
+)
+```
+```ttl
+@prefix ex: <https://example.com/> .
+
+ex:s ex:p ex:s2 .
+ex:s2 ex:p2 "literal" .
+```
+
+- Advanced example with multiple nested objects in an object list
+```python
+triples: Iterable[_Triple] = ttl(
+    ex.s,
+    (
+        ex.p,
+        (
+            ttl(ex.s2, (ex.p2, ex.o)),
+            [
+                (ex.p3, ttl(
+                    ex.s3,
+                    (ex.p4, (ex.o2, [(ex.p5, ex.o3)])))),
+                (ex.p6, [(ex.p7, "literal")]),
+            ],
+        ),
+    ),
+)
+```
+```ttl
+@prefix ex: <https://example.com/> .
+
+ex:s ex:p [
+     ex:p3 ex:s3 ;
+     ex:p6 [ ex:p7 "literal" ]
+     ],
+     ex:s2 .
+
+ex:s2 ex:p2 ex:o .
+
+ex:s3 ex:p4 [ ex:p5 ex:o3 ],
+        ex:o2 .
+```
+
+- Simple RDF generation pipeline example
+
+```python
+class TripleGenerator:
+
+    def triple_generator_1(self) -> Iterator[_Triple]:
+        if conditional:
+            yield (s, p, o)
+        yield from ttl(s, ...)
+
+    # more triple generator method definitions
+    ...
+
+    def __iter__(self) -> Iterator[_Triple]:
+        return itertools.chain(
+            self.triple_generator_1(),
+            self.triple_generator_2(),
+            self.triple_generator_3(),
+            ...
+        )
+
+triples: Iterator[_Triple] = itertools.chain(TripleGenerator(), ...)
+```
+
 
 ## Namespace Tools
 
