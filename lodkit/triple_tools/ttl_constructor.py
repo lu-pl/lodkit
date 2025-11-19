@@ -1,7 +1,10 @@
 """LODKit Triple utilities."""
 
 from collections.abc import Iterable, Iterator
+import functools
 from itertools import repeat
+import itertools
+from typing import Self
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
 from rdflib import BNode, Graph, Literal, URIRef
@@ -19,38 +22,31 @@ type _TPredicateObjectPairObject = (
 type _TPredicateObjectPair = tuple[URIRef, _TPredicateObjectPairObject]
 
 
-class ttl(Iterable[_Triple]):
-    """Triple generation facility that implements a Turtle-like interface.
+class _ToGraphMixin:
+    def to_graph(self: Iterable[_Triple], graph: Graph | None = None) -> Graph:
+        """Generate a graph instance from a ttl Iterator."""
+        _graph = Graph() if graph is None else graph
 
-    The generator takes a triple subject and an aribitrary number of predicate/object pairs
-    and produces an Iterator of RDFLib object 3-tuples.
+        for triple in self:
+            _graph.add(triple)
+        return _graph
 
-    Triple objects passed to the constructor can be
-    - URIRefs, BNodes, Literals
-    - Python lists of predicate/object tuples (resolved as blank nodes),
-    - tuples (resolved as Turtle object lists)
-    - ttl constructors (resolved recursively)
 
-    Args:
-        uri (_TripleSubject): The subject of a triple
-        *predicate_object_pairs (tuple[ URIRef, _TripleObject | list | Iterator | Self | str | tuple[_TripleObject, ...]]): Predicate-object pairs
+class TripleChain(Iterator[_Triple], _ToGraphMixin):
+    def __init__(self, *triples: Iterable[_Triple]) -> None:
+        self._triples = itertools.chain.from_iterable(triples)
 
-    Returns:
-        None
+    def __iter__(self) -> Self:
+        return self
 
-    Examples:
+    def __next__(self) -> _Triple:
+        return next(self._triples)
 
-        triples: Iterator[lodkit._Triple] = ttl(
-            URIRef('https://subject'),
-            (RDF.type, URIRef('https://some_type')),
-            (RDFS.label, Literal('label 1'), 'label 2'),
-            (RDFS.seeAlso, [(RDFS.label, 'label 3')]),
-            (RDFS.isDefinedBy, ttl(URIRef('https://subject_2'), (RDF.type, URI('https://another_type'))))
-        )
+    def __or__(self, other: Iterable[_Triple]) -> Self:
+        return self.__class__(self, other)
 
-        graph: Graph = triples.to_graph()
-    """
 
+class ttl(Iterable[_Triple], _ToGraphMixin):
     def __init__(
         self,
         uri: _TripleSubject,
@@ -84,10 +80,5 @@ class ttl(Iterable[_Triple]):
                         "See the ttl docs and type annotation for applicable object types."
                     )
 
-    def to_graph(self, graph: Graph | None = None) -> Graph:
-        """Generate a graph instance from a ttl Iterator."""
-        _graph = Graph() if graph is None else graph
-
-        for triple in self:
-            _graph.add(triple)
-        return _graph
+    def __or__(self, other: Iterable[_Triple]) -> TripleChain:
+        return TripleChain(self, other)
