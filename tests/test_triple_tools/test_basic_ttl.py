@@ -2,12 +2,11 @@
 
 from typing import NamedTuple
 
-import pytest
-from rdflib import BNode, Graph, Literal, URIRef
-from rdflib.compare import isomorphic
-
 from lodkit import _TripleObject, _TripleSubject, ttl
 from lodkit.triple_tools.ttl_constructor import _TPredicateObjectPair
+import pytest
+from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib.compare import isomorphic
 
 
 class TestParameter(NamedTuple):
@@ -17,335 +16,419 @@ class TestParameter(NamedTuple):
     comment: str | None = None
 
 
+ex = Namespace("https://example.com")
+
+
 params: list[TestParameter] = [
     # literal object
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), Literal("literal"))],
-        expected=[(URIRef("urn:s"), URIRef("urn:p"), Literal("literal"))],
+        s=ex.s,
+        po=[(ex.p, Literal("literal"))],
+        expected=[(ex.s, ex.p, Literal("literal"))],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
-            (URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:p2"), Literal("literal")),
+            (ex.p, Literal("literal")),
+            (ex.p2, Literal("literal")),
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p2"), Literal("literal")),
-        ],
-    ),
-    TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), "literal")],
-        expected=[(URIRef("urn:s"), URIRef("urn:p"), Literal("literal"))],
-    ),
-    TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), "literal"), (URIRef("urn:p"), "literal 2")],
-        expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal 2")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p2, Literal("literal")),
         ],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), "literal"), (URIRef("urn:p"), Literal("literal 2"))],
+        s=ex.s,
+        po=[(ex.p, "literal")],
+        expected=[(ex.s, ex.p, Literal("literal"))],
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, "literal"), (ex.p, "literal 2")],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal 2")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, Literal("literal 2")),
+        ],
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, "literal"), (ex.p, Literal("literal 2"))],
+        expected=[
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, Literal("literal 2")),
         ],
         comment="Mixing str | rdflib.Literal",
     ),
     # URI object
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), URIRef("urn:o"))],
-        expected=[(URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o"))],
+        s=ex.s,
+        po=[(ex.p, ex.o)],
+        expected=[(ex.s, ex.p, ex.o)],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), URIRef("urn:o")), (URIRef("urn:p2"), URIRef("urn:o"))],
+        s=ex.s,
+        po=[(ex.p, ex.o), (ex.p2, ex.o)],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
-            (URIRef("urn:s"), URIRef("urn:p2"), URIRef("urn:o")),
+            (ex.s, ex.p, ex.o),
+            (ex.s, ex.p2, ex.o),
         ],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), URIRef("urn:o")), (URIRef("urn:p"), Literal("literal"))],
+        s=ex.s,
+        po=[(ex.p, ex.o), (ex.p, Literal("literal"))],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
+            (ex.s, ex.p, ex.o),
+            (ex.s, ex.p, Literal("literal")),
         ],
         comment="Mixing URI and Literal object.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), URIRef("urn:o")), (URIRef("urn:p"), "literal")],
+        s=ex.s,
+        po=[(ex.p, ex.o), (ex.p, "literal")],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
+            (ex.s, ex.p, ex.o),
+            (ex.s, ex.p, Literal("literal")),
         ],
         comment="Mixing URI and Literal object with str argument.",
     ),
+    # object list notation
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), (URIRef("urn:o"), URIRef("urn:o2")))],
+        s=ex.s,
+        po=[(ex.p, ex.o, ex.o2)],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o2")),
+            (ex.s, ex.p, ex.o),
+            (ex.s, ex.p, ex.o2),
         ],
         comment="Object list notation with URIs.",
     ),
-    # object lists
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), (Literal("literal"), "literal 2"))],
+        s=ex.s,
+        po=[(ex.p, "literal", "literal 2")],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal 2")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, Literal("literal 2")),
         ],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), (Literal("literal"), URIRef("urn:o")))],
+        s=ex.s,
+        po=[(ex.p, Literal("literal"), ex.o)],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, ex.o),
         ],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), ("literal", URIRef("urn:o")))],
+        s=ex.s,
+        po=[(ex.p, "literal", ex.o)],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:o")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, ex.o),
         ],
     ),
     # ttl objects
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
-                ttl(URIRef("urn:s2"), (URIRef("urn:p2"), Literal("literal"))),
+                ex.p,
+                ttl(ex.s2, (ex.p2, Literal("literal"))),
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:s2")),
-            (URIRef("urn:s2"), URIRef("urn:p2"), Literal("literal")),
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p2, Literal("literal")),
         ],
         comment="Basic ttl object.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
-            (URIRef("urn:p"), Literal("literal")),
+            (ex.p, Literal("literal")),
             (
-                URIRef("urn:p"),
-                ttl(URIRef("urn:s2"), (URIRef("urn:p2"), Literal("literal"))),
+                ex.p,
+                ttl(ex.s2, (ex.p2, Literal("literal"))),
             ),
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:s2")),
-            (URIRef("urn:s2"), URIRef("urn:p2"), Literal("literal")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p2, Literal("literal")),
         ],
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
+                ex.p,
                 ttl(
-                    URIRef("urn:s2"),
-                    (URIRef("urn:p2"), Literal("literal")),
-                    (URIRef("urn:p2"), Literal("literal 2")),
+                    ex.s2,
+                    (ex.p2, Literal("literal")),
+                    (ex.p2, Literal("literal 2")),
                 ),
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:s2")),
-            (URIRef("urn:s2"), URIRef("urn:p2"), Literal("literal")),
-            (URIRef("urn:s2"), URIRef("urn:p2"), Literal("literal 2")),
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p2, Literal("literal")),
+            (ex.s2, ex.p2, Literal("literal 2")),
         ],
         comment="Basic ttl object with second predicate.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
+                ex.p,
                 ttl(
-                    URIRef("urn:s2"),
+                    ex.s2,
                     (
-                        URIRef("urn:p2"),
-                        ttl(URIRef("urn:s3"), (URIRef("urn:p3"), "literal")),
+                        ex.p2,
+                        ttl(ex.s3, (ex.p3, "literal")),
                     ),
                 ),
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:s2")),
-            (URIRef("urn:s2"), URIRef("urn:p2"), URIRef("urn:s3")),
-            (URIRef("urn:s3"), URIRef("urn:p3"), Literal("literal")),
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p2, ex.s3),
+            (ex.s3, ex.p3, Literal("literal")),
         ],
         comment="Double nested ttl.",
     ),
 ]
 
 
-bnode1, bnode2, bnode3 = BNode(), BNode(), BNode()
+## ttl code paths that generate blank nodes cannot be tested by simple tuple comparison;
+## the tests below use global bnodes, loads asserted and expected triples into a graph and test for isomorphy.
+bnode1, bnode2, bnode3, bnode4, bnode5, bnode6 = (
+    BNode(),
+    BNode(),
+    BNode(),
+    BNode(),
+    BNode(),
+    BNode(),
+)
 bnode_params = [
     TestParameter(
-        s=URIRef("urn:s"),
-        po=[(URIRef("urn:p"), [(URIRef("urn:p2"), Literal("literal"))])],
+        s=ex.s,
+        po=[(ex.p, [(ex.p2, Literal("literal"))])],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, Literal("literal")),
         ],
         comment="Basic BNode object.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
+                ex.p,
                 [
-                    (URIRef("urn:p2"), Literal("literal")),
-                    (URIRef("urn:p3"), Literal("literal")),
+                    (ex.p2, Literal("literal")),
+                    (ex.p3, Literal("literal")),
                 ],
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), Literal("literal")),
-            (bnode1, URIRef("urn:p3"), Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, Literal("literal")),
+            (bnode1, ex.p3, Literal("literal")),
         ],
         comment="Multiple BNode object assertions.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
-                [(URIRef("urn:p2"), [(URIRef("urn:p3"), Literal("literal"))])],
+                ex.p,
+                [(ex.p2, [(ex.p3, Literal("literal"))])],
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), bnode2),
-            (bnode2, URIRef("urn:p3"), Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, bnode2),
+            (bnode2, ex.p3, Literal("literal")),
         ],
         comment="Nested BNode object assertions.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
+                ex.p,
                 [
                     (
-                        URIRef("urn:p2"),
+                        ex.p2,
                         [
-                            (URIRef("urn:p3"), Literal("literal")),
-                            (URIRef("urn:p4"), Literal("literal")),
+                            (ex.p3, Literal("literal")),
+                            (ex.p4, Literal("literal")),
                         ],
                     )
                 ],
             )
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), bnode2),
-            (bnode2, URIRef("urn:p3"), Literal("literal")),
-            (bnode2, URIRef("urn:p4"), Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, bnode2),
+            (bnode2, ex.p3, Literal("literal")),
+            (bnode2, ex.p4, Literal("literal")),
         ],
         comment="Nested BNode object with multi assertions.",
     ),
-    # bnode objects iterators
-    TestParameter(
-        s=URIRef("urn:s"),
-        po=[
-            (
-                URIRef("urn:p"),
-                iter(
-                    [
-                        (
-                            URIRef("urn:p2"),
-                            iter(
-                                [
-                                    (URIRef("urn:p3"), Literal("literal")),
-                                    (URIRef("urn:p4"), Literal("literal")),
-                                ]
-                            ),
-                        )
-                    ]
-                ),
-            )
-        ],
-        expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), bnode2),
-            (bnode2, URIRef("urn:p3"), Literal("literal")),
-            (bnode2, URIRef("urn:p4"), Literal("literal")),
-        ],
-        comment="Nested BNode object with multi assertions; but with iterators.",
-    ),
     # object list recursion
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
-                (
-                    "literal",
-                    [(URIRef("urn:p2"), "literal 2")],
-                    ttl(
-                        URIRef("urn:s2"),
-                        (URIRef("urn:p3"), "literal 3"),
-                    ),
+                ex.p,
+                "literal",
+                [(ex.p2, "literal 2")],
+                ttl(
+                    ex.s2,
+                    (ex.p3, "literal 3"),
                 ),
             ),
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (URIRef("urn:s"), URIRef("urn:p"), URIRef("urn:s2")),
-            (bnode1, URIRef("urn:p2"), Literal("literal 2")),
-            (URIRef("urn:s2"), URIRef("urn:p3"), Literal("literal 3")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, Literal("literal 2")),
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p3, Literal("literal 3")),
         ],
         comment="Constructor with literal, bnode and ttl elements in an object list.",
     ),
     TestParameter(
-        s=URIRef("urn:s"),
+        s=ex.s,
         po=[
             (
-                URIRef("urn:p"),
-                (
-                    "literal",
-                    [
-                        (URIRef("urn:p2"), "literal 2"),
-                        (
-                            URIRef("urn:p3"),
-                            ttl(
-                                URIRef("urn:s2"),
-                                (URIRef("urn:p4"), "literal 3"),
-                            ),
+                ex.p,
+                "literal",
+                [
+                    (ex.p2, "literal 2"),
+                    (
+                        ex.p3,
+                        ttl(
+                            ex.s2,
+                            (ex.p4, "literal 3"),
                         ),
-                    ],
-                ),
+                    ),
+                ],
             ),
         ],
         expected=[
-            (URIRef("urn:s"), URIRef("urn:p"), Literal("literal")),
-            (URIRef("urn:s"), URIRef("urn:p"), bnode1),
-            (bnode1, URIRef("urn:p2"), Literal("literal 2")),
-            (bnode1, URIRef("urn:p3"), URIRef("urn:s2")),
-            (URIRef("urn:s2"), URIRef("urn:p4"), Literal("literal 3")),
+            (ex.s, ex.p, Literal("literal")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, Literal("literal 2")),
+            (bnode1, ex.p3, ex.s2),
+            (ex.s2, ex.p4, Literal("literal 3")),
         ],
         comment="Constructor with literal and blank node with nested ttl in an object list.",
+    ),
+    # RDF collection tests
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, (ex.o,))],
+        expected=[
+            (ex.s, ex.p, bnode1),
+            (bnode1, RDF.first, ex.o),
+            (bnode1, RDF.rest, RDF.nil),
+        ],
+        comment="Simple RDF Collection with a single element collection.",
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, (ex.o))],
+        expected=[(ex.s, ex.p, ex.o)],
+        comment="Note that the object it NOT a single element tuple!",
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, (ex.o1, ex.o2))],
+        expected=[
+            (ex.s, ex.p, bnode1),
+            (bnode1, RDF.first, ex.o1),
+            (bnode1, RDF.rest, bnode2),
+            (bnode2, RDF.first, ex.o2),
+            (bnode2, RDF.rest, RDF.nil),
+        ],
+        comment="Simple RDF Collection with a two element collection.",
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, (ex.o1, ex.o2, "literal"))],
+        expected=[
+            (ex.s, ex.p, bnode1),
+            (bnode1, RDF.first, ex.o1),
+            (bnode1, RDF.rest, bnode2),
+            (bnode2, RDF.first, ex.o2),
+            (bnode2, RDF.rest, bnode3),
+            (bnode3, RDF.first, Literal("literal")),
+            (bnode3, RDF.rest, RDF.nil),
+        ],
+        comment="Simple RDF Collection with a three element collection.",
+    ),
+    ## recursive code paths
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, ttl(ex.s2, (ex.p2, "1")), [(ex.p3, "2")], ("3",))],
+        expected=[
+            (ex.s, ex.p, ex.s2),
+            (ex.s2, ex.p2, Literal("1")),
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p3, Literal("2")),
+            (ex.s, ex.p, bnode2),
+            (bnode2, RDF.first, Literal("3")),
+            (bnode2, RDF.rest, RDF.nil),
+        ],
+        comment="Recursive object list.",
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[
+            (
+                ex.p,
+                [
+                    (ex.p2, "1"),
+                    (ex.p3, ("2",)),
+                    (ex.p4, ttl(ex.s2, (ex.p5, "3"))),
+                    (ex.p6, [(ex.p7, "4")]),
+                ],
+            )
+        ],
+        expected=[
+            (ex.s, ex.p, bnode1),
+            (bnode1, ex.p2, Literal("1")),
+            (bnode1, ex.p3, bnode2),
+            (bnode2, RDF.first, Literal("2")),
+            (bnode2, RDF.rest, RDF.nil),
+            (bnode1, ex.p4, ex.s2),
+            (ex.s2, ex.p5, Literal("3")),
+            (bnode1, ex.p6, bnode3),
+            (bnode3, ex.p7, Literal("4")),
+        ],
+        comment="recursive blank node",
+    ),
+    TestParameter(
+        s=ex.s,
+        po=[(ex.p, ("1", ttl(ex.s2, (ex.p2, ex.o, "2")), [(ex.p3, "3")], ("4",)))],
+        expected=[
+            (ex.s, ex.p, bnode1),
+            (bnode1, RDF.first, Literal("1")),
+            (bnode1, RDF.rest, bnode2),
+            (bnode2, RDF.first, ex.s2),
+            (ex.s2, ex.p2, ex.o),
+            (ex.s2, ex.p2, Literal("2")),
+            (bnode2, RDF.rest, bnode3),
+            (bnode3, RDF.first, bnode4),
+            (bnode4, ex.p3, Literal("3")),
+            (bnode3, RDF.rest, bnode5),
+            (bnode5, RDF.first, bnode6),
+            (bnode6, RDF.first, Literal("4")),
+            (bnode6, RDF.rest, RDF.nil),
+            (bnode5, RDF.rest, RDF.nil),
+        ],
+        comment="Recursive collection.",
     ),
 ]
 
