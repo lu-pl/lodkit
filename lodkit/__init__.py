@@ -3,20 +3,20 @@
 import sys
 
 from lodkit.lod_types import (
+    _BNodeObjectTriple,
     _GraphParseFormatOptions,
     _GraphSerializeFormatOptions,
+    _LiteralObjectTriple,
     _QuadParseFormatOptions,
     _QuadSerializeFormatOptions,
     _RDFTerm,
     _Triple,
-    _TripleBNodeObject,
-    _TripleLiteralObject,
     _TripleObject,
     _TripleParseFormatOptions,
     _TriplePredicate,
     _TripleSerializeFormatOptions,
     _TripleSubject,
-    _TripleURIObject,
+    _URIObjectTriple,
 )
 from lodkit.namespace_tools.namespace_graph import NamespaceGraph
 from lodkit.namespace_tools.ontology_namespaces import (

@@ -11,9 +11,9 @@ _TripleObject: TypeAlias = Literal | URIRef | BNode
 _RDFTerm: TypeAlias = _TripleObject
 _Triple: TypeAlias = tuple[_TripleSubject, URIRef, _TripleObject]
 
-_TripleLiteralObject: TypeAlias = tuple[_TripleSubject, URIRef, Literal]
-_TripleURIObject: TypeAlias = tuple[_TripleSubject, URIRef, URIRef]
-_TripleBNodeObject: TypeAlias = tuple[_TripleSubject, URIRef, BNode]
+_LiteralObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, Literal]
+_URIObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, URIRef]
+_BNodeObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, BNode]
 
 _GraphParseFormatOptions: TypeAlias = TypingLiteral[
     "application/rdf+xml",
