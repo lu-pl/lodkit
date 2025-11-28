@@ -1,25 +1,24 @@
 """Tests for lodkit.lod_types."""
 
-import pytest
-from typeguard import TypeCheckError, check_type
-
 from lodkit import (
-    _Triple,
-    _TripleBNodeObject,
-    _TripleLiteralObject,
-    _TripleObject,
-    _TripleSubject,
-    _TripleURIObject,
+    _BNodeObjectTriple,
     _GraphParseFormatOptions,
     _GraphSerializeFormatOptions,
-    _TripleSerializeFormatOptions,
-    _QuadSerializeFormatOptions,
-    _TripleParseFormatOptions,
+    _LiteralObjectTriple,
     _QuadParseFormatOptions,
+    _QuadSerializeFormatOptions,
+    _Triple,
+    _TripleObject,
+    _TripleParseFormatOptions,
+    _TripleSerializeFormatOptions,
+    _TripleSubject,
+    _URIObjectTriple,
 )
+import pytest
 from tests.data.fail_triples import fail_triples
 from tests.utils.paths import ontologies_path
 from tests.utils.utils import parametrize_graphs_from_glob
+from typeguard import TypeCheckError, check_type
 
 
 @parametrize_graphs_from_glob(ontologies_path, param="graph")
@@ -42,7 +41,7 @@ def test_triple_subject_object_type(graph):
 def test_triple_object_types(graph):
     """Runtime check for _TripleURI|BNode|LiteralObject."""
     for triple in graph.triples((None, None, None)):
-        check_type(triple, _TripleURIObject | _TripleBNodeObject | _TripleLiteralObject)
+        check_type(triple, _URIObjectTriple | _BNodeObjectTriple | _LiteralObjectTriple)
 
 
 @pytest.mark.parametrize("fail_triple", fail_triples)
