@@ -68,4 +68,4 @@ def test_make_uriclass_generate_pairs_type_fail(x, y):
     """Simple case for triggering a TyperError in make_uriclass."""
     with pytest.raises(TypeError):
         namespace = Namespace("https://lodkit.testing/")
-        uricls = make_uriclass("uricls", namespace, fields=((x, y),))
+        make_uriclass("uricls", namespace, fields=((x, y),))

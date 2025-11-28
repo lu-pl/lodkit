@@ -8,7 +8,7 @@ from rdflib import BNode, Literal, URIRef
 s = URIRef("https://test.org/test_subject")
 p = URIRef("https://test.org/test_predicate")
 o = URIRef("https://test.org/test_object")
-l = Literal("test_literal")
+l = Literal("test_literal")  # noqa: E741
 b = BNode()
 
 

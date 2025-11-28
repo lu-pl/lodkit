@@ -2,11 +2,9 @@
 
 from types import new_class
 
-import pytest
-from typeguard import TypeCheckError
-
 from hypothesis import given
 from lodkit import NamespaceGraph
+import pytest
 from rdflib import URIRef
 from tests.utils.strategies import (
     fail_pairs,
@@ -14,6 +12,7 @@ from tests.utils.strategies import (
     name_uri_pairs,
     name_uriref_pairs,
 )
+from typeguard import TypeCheckError
 
 
 def _namespacegraph_containment_helper(assignment_pair: tuple[str, str]):
@@ -54,7 +53,7 @@ def test_fail_on_value(pair):
     """Check if type-invalid inputs cause a TypeCheckError."""
     with pytest.raises(TypeCheckError):
         name, namespace = pair
-        NamespaceGraphCls = new_class(
+        new_class(
             "NamespaceGraphCls",
             bases=(NamespaceGraph,),
             exec_body=lambda ns: ns.update({name: namespace}),

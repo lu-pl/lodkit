@@ -63,9 +63,7 @@ def test_closed_ontology_namespace_delimiter_side_effects_exception(fail_ontolog
     """Check if an undelimited namespace raises an exception if strict_delimiters=True."""
 
     with pytest.raises(NamespaceDelimiterException):
-        closed_ontology_namespace = ClosedOntologyNamespace(
-            fail_ontology, strict_delimiters=True
-        )
+        ClosedOntologyNamespace(fail_ontology, strict_delimiters=True)
 
 
 @parametrize_paths_from_glob(
@@ -90,11 +88,11 @@ def test_closed_ontology_multi_header_fail():
     """Check if a MultiOntologyHeadersException is raised."""
     fail_ontology_path = fail_ontologies_path / "header_fails/multiple_headers.ttl"
     with pytest.raises(MultiOntologyHeadersException):
-        closed_ontology_namespace = ClosedOntologyNamespace(fail_ontology_path)
+        ClosedOntologyNamespace(fail_ontology_path)
 
 
 def test_closed_ontology_no_header_fail():
     """Check if a NoOntologyHeadersException is raised."""
     fail_ontology_path = fail_ontologies_path / "header_fails/no_header_cidoc.ttl"
     with pytest.raises(NoOntologyHeaderException):
-        closed_ontology_namespace = ClosedOntologyNamespace(fail_ontology_path)
+        ClosedOntologyNamespace(fail_ontology_path)
