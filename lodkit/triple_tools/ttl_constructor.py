@@ -53,7 +53,7 @@ class ttl(Iterable[_Triple]):
                                 ],
                             ),
                         )
-                    case obj if isinstance(obj, _TripleObject):
+                    case obj if isinstance(obj, (URIRef, BNode, Literal)):
                         yield (self.subject, pred, obj)
                     case str():
                         yield (self.subject, pred, Literal(obj))
