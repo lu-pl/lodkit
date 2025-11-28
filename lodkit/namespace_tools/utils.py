@@ -26,9 +26,7 @@ _TGraphParseSource: Annotated[
     """Source parameter type for rdflib.Graph.parse.
     This is the exact type defined in RDFLib.
     """,
-] = (
-    IO[bytes] | TextIO | InputSource | str | bytes | PurePath
-)
+] = IO[bytes] | TextIO | InputSource | str | bytes | PurePath
 
 
 def _get_ontology_graph(ontology_reference: Graph | _TGraphParseSource) -> Graph:  # type: ignore
