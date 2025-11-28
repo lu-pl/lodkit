@@ -1,11 +1,14 @@
 """Custom importer for RDF files."""
 
 from importlib.machinery import ModuleSpec
+import logging
 import pathlib
 import sys
 
-from loguru import logger
 from rdflib import Graph
+
+
+logger = logging.getLogger(__name__)
 
 
 class RDFImporterException(Exception):
