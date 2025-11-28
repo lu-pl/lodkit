@@ -1,7 +1,6 @@
 """LODKit Triple utilities."""
 
 from collections.abc import Iterable, Iterator
-from itertools import repeat
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
 from rdflib import BNode, Graph, Literal, RDF, URIRef
