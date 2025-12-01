@@ -3,7 +3,8 @@
 from collections.abc import Iterable, Iterator
 
 from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
-from rdflib import BNode, Graph, Literal, RDF, URIRef
+from lodkit.triple_tools.utils import _ToGraphMixin
+from rdflib import BNode, Literal, RDF, URIRef
 
 
 type _TPredicateObjectPairObject = (
@@ -17,7 +18,7 @@ type _TPredicateObjectPairObject = (
 type _TPredicateObjectPair = tuple[URIRef, *tuple[_TPredicateObjectPairObject, ...]]
 
 
-class ttl(Iterable[_Triple]):
+class ttl(Iterable[_Triple], _ToGraphMixin):
     """Triple generation facility that implements a Turtle-like interface."""
 
     def __init__(
@@ -62,11 +63,3 @@ class ttl(Iterable[_Triple]):
                             f"Unable to process triple object '{obj}'. "
                             "See the ttl docs and type annotation for applicable object types."
                         )
-
-    def to_graph(self, graph: Graph | None = None) -> Graph:
-        """Generate a graph instance from a ttl object."""
-        _graph = Graph() if graph is None else graph
-
-        for triple in self:
-            _graph.add(triple)
-        return _graph
