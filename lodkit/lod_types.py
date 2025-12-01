@@ -1,21 +1,21 @@
 """A collection of useful types for working with LOD."""
 
-from typing import Literal as TypingLiteral, TypeAlias
+from typing import Literal as TLiteral
 
 from rdflib import BNode, Literal, URIRef
 
 
-_TripleSubject: TypeAlias = URIRef | BNode
-_TriplePredicate: TypeAlias = URIRef
-_TripleObject: TypeAlias = Literal | URIRef | BNode
-_RDFTerm: TypeAlias = _TripleObject
-_Triple: TypeAlias = tuple[_TripleSubject, URIRef, _TripleObject]
+type _TripleSubject = URIRef | BNode
+type _TriplePredicate = URIRef
+type _RDFTerm = Literal | URIRef | BNode
+type _TripleObject = _RDFTerm
+type _Triple = tuple[_TripleSubject, URIRef, _TripleObject]
 
-_LiteralObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, Literal]
-_URIObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, URIRef]
-_BNodeObjectTriple: TypeAlias = tuple[_TripleSubject, URIRef, BNode]
+type _LiteralObjectTriple = tuple[_TripleSubject, URIRef, Literal]
+type _URIObjectTriple = tuple[_TripleSubject, URIRef, URIRef]
+type _BNodeObjectTriple = tuple[_TripleSubject, URIRef, BNode]
 
-_GraphParseFormatOptions: TypeAlias = TypingLiteral[
+type _GraphParseFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "text/n3",
@@ -38,7 +38,7 @@ _GraphParseFormatOptions: TypeAlias = TypingLiteral[
     "hext",
 ]
 
-_TripleParseFormatOptions: TypeAlias = TypingLiteral[
+type _TripleParseFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "text/n3",
@@ -55,7 +55,7 @@ _TripleParseFormatOptions: TypeAlias = TypingLiteral[
     "hext",
 ]
 
-_QuadParseFormatOptions: TypeAlias = TypingLiteral[
+type _QuadParseFormatOptions = TLiteral[
     "nquads",
     "application/n-quads",
     "trix",
@@ -64,7 +64,7 @@ _QuadParseFormatOptions: TypeAlias = TypingLiteral[
     "application/trig",
 ]
 
-_GraphSerializeFormatOptions: TypeAlias = TypingLiteral[
+type _GraphSerializeFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "pretty-xml",
@@ -89,7 +89,7 @@ _GraphSerializeFormatOptions: TypeAlias = TypingLiteral[
     "hext",
 ]
 
-_TripleSerializeFormatOptions: TypeAlias = TypingLiteral[
+type _TripleSerializeFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "pretty-xml",
@@ -108,7 +108,7 @@ _TripleSerializeFormatOptions: TypeAlias = TypingLiteral[
     "hext",
 ]
 
-_QuadSerializeFormatOptions: TypeAlias = TypingLiteral[
+type _QuadSerializeFormatOptions = TLiteral[
     "nquads",
     "application/n-quads",
     "trix",
