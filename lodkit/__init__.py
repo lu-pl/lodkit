@@ -24,6 +24,7 @@ from lodkit.namespace_tools.ontology_namespaces import (
     DefinedOntologyNamespace,
 )
 from lodkit.rdf_importer import RDFImporter
+from lodkit.triple_tools.triple_chain import TripleChain
 from lodkit.triple_tools.ttl_constructor import (
     _TPredicateObjectPair,
     _TPredicateObjectPairObject,

@@ -198,6 +198,56 @@ class TripleGenerator:
 triples: Iterator[_Triple] = itertools.chain(TripleGenerator(), ...)
 ```
 
+## TripleChain
+
+LODKit provides a `TripleChain` class for convenient triple chain construction. Also see [Building Triple Chains](#building-triple-chains).
+
+`lodkit.TripeChain` is a simple `itertools.chain` subclass that implements a fluid chain interface for arbitrary successive chaining and a `to_graph` method for deriving an `rdflib.Graph` from a given chain.
+
+> Note that, unlike `lodkit.ttl`, `TripleChain` is an `Iterator` and can be exhausted, e.g. by calling `TripleChain.to_graph`.
+
+```python
+from collections.abc import Iterator
+
+from lodkit import TripleChain, _Triple, ttl
+from rdflib import Graph, Namespace
+
+ex = Namespace("https://example.com/")
+
+
+triples = ttl(ex.s, (ex.p, "1", "2", "3"))
+more_triples = ttl(ex.s, (ex.p2, [(ex.p3, ex.o)]))
+yet_more_triples = ttl(ex.s, (ex.p3, ex.o))
+
+
+def any_iterable_of_triples() -> Iterator[_Triple]:
+    yield (ex.s, ex.p, ex.o)
+
+
+triple_chain = (
+    TripleChain(triples, more_triples)
+    .chain(yet_more_triples)
+    .chain(any_iterable_of_triples())
+)
+
+ex_graph = Graph()
+ex_graph.bind("ex", ex)
+
+graph: Graph = triple_chain.to_graph(graph=ex_graph)
+print(graph.serialize())
+```
+
+```ttl
+@prefix ex: <https://example.com/> .
+
+ex:s ex:p ex:o,
+        "1",
+        "2",
+        "3" ;
+    ex:p2 [ ex:p3 ex:o ] ;
+    ex:p3 ex:o .
+```
+
 
 ## RDF Importer
 
