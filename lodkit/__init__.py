@@ -23,7 +23,7 @@ from lodkit.namespace_tools.ontology_namespaces import (
     ClosedOntologyNamespace,
     DefinedOntologyNamespace,
 )
-from lodkit.rdf_importer import RDFImporter
+from lodkit.rdf_importer import RDFImporter, enable_rdf_import
 from lodkit.triple_tools.triple_chain import TripleChain
 from lodkit.triple_tools.ttl_constructor import (
     _TPredicateObjectPair,
@@ -38,6 +38,3 @@ from lodkit.uri_tools.utils import (
     generate_uri_id_segment,
     mkuri_factory,
 )
-
-# module level side-effect
-sys.meta_path.append(RDFImporter)

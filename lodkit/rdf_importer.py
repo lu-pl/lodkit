@@ -1,66 +1,83 @@
 """Custom importer for RDF files."""
 
-from importlib.machinery import ModuleSpec
-import logging
-import pathlib
+from collections.abc import Sequence
+import importlib.abc
+import importlib.machinery
+from pathlib import Path
 import sys
+from types import ModuleType
 
 from rdflib import Graph
+from rdflib.util import guess_format
 
 
-logger = logging.getLogger(__name__)
+class RDFImporter(importlib.abc.MetaPathFinder, importlib.abc.Loader):
+    """Custom Importer for loading RDF files like modules.
 
-
-class RDFImporterException(Exception):
-    """Exception indicating that RDFImporter ran but failed to import a graph."""
-
-
-class RDFImporter:
-    """Importer for directly importing RDF files as if they were modules.
-
-     The importer works by Searching the PYTHONPATH for RDF files
-     and parsing them into rdflib.Graph instances.
-
-     Note that RDFImporter is added to the meta_path in lodkit.__init__
-     so this functionality is available as soon as any lodkit import runs.
-
-    Examples:
-
-        # assuming e.g. 'graphs/some_graph.ttl' exists in the import path
-
-        import lodkit
-        from graphs import some_graph
-
-        type(some_graph)  # <class 'rdflib.graph.Graph'>
+    E.g. given that graph/my_graph.ttl is in the import path,
+    one can do "from graph import my_graph" if RDFImporter is register
+    (e.g. by calling enable_rdf_import()); this will parse my_graph.ttl
+    and bind my_graph to the resulting rdflib.Graph instance.
     """
 
-    def __init__(self, rdf_path):
-        self.rdf_path = rdf_path
+    def find_spec(
+        self,
+        fullname: str,
+        path: Sequence[str] | None,
+        target: ModuleType | None = None,
+    ) -> importlib.machinery.ModuleSpec | None:
+        """Finder for RDFImporter.
 
-    @classmethod
-    def find_spec(cls, name, path, target=None):
-        *_, module_name = name.rpartition(".")
-        directories = sys.path if path is None else path
+        The finder checks if a given import request targets an RDF file by
+        attempting to guess an RDF file format. If the imported file is an RDF file,
+        the finder registers the Path to the file in the instance for the loader
+        to operate on and returns a ModuleSpec indicating the importer instance as loader.
+        """
+        if not path:  # direct top-level graph imports are not supported
+            return None
 
-        for directory in directories:
-            # don't check for RDF extensions, handle PluginException instead
-            rdf_paths = pathlib.Path(directory).glob(f"{module_name}.*")
+        resource_path, *_ = path
+        *_, resource_name = fullname.rpartition(".")
 
-            for path in rdf_paths:
-                if path.exists():
-                    return ModuleSpec(name, cls(path))  # type: ignore
+        resource_file_path: Path | None = next(
+            filter(
+                lambda x: guess_format(x.suffix),
+                Path(resource_path).glob(f"{resource_name}.*"),
+            ),
+            None,
+        )
 
-    def create_module(self, spec):
-        try:
-            graph = Graph().parse(self.rdf_path)
-            if not graph:
-                logger.warning(f"Graph parsed from '{self.rdf_path}' is empty.")
-        except Exception as e:
-            raise RDFImporterException(
-                f"Importing graph failed due to '{e.__class__.__name__}' (see stack trace)."
-            )
-        else:
-            return graph
+        if resource_file_path is not None:
+            self.rdf_resource: Path = resource_file_path
+            self.resource_name = resource_name
 
-    def exec_module(self, module):
+            return importlib.machinery.ModuleSpec(fullname, self)
+        return None
+
+    def create_module(self, spec: importlib.machinery.ModuleSpec) -> Graph:  # type: ignore
+        """Parse an RDF resource and return the resulting Graph object.
+
+        The method relies on the finder to register the Path of an RDF resource in the importer instance.
+        """
+        graph = Graph()
+        graph.parse(str(self.rdf_resource.absolute()))
+
+        return graph
+
+    def exec_module(self, module: ModuleType) -> None:
+        """Stub definition for the Loader ABC.
+
+        RDFImporter shortcircuits the import maschinery by returning a Graph object from create_module;
+        this means that exec_module is not meaningful for RDFImporter.
+
+        importlib.abc.Loader raises an ImportError if a concrete Loader does not define exec_module though.
+        See https://github.com/python/cpython/blob/main/Lib/importlib/_abc.py.
+        """
         pass
+
+
+def enable_rdf_import() -> None:
+    """Invoke the module-level side effect of adding an RDFImporter instance to sys.meta_path."""
+
+    if not any(isinstance(entry, RDFImporter) for entry in sys.meta_path):
+        sys.meta_path.append(RDFImporter())
