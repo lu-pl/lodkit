@@ -1,8 +1,6 @@
 """NamespaceGraph: rdflib.Graph extension for convenient namespace binding."""
 
-from typeguard import check_type
-
-from rdflib import Graph, Namespace, URIRef
+from rdflib import Graph, Namespace
 
 
 class NamespaceGraph(Graph):
@@ -39,6 +37,4 @@ class NamespaceGraph(Graph):
             name: Namespace(namespace)
             for name, namespace in cls.__dict__.items()
             if not name.startswith("_")
-            # URIRef/Namespace are str subclasses, but this gives better error messages
-            and check_type(namespace, str | URIRef | Namespace)
         }
