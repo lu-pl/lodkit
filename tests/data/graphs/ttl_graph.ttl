@@ -1,0 +1,10 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rel: <http://www.perceive.net/schemas/relationship/> .
+
+<http://example.org/#green-goblin> a foaf:Person ;
+    rel:enemyOf <http://example.org/#spiderman> ;
+    foaf:name "Green Goblin" .
+
+<http://example.org/#spiderman> a foaf:Person ;
+    rel:enemyOf <http://example.org/#green-goblin> ;
+    foaf:name "Spiderman" .

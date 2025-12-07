@@ -6,19 +6,13 @@ authors = [{ name = "Lukas Plank", email = "lupl@tuta.io" }]
 requires-python = ">=3.12"
 readme = "README.md"
 dependencies = [
-    "loguru>=0.7.2,<0.8",
     "rdflib>=7.0.0,<8",
-    "langcodes>=3.4.0,<4",
-    "typeguard>=4.3.0,<5",
-    "hypothesis[pytz]>=6.112.2,<7",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=8.2.2,<9",
     "pytest-cov>=5.0.0,<6",
-    "typeguard>=4.3.0,<5",
-    "pytest-loguru>=0.4.0,<0.5",
     "mkdocs>=1.6.0,<2",
     "mkdocstrings[python]>=0.25.1,<0.26",
     "mkdocs-material>=9.5.27,<10",

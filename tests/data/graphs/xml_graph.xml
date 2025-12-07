@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:foaf="http://xmlns.com/foaf/0.1/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rel="http://www.perceive.net/schemas/relationship/"
+>
+  <rdf:Description rdf:about="http://example.org/#spiderman">
+    <rel:enemyOf rdf:resource="http://example.org/#green-goblin"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:name>Spiderman</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/#green-goblin">
+    <rel:enemyOf rdf:resource="http://example.org/#spiderman"/>
+    <rdf:type rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+    <foaf:name>Green Goblin</foaf:name>
+  </rdf:Description>
+</rdf:RDF>

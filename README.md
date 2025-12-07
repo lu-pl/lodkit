@@ -251,17 +251,17 @@ ex:s ex:p ex:o,
 
 ## RDF Importer
 
-`lodkit.RDFImporter` is a custom importer for importing RDF files as if they were modules.
+`lodkit.RDFImporter` is a custom importer for parsing RDF files into `rdflib.Graph` objects.
 
-Assuming 'graphs/some_graph.ttl' exists in the import path, `lodkit.RDFImporter` makes it possible to do the following:
+Assuming `graphs/some_graph.ttl` exists in the import path, `lodkit.RDFImporter` makes it possible to import the RDF file like a module:
+
 ```python
-import lodkit
 from graphs import some_graph
 
 type(some_graph)  # <class 'rdflib.graph.Graph'>
 ```
 
-Note that `lodkit.RDFImporter` is available on `import lodkit`.
+RDF import functionality is available after registering `lodkit.RDFImporter` with the import maschinery e.g by calling `lodkit.enable_rdf_import`.
 
 ## Types
 `lodkit.lod_types` defines several useful `typing.TypeAliases` and `typing.Literals` for working with RDFLib-based Python functionalities.
