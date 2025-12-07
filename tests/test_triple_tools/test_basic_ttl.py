@@ -2,14 +2,15 @@
 
 from typing import NamedTuple
 
-from lodkit import _TripleObject, _TripleSubject, ttl
-from lodkit.triple_tools.ttl_constructor import _TPredicateObjectPair
 import pytest
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import isomorphic
 
+from lodkit import _TripleObject, _TripleSubject, ttl
+from lodkit.triple_tools.ttl_constructor import _TPredicateObjectPair
 
-class TestParameter(NamedTuple):
+
+class TripleConstructorTestParameter(NamedTuple):
     s: _TripleSubject
     po: list[_TPredicateObjectPair]
     expected: list[tuple[_TripleSubject, URIRef, _TripleObject]]
@@ -19,14 +20,14 @@ class TestParameter(NamedTuple):
 ex = Namespace("https://example.com")
 
 
-params: list[TestParameter] = [
+params: list[TripleConstructorTestParameter] = [
     # literal object
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, Literal("literal"))],
         expected=[(ex.s, ex.p, Literal("literal"))],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (ex.p, Literal("literal")),
@@ -37,12 +38,12 @@ params: list[TestParameter] = [
             (ex.s, ex.p2, Literal("literal")),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, "literal")],
         expected=[(ex.s, ex.p, Literal("literal"))],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, "literal"), (ex.p, "literal 2")],
         expected=[
@@ -50,7 +51,7 @@ params: list[TestParameter] = [
             (ex.s, ex.p, Literal("literal 2")),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, "literal"), (ex.p, Literal("literal 2"))],
         expected=[
@@ -60,12 +61,12 @@ params: list[TestParameter] = [
         comment="Mixing str | rdflib.Literal",
     ),
     # URI object
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ex.o)],
         expected=[(ex.s, ex.p, ex.o)],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ex.o), (ex.p2, ex.o)],
         expected=[
@@ -73,7 +74,7 @@ params: list[TestParameter] = [
             (ex.s, ex.p2, ex.o),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ex.o), (ex.p, Literal("literal"))],
         expected=[
@@ -82,7 +83,7 @@ params: list[TestParameter] = [
         ],
         comment="Mixing URI and Literal object.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ex.o), (ex.p, "literal")],
         expected=[
@@ -92,7 +93,7 @@ params: list[TestParameter] = [
         comment="Mixing URI and Literal object with str argument.",
     ),
     # object list notation
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ex.o, ex.o2)],
         expected=[
@@ -101,7 +102,7 @@ params: list[TestParameter] = [
         ],
         comment="Object list notation with URIs.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, "literal", "literal 2")],
         expected=[
@@ -109,7 +110,7 @@ params: list[TestParameter] = [
             (ex.s, ex.p, Literal("literal 2")),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, Literal("literal"), ex.o)],
         expected=[
@@ -117,7 +118,7 @@ params: list[TestParameter] = [
             (ex.s, ex.p, ex.o),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, "literal", ex.o)],
         expected=[
@@ -126,7 +127,7 @@ params: list[TestParameter] = [
         ],
     ),
     # ttl objects
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -140,7 +141,7 @@ params: list[TestParameter] = [
         ],
         comment="Basic ttl object.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (ex.p, Literal("literal")),
@@ -155,7 +156,7 @@ params: list[TestParameter] = [
             (ex.s2, ex.p2, Literal("literal")),
         ],
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -174,7 +175,7 @@ params: list[TestParameter] = [
         ],
         comment="Basic ttl object with second predicate.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -209,7 +210,7 @@ bnode1, bnode2, bnode3, bnode4, bnode5, bnode6 = (
     BNode(),
 )
 bnode_params = [
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, [(ex.p2, Literal("literal"))])],
         expected=[
@@ -218,7 +219,7 @@ bnode_params = [
         ],
         comment="Basic BNode object.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -236,7 +237,7 @@ bnode_params = [
         ],
         comment="Multiple BNode object assertions.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -251,7 +252,7 @@ bnode_params = [
         ],
         comment="Nested BNode object assertions.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -276,7 +277,7 @@ bnode_params = [
         comment="Nested BNode object with multi assertions.",
     ),
     # object list recursion
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -298,7 +299,7 @@ bnode_params = [
         ],
         comment="Constructor with literal, bnode and ttl elements in an object list.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -326,7 +327,7 @@ bnode_params = [
         comment="Constructor with literal and blank node with nested ttl in an object list.",
     ),
     # RDF collection tests
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, (ex.o,))],
         expected=[
@@ -336,13 +337,13 @@ bnode_params = [
         ],
         comment="Simple RDF Collection with a single element collection.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, (ex.o))],
         expected=[(ex.s, ex.p, ex.o)],
         comment="Note that the object it NOT a single element tuple!",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, (ex.o1, ex.o2))],
         expected=[
@@ -354,7 +355,7 @@ bnode_params = [
         ],
         comment="Simple RDF Collection with a two element collection.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, (ex.o1, ex.o2, "literal"))],
         expected=[
@@ -369,7 +370,7 @@ bnode_params = [
         comment="Simple RDF Collection with a three element collection.",
     ),
     ## recursive code paths
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ttl(ex.s2, (ex.p2, "1")), [(ex.p3, "2")], ("3",))],
         expected=[
@@ -383,7 +384,7 @@ bnode_params = [
         ],
         comment="Recursive object list.",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[
             (
@@ -409,7 +410,7 @@ bnode_params = [
         ],
         comment="recursive blank node",
     ),
-    TestParameter(
+    TripleConstructorTestParameter(
         s=ex.s,
         po=[(ex.p, ("1", ttl(ex.s2, (ex.p2, ex.o, "2")), [(ex.p3, "3")], ("4",)))],
         expected=[
