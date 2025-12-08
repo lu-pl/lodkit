@@ -36,7 +36,7 @@ The `lodkit.ttl` triple constructor implements a Turtle-inspired functional DSL 
 
 and is recursive/composable on all code paths.
 
-`lodkit.ttl` implements the `Iterable[_Triple]` protocol and exposes a `to_graph` method for convenient construction of an `rdflib.Graph` instance.
+`lodkit.ttl` implements the `Iterable[lodkit.types.Triple]` protocol and exposes a `to_graph` method for convenient construction of an `rdflib.Graph` instance.
 
 ### Examples
 
@@ -172,14 +172,14 @@ This is actually a relatively simple example. Triple objects in the `lodkit.ttl`
 
 ### Building Triple Chains
 
-As mentioned, `lodkit.ttl` implements the `Iterable[_Triple]` protocol; arbitrary `lodkit.ttl` instances can therefore be chained to create highly modular and scalable triple generation pipelines.
+As mentioned, `lodkit.ttl` implements the `Iterable[lodkit.types.Triple]` protocol; arbitrary `lodkit.ttl` instances can therefore be chained to create highly modular and scalable triple generation pipelines.
 
 A minimal example of such a (layered) triple pipeline could look like this:
 
 ```python
 class TripleGenerator:
 
-    def triple_generator_1(self) -> Iterator[_Triple]:
+    def triple_generator_1(self) -> Iterator[Triple]:
         if conditional:
             yield (s, p, o)
         yield from ttl(s, ...)
@@ -187,7 +187,7 @@ class TripleGenerator:
     # more triple generator method definitions
     ...
 
-    def __iter__(self) -> Iterator[_Triple]:
+    def __iter__(self) -> Iterator[Triple]:
         return itertools.chain(
             self.triple_generator_1(),
             self.triple_generator_2(),
@@ -195,7 +195,7 @@ class TripleGenerator:
             ...
         )
 
-triples: Iterator[_Triple] = itertools.chain(TripleGenerator(), ...)
+triples: Iterator[Triple] = itertools.chain(TripleGenerator(), ...)
 ```
 
 ## TripleChain
@@ -209,7 +209,8 @@ LODKit provides a `TripleChain` class for convenient triple chain construction. 
 ```python
 from collections.abc import Iterator
 
-from lodkit import TripleChain, _Triple, ttl
+from lodkit import TripleChain, ttl
+from lodkit.types import Triple
 from rdflib import Graph, Namespace
 
 ex = Namespace("https://example.com/")
@@ -220,7 +221,7 @@ more_triples = ttl(ex.s, (ex.p2, [(ex.p3, ex.o)]))
 yet_more_triples = ttl(ex.s, (ex.p3, ex.o))
 
 
-def any_iterable_of_triples() -> Iterator[_Triple]:
+def any_iterable_of_triples() -> Iterator[Triple]:
     yield (ex.s, ex.p, ex.o)
 
 
@@ -264,7 +265,8 @@ type(some_graph)  # <class 'rdflib.graph.Graph'>
 RDF import functionality is available after registering `lodkit.RDFImporter` with the import maschinery e.g by calling `lodkit.enable_rdf_import`.
 
 ## Types
-`lodkit.lod_types` defines several useful `typing.TypeAliases` and `typing.Literals` for working with RDFLib-based Python functionalities.
+
+`lodkit.types` defines several useful types for working with RDFLib-based Python code.
 
 ## URI Tools
 
@@ -389,6 +391,6 @@ def test_some_function(triples):
     assert len(graph) == len(triples)
 ```
 
-The strategy generates up to 100 (by default, see [settings](https://hypothesis.readthedocs.io/en/latest/settings.html)) lists of 1-10 `tuple[_TripleSubject, URIRef, _TripleObject]` and passes them to the test function.
+The strategy generates up to 100 (by default, see [settings](https://hypothesis.readthedocs.io/en/latest/settings.html)) lists of 1-10 `tuple[lodkit.types.TripleSubject, URIRef, lodkit.types.TripleObject]` and passes them to the test function.
 
 > Warning: The API of lodkit.tesing_tools is very likely to change soon! Strategies should be module-level callables and not properties of a Singleton.
