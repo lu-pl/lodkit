@@ -2,11 +2,11 @@ from collections.abc import Iterable
 import itertools
 from typing import Self
 
-from lodkit import _Triple
 from lodkit.triple_tools.utils import _ToGraphMixin
+from lodkit.types import Triple
 
 
-class TripleChain(itertools.chain[_Triple], _ToGraphMixin):
+class TripleChain(itertools.chain[Triple], _ToGraphMixin):
     """A simple itertools.chain for chaining lodkit._Triple iterables.
 
     TripleChain implements a fluid chain interface,
@@ -17,5 +17,5 @@ class TripleChain(itertools.chain[_Triple], _ToGraphMixin):
     Note that calling to_graph exhausts the TripleChain object.
     """
 
-    def chain(self, *others: Iterable[_Triple]) -> Self:
+    def chain(self, *others: Iterable[Triple]) -> Self:
         return self.__class__(self, *others)

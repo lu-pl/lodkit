@@ -6,14 +6,15 @@ import pytest
 from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import isomorphic
 
-from lodkit import _TripleObject, _TripleSubject, ttl
+from lodkit import ttl
 from lodkit.triple_tools.ttl_constructor import _TPredicateObjectPair
+from lodkit.types import TripleObject, TripleSubject
 
 
 class TripleConstructorTestParameter(NamedTuple):
-    s: _TripleSubject
+    s: TripleSubject
     po: list[_TPredicateObjectPair]
-    expected: list[tuple[_TripleSubject, URIRef, _TripleObject]]
+    expected: list[tuple[TripleSubject, URIRef, TripleObject]]
     comment: str | None = None
 
 

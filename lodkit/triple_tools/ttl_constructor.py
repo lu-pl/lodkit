@@ -2,13 +2,14 @@
 
 from collections.abc import Iterable, Iterator
 
-from lodkit.lod_types import _Triple, _TripleObject, _TripleSubject
-from lodkit.triple_tools.utils import _ToGraphMixin
 from rdflib import BNode, Literal, RDF, URIRef
+
+from lodkit.triple_tools.utils import _ToGraphMixin
+from lodkit.types import Triple, TripleObject, TripleSubject
 
 
 type _TPredicateObjectPairObject = (
-    _TripleObject
+    TripleObject
     | str
     | list[_TPredicateObjectPair]
     | tuple[_TPredicateObjectPairObject, ...]
@@ -18,18 +19,18 @@ type _TPredicateObjectPairObject = (
 type _TPredicateObjectPair = tuple[URIRef, *tuple[_TPredicateObjectPairObject, ...]]
 
 
-class ttl(Iterable[_Triple], _ToGraphMixin):
+class ttl(Iterable[Triple], _ToGraphMixin):
     """Triple generation facility that implements a Turtle-like interface."""
 
     def __init__(
         self,
-        subject: _TripleSubject,
+        subject: TripleSubject,
         *predicate_object_pairs: _TPredicateObjectPair,
     ) -> None:
         self.subject = subject
         self.predicate_object_pairs = predicate_object_pairs
 
-    def __iter__(self) -> Iterator[_Triple]:
+    def __iter__(self) -> Iterator[Triple]:
         """Generate an iterator of 3-tuple triple representations."""
 
         for pred, *objs in self.predicate_object_pairs:

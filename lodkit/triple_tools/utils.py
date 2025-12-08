@@ -3,14 +3,15 @@
 from collections.abc import Iterable
 import warnings
 
-from lodkit import _Triple
 from rdflib import Graph
+
+from lodkit.types import Triple
 
 
 class _ToGraphMixin:
     """Mixin that adds a to_graph method for generating graphs from Iterable[_Triple] objects."""
 
-    def to_graph(self: Iterable[_Triple], graph: Graph | None = None) -> Graph:
+    def to_graph(self: Iterable[Triple], graph: Graph | None = None) -> Graph:
         _graph: Graph = Graph() if graph is None else graph
 
         for triple in self:
