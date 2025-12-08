@@ -5,17 +5,17 @@ from typing import Literal as TLiteral
 from rdflib import BNode, Literal, URIRef
 
 
-type _TripleSubject = URIRef | BNode
-type _TriplePredicate = URIRef
-type _RDFTerm = Literal | URIRef | BNode
-type _TripleObject = _RDFTerm
-type _Triple = tuple[_TripleSubject, URIRef, _TripleObject]
+type TripleSubject = URIRef | BNode
+type TriplePredicate = URIRef
+type RDFTerm = Literal | URIRef | BNode
+type TripleObject = RDFTerm
+type Triple = tuple[TripleSubject, URIRef, TripleObject]
 
-type _LiteralObjectTriple = tuple[_TripleSubject, URIRef, Literal]
-type _URIObjectTriple = tuple[_TripleSubject, URIRef, URIRef]
-type _BNodeObjectTriple = tuple[_TripleSubject, URIRef, BNode]
+type LiteralObjectTriple = tuple[TripleSubject, URIRef, Literal]
+type URIObjectTriple = tuple[TripleSubject, URIRef, URIRef]
+type BNodeObjectTriple = tuple[TripleSubject, URIRef, BNode]
 
-type _GraphParseFormatOptions = TLiteral[
+type GraphParseFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "text/n3",
@@ -38,7 +38,7 @@ type _GraphParseFormatOptions = TLiteral[
     "hext",
 ]
 
-type _TripleParseFormatOptions = TLiteral[
+type TripleParseFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "text/n3",
@@ -55,7 +55,7 @@ type _TripleParseFormatOptions = TLiteral[
     "hext",
 ]
 
-type _QuadParseFormatOptions = TLiteral[
+type QuadParseFormatOptions = TLiteral[
     "nquads",
     "application/n-quads",
     "trix",
@@ -64,7 +64,7 @@ type _QuadParseFormatOptions = TLiteral[
     "application/trig",
 ]
 
-type _GraphSerializeFormatOptions = TLiteral[
+type GraphSerializeFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "pretty-xml",
@@ -89,7 +89,7 @@ type _GraphSerializeFormatOptions = TLiteral[
     "hext",
 ]
 
-type _TripleSerializeFormatOptions = TLiteral[
+type TripleSerializeFormatOptions = TLiteral[
     "application/rdf+xml",
     "xml",
     "pretty-xml",
@@ -108,7 +108,7 @@ type _TripleSerializeFormatOptions = TLiteral[
     "hext",
 ]
 
-type _QuadSerializeFormatOptions = TLiteral[
+type QuadSerializeFormatOptions = TLiteral[
     "nquads",
     "application/n-quads",
     "trix",
