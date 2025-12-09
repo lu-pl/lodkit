@@ -12,11 +12,4 @@ from lodkit.triple_tools.ttl_constructor import (
     _TPredicateObjectPairObject,
     ttl,
 )
-from lodkit.uri_tools.uribase import uribase
-from lodkit.uri_tools.uriclass import make_uriclass, uriclass
-from lodkit.uri_tools.utils import (
-    URIConstructorFactory,
-    generate_uri_hash,
-    generate_uri_id_segment,
-    mkuri_factory,
-)
+from lodkit.uri_tools.uri_constructor import URIConstructor
