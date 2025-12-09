@@ -1,6 +1,7 @@
 """Utility functions for Ontology Namespaces."""
 
 from collections.abc import Iterator
+import logging
 from pathlib import PurePath
 import re
 from typing import Annotated, IO, TextIO, TypeAlias, cast
@@ -16,9 +17,11 @@ from lodkit.namespace_tools._messages import (
     _namespace_delimiter_warning_message,
     _no_ontology_header_message,
 )
-from loguru import logger
 from rdflib import Graph, Namespace, OWL, RDF, RDFS, URIRef
 from rdflib.parser import InputSource
+
+
+logger = logging.getLogger(__name__)
 
 
 _TGraphParseSource: Annotated[
