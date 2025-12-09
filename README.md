@@ -269,43 +269,6 @@ RDF import functionality is available after registering `lodkit.RDFImporter` wit
 
 ## URI Tools
 
-### uriclass, make_uriclass
-
-`uriclass` and `make_uriclass` provide dataclass-inspired URI constructor functionality.
-
-With `uriclass`, class-level attributes are converted to URIs according to uri_constructor.
-For class attributes with just type information, URIs are constructed using UUIDs,
-for class attributes with string values, URIs are constructed using hashing based on that string.
-
-```python
-from lodkit import uriclass
-
-@uriclass(Namespace("https://test.org/test/"))
-class uris:
-    x1: str
-
-    y1 = "hash value 1"
-    y2 = "hash value 1"
-
-    print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-    print(uris.y1 == uris.y2)  # True
-```
-
-`make_uriclass` provides equalent functionality but is more apt for dynamic use.
-
-```python
-from lodkit import make_uriclass
-
-uris = make_uriclass(
-    cls_name="TestURIFun",
-	    namespace="https://test.org/test/",
-        fields=("x", ("y1", "hash value 1"), ("y2", "hash value 1")),
-    )
-
-    print(uris.x1)             # Namespace("https://test.org/test/<UUID>")
-    print(uris.y1 == uris.y2)  # True
-```
-	
 ### uritools.utils
 `uritools.utils` defines base functionality for generating UUID-based and hashed URIs.
 
