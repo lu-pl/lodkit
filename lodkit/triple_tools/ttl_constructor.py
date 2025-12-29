@@ -8,15 +8,15 @@ from lodkit.triple_tools.utils import _ToGraphMixin
 from lodkit.types import Triple, TripleObject, TripleSubject
 
 
-type _TPredicateObjectPairObject = (
+type TPredicateObjectPairObject = (
     TripleObject
     | str
-    | list[_TPredicateObjectPair]
-    | tuple[_TPredicateObjectPairObject, ...]
+    | list[TPredicateObjectPair]
+    | tuple[TPredicateObjectPairObject, ...]
     | ttl
 )
 
-type _TPredicateObjectPair = tuple[URIRef, *tuple[_TPredicateObjectPairObject, ...]]
+type TPredicateObjectPair = tuple[URIRef, *tuple[TPredicateObjectPairObject, ...]]
 
 
 class ttl(Iterable[Triple], _ToGraphMixin):
@@ -25,7 +25,7 @@ class ttl(Iterable[Triple], _ToGraphMixin):
     def __init__(
         self,
         subject: TripleSubject,
-        *predicate_object_pairs: _TPredicateObjectPair,
+        *predicate_object_pairs: TPredicateObjectPair,
     ) -> None:
         self.subject = subject
         self.predicate_object_pairs = predicate_object_pairs

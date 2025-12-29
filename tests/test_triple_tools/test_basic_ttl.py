@@ -7,13 +7,13 @@ from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
 from rdflib.compare import isomorphic
 
 from lodkit import ttl
-from lodkit.triple_tools.ttl_constructor import _TPredicateObjectPair
+from lodkit.triple_tools.ttl_constructor import TPredicateObjectPair
 from lodkit.types import TripleObject, TripleSubject
 
 
 class TripleConstructorTestParameter(NamedTuple):
     s: TripleSubject
-    po: list[_TPredicateObjectPair]
+    po: list[TPredicateObjectPair]
     expected: list[tuple[TripleSubject, URIRef, TripleObject]]
     comment: str | None = None
 
