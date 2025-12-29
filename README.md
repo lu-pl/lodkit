@@ -336,29 +336,3 @@ crm.E39_Author  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Author') + User
 
 Note that `rdflib.ClosedNamespaces` are meant to be instantiated and `rdflib.DefinedNameSpaces` are meant to be extended,
 which is reflected in `lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace`.
-
-
-## Testing Tools
-`lodkit.testing_tools` aims to provide general definitions (e.g Graph format options) and [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) strategies useful for testing RDFLib-based Python and code.
-
-E.g. the `TripleStrategies.triples` strategy generates random triples utilizing all permissible subject, predicate and object types including lang-tagged and xsd-typed literals.
-The following uses the triples strategies together with a Hypothesis strategy to create random graphs:
-
-```python
-from hypothesis import given, strategies as st
-from lodkit import tst
-from rdflib import Graph
-
-
-@given(triples=st.lists(tst.triples, min_size=1, max_size=10))
-def test_some_function(triples):
-    graph = Graph()
-    for triple in triples:
-        graph.add(triple)
-
-    assert len(graph) == len(triples)
-```
-
-The strategy generates up to 100 (by default, see [settings](https://hypothesis.readthedocs.io/en/latest/settings.html)) lists of 1-10 `tuple[lodkit.types.TripleSubject, URIRef, lodkit.types.TripleObject]` and passes them to the test function.
-
-> Warning: The API of lodkit.tesing_tools is very likely to change soon! Strategies should be module-level callables and not properties of a Singleton.
