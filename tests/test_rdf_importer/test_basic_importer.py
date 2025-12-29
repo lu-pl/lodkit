@@ -1,9 +1,7 @@
 """Pytest entry point for RDFImporter tests."""
 
 import functools
-from importlib import import_module
 import sys
-from tempfile import NamedTemporaryFile
 
 import pytest
 from rdflib import Graph
@@ -88,4 +86,4 @@ def test_importer_dispatch(restore_meta_path):
     sys.meta_path.insert(0, RDFImporter())
 
     with pytest.raises(ImportError):
-        from tests.data.graphs import dne
+        from tests.data.graphs import dne  # noqa: F401
