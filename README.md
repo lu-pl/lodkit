@@ -270,18 +270,24 @@ RDF import functionality is available after registering `lodkit.RDFImporter` wit
 ## URI Tools
 
 ### uritools.utils
-`uritools.utils` defines base functionality for generating UUID-based and hashed URIs.
 
-`URIConstructorFactory` (alias of `mkuri_factory`) constructs a callable for generating URIs.
-The returned callable takes an optional str argument 'hash_value'; 
-If a hash value is given, the segment is generated using a hash function, else the path is generated using a uuid.
+## URIConstructor
+
+The `URIConstructor` class provides namespaced URI constructor functionality.
+
+A `URIConstructor` is initialized given a namespace.
+Calls to the initialized object will construct `rdflib.URIRefs` for that namespace.
+
+If a `hash_value` argument of type `str | bytes` is provided, the URIRef will be generated with the sha256 hash of the `hash_value` argument as last URI component;
+else a URIRef with a unique component will be generated using UUID4.
 
 ```python
-from lodkit import URIConstructorFactory
+make_uri = URIConstructor("https://example.com/")
 
-mkuri = URIConstructorFactory("https://test.namespace/")
-print(mkuri())                         # URIRef("https://test.namespace/<UUID>")
-print(mkuri("test") == mkuri("test"))  # True
+make_uri()        # rdflib.URIRef('https://example.com/<UUID4>')
+make_uri("test")  # rdflib.URIRef('https://example.com/<sha256>')
+
+make_uri("test") == make_uri("test")  # True
 ```
 
 ## Namespace Tools
