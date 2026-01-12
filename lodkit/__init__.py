@@ -1,9 +1,9 @@
 """Entry point for LODkit."""
 
-from lodkit.namespace_tools.namespace_graph import NamespaceGraph
-from lodkit.namespace_tools.ontology_namespaces import (
+from lodkit.namespace_tools.ontology_namespace import (
     ClosedOntologyNamespace,
-    DefinedOntologyNamespace,
+    EmptySolutionException,
+    NoSolutionException,
 )
 from lodkit.rdf_importer import RDFImporter, enable_rdf_import
 from lodkit.triple_tools.triple_chain import TripleChain
