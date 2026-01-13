@@ -2,11 +2,14 @@
 
 import datetime
 import decimal
+from pathlib import PurePath
 from typing import Literal as TLiteral
+from typing import IO, TextIO
 from xml.dom.minidom import Document
 
 from rdflib import BNode, Literal, URIRef
 from rdflib.compat import long_type
+from rdflib.parser import InputSource
 from rdflib.xsd_datetime import Duration
 
 
@@ -68,6 +71,12 @@ Return type provenance:
     - bool: rdflib.term._parseBoolean
     - int, float, decimal.Decimal, long_type: rdflib.term.XSDToPython
     - Document: rdflib.term._parseXML
+"""
+
+type GraphParseSource = IO[bytes] | TextIO | InputSource | str | bytes | PurePath
+"""Source parameter type for rdflib.Graph.parse.
+
+This is the exact union type as defined in RDFLib.
 """
 
 type GraphParseFormatOptions = TLiteral[
