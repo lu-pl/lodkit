@@ -269,9 +269,7 @@ RDF import functionality is available after registering `lodkit.RDFImporter` wit
 
 ## URI Tools
 
-### uritools.utils
-
-## URIConstructor
+### URIConstructor
 
 The `URIConstructor` class provides namespaced URI constructor functionality.
 
@@ -292,47 +290,41 @@ make_uri("test") == make_uri("test")  # True
 
 ## Namespace Tools
 
-### NamespaceGraph
-`lodkit.NamespaceGraph` is a simple rdflib.Graph subclass for easy and convenient namespace binding.
+### ClosedOntologyNamespace
+
+`ClosedOntologyNamespace` is an `rdflib.namespace.ClosedNamespace`-inspired utility class that constructs an immutable (*closed*) mapping of RDF term names to IRIs based on an Ontology or generally an RDF graph source.
+
+Given a `lodkit.types.GraphParseSource` or an `rdflib.Graph`, a `MappingProxyType[str, rdflib.URIRef]` mapping is created and stored in `ClosedOntologyNamespace.mapping` by 
+
+1. Querying the RDF source for RDF class and property definitions (RDF/RDFS/OWL class/property type assertions and OWL named individual assertions)
+
+2. Deriving RDF term names by extracting the last IRI component delimited by `#`, `/` or `:` for generating the RDF term name -> IRI mapping.
+
+
+Namespace members are accessible as both attributes and items of a given `ClosedOntologyNamespace` instance, i.e. attribute and item access is routed to `ClosedOntologyNamespace.mapping`.
+For dictionary operations over the namespace mapping, the public `ClosedOntologyNamespace.mapping` can be accessed directly.
+
+
+The following example loads a remote Ontology and accesses namespace members using attribute and item lookup.
 
 ```python
-from lodkit import NamespaceGraph
-from rdflib import Namespace
+from lodkit import ClosedOntologyNamespace
 
-class CLSGraph(NamespaceGraph):
-	crm = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
-	crmcls = Namespace("https://clscor.io/ontologies/CRMcls/")
-	clscore = Namespace("https://clscor.io/entity/")
-
-graph = CLSGraph()
-
-ns_check: bool = all(
-	ns in map(lambda x: x[0], graph.namespaces())
-	for ns in ("crm", "crmcls", "clscore")
+crm = ClosedOntologyNamespace(
+    source="https://cidoc-crm.org/rdfs/7.1.3/CIDOC_CRM_v7.1.3.rdf"
 )
 
-print(ns_check)  # True
+crm.E92_Spacetime_Volume  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume')
+crm["E52_Time-Span"]      # URIRef('http://www.cidoc-crm.org/cidoc-crm/E52_Time-Span')
+
+crm.E21_Author            # AttributeError
+crm["E21-Person"]         # AttributeError
 ```
 
-## ClosedOntologyNamespace, DefinedOntologyNamespace
-`lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace` are `rdflib.ClosedNamespace` and `rdflib.DefinedNameSpace` subclasses 
-that are able to load namespace members based on an ontology.
+> Note that lookup failure for both attribute and item access on `ClosedOntologyNamespace` objects raises an `AttributeError`!
 
-```python
-crm = ClosedOntologyNamespace(ontology="./CIDOC_CRM_v7.1.3.ttl")
+In the case of RDF term names conflicting with class namespace names, the class namespace names take precedence for attribute access; conflicting RDF terms are still accessible via item lookup or through the `ClosedOntologyNamespace.mapping` proxy.
 
-crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
-crm.E39_Author  # AttributeError
-```
-
-```python
-class crm(DefinedOntologyNamespace):
-	ontology = "./CIDOC_CRM_v7.1.3.ttl"
-
-crm.E39_Actor   # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Actor')
-crm.E39_Author  # URIRef('http://www.cidoc-crm.org/cidoc-crm/E39_Author') + UserWarning
-```
-
-
-Note that `rdflib.ClosedNamespaces` are meant to be instantiated and `rdflib.DefinedNameSpaces` are meant to be extended,
-which is reflected in `lodkit.ClosedOntologyNamespace` and `lodkit.DefinedOntologyNamespace`.
+> Note that *currently* `ClosedOntologyNamespace` is a highly dynamic runtime construct and does not support static analysis and IDE completion for namespace entries.
+	
+	
