@@ -1,6 +1,6 @@
 [project]
 name = "lodkit"
-version = "0.5.0"
+version = "0.6.0"
 description = ""
 authors = [{ name = "Lukas Plank", email = "lupl@tuta.io" }]
 requires-python = ">=3.12"
