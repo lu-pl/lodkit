@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.6.0](https://github.com/lu-pl/lodkit/compare/v0.5.0...v0.6.0) (2026-01-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* discontinue old namespace_tools functionality
+
+### Features
+
+* add GraphParseSource type ([6c6bf9f](https://github.com/lu-pl/lodkit/commit/6c6bf9f43885dc1495d9b6adb66563188108d5e4))
+* implement ClosedOntologyNamespace ([0c05102](https://github.com/lu-pl/lodkit/commit/0c0510222b804d965aa1a8fc4abe0c0a0a169fd1))
+
+
+### Documentation
+
+* add README section on ClosedOntologyNamespace ([c08e673](https://github.com/lu-pl/lodkit/commit/c08e673d2e76fc95c2cac0afe6bb028443e0f242))
+
+
+### Miscellaneous Chores
+
+* discontinue old namespace_tools functionality ([5f736ca](https://github.com/lu-pl/lodkit/commit/5f736cac031a2a125d5add1a33c0965ef630ea44))
+
 ## [0.5.0](https://github.com/lu-pl/lodkit/compare/v0.4.0...v0.5.0) (2025-12-29)
 
 
