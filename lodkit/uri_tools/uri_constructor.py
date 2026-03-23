@@ -29,8 +29,6 @@ class URIConstructor:
         else:
             if isinstance(hash_value, str):
                 hash_value = hash_value.encode("utf8")
-
-            digest = sha256(hash_value).hexdigest()
-            segment = digest[:36]
+            segment = sha256(hash_value).hexdigest()
 
         return self.namespace[segment]
