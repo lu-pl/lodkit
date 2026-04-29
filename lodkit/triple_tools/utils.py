@@ -4,6 +4,7 @@ from collections.abc import Iterable
 import warnings
 
 from rdflib import Graph
+from rdflib.compare import to_canonical_graph
 
 from lodkit.types import Triple
 
@@ -11,7 +12,7 @@ from lodkit.types import Triple
 class _ToGraphMixin:
     """Mixin that adds a to_graph method for generating graphs from Iterable[_Triple] objects."""
 
-    def to_graph(self: Iterable[Triple], graph: Graph | None = None) -> Graph:
+    def to_graph(self: Iterable[Triple], graph: Graph | None = None, canonical: bool = False) -> Graph:
         _graph: Graph = Graph() if graph is None else graph
 
         for triple in self:
@@ -21,4 +22,6 @@ class _ToGraphMixin:
             msg = f"Graph object '{_graph}' is empty. This might indicate an exhausted iterator."
             warnings.warn(msg)
 
-        return _graph
+        return to_canonical_graph(_graph) if canonical else _graph
+
+
