@@ -109,6 +109,20 @@ ex:s ex:p [
 ] .
 ```
 
+Also, `[]` as the subject position is resolved as `rdflib.BNode()`:
+
+
+```python
+triples = ttl([], (ex.p, ex.o))
+```
+
+```ttl
+@prefix ns1: <https://example.com/> .
+
+[] ns1:p ns1:o .
+```
+
+
 #### RDF Collections
 Python tuples in the object position of predicate-object constellations are interpreted as Turtle Collection:
 
