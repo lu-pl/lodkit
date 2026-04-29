@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/lu-pl/lodkit/compare/v0.6.0...v0.7.0) (2026-04-29)
+
+
+### Features
+
+* add support for `[]` in subject position in the ttl constructor ([7c32566](https://github.com/lu-pl/lodkit/commit/7c325667697fac486505c73b19d8211f7b2fb20a))
+
 ## [0.6.0](https://github.com/lu-pl/lodkit/compare/v0.5.0...v0.6.0) (2026-01-15)
 
 
