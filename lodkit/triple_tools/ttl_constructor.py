@@ -1,12 +1,12 @@
 """LODKit Triple utilities."""
 
 from collections.abc import Iterable, Iterator
+from typing import Never
 
-from rdflib import BNode, Literal, RDF, URIRef
+from rdflib import RDF, BNode, Literal, URIRef
 
 from lodkit.triple_tools.utils import _ToGraphMixin
 from lodkit.types import Triple, TripleObject, TripleSubject
-
 
 type TPredicateObjectPairObject = (
     TripleObject
@@ -24,10 +24,10 @@ class ttl(Iterable[Triple], _ToGraphMixin):
 
     def __init__(
         self,
-        subject: TripleSubject,
+        subject: TripleSubject | list[Never],
         *predicate_object_pairs: TPredicateObjectPair,
     ) -> None:
-        self.subject = subject
+        self.subject = BNode() if subject == [] else subject
         self.predicate_object_pairs = predicate_object_pairs
 
     def __iter__(self) -> Iterator[Triple]:
