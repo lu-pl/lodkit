@@ -1,8 +1,9 @@
 from types import MappingProxyType
 
-from lodkit.types import GraphParseSource
 from rdflib import Graph, URIRef
 from rdflib.query import Result
+
+from lodkit.types import GraphParseSource
 
 
 class NoSolutionException(Exception): ...
@@ -44,6 +45,8 @@ class ClosedOntologyNamespace:
     values ?type {
       rdfs:Class
       owl:Class
+
+      rdfs:Datatype
 
       rdf:Property
       owl:ObjectProperty

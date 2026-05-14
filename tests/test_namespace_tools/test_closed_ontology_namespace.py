@@ -1,9 +1,9 @@
 """Pytest entry point for ClosedOntologyNamespace tests."""
 
 import pytest
+from rdflib import RDF, RDFS, Graph, URIRef
 
 from lodkit import ClosedOntologyNamespace, NoSolutionException
-from rdflib import Graph, RDF, RDFS, URIRef
 
 
 def test_closed_ns_term_types():
@@ -24,6 +24,8 @@ def test_closed_ns_term_types():
     <urn:owl_annotationproperty> a owl:AnnotationProperty .
 
     <urn:owl_namedindividual> a owl:NamedIndividual .
+    
+    <urn:rdfs_datatype> a rdfs:Datatype .
     """
 
     g = Graph().parse(data=data, format="ttl")
@@ -37,6 +39,7 @@ def test_closed_ns_term_types():
         "owl_datatypeproperty": URIRef("urn:owl_datatypeproperty"),
         "owl_annotationproperty": URIRef("urn:owl_annotationproperty"),
         "owl_namedindividual": URIRef("urn:owl_namedindividual"),
+        "rdfs_datatype": URIRef("urn:rdfs_datatype"),
     }
 
     assert ns.mapping == expected
