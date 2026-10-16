@@ -27,8 +27,20 @@ class ttl(Iterable[Triple], _ToGraphMixin):
         subject: TripleSubject | list[Never],
         *predicate_object_pairs: PredicateObjectPair,
     ) -> None:
-        self.subject = BNode() if subject == [] else subject
+        self._subject = subject
         self.predicate_object_pairs = predicate_object_pairs
+
+    @property
+    def subject(self):
+        match self._subject:
+            case list() if not self._subject:
+                return BNode()
+            case _:
+                return self._subject
+
+    @subject.setter
+    def subject(self, subject: TripleSubject | list[Never]) -> None:
+        self._subject = subject
 
     def __iter__(self) -> Iterator[Triple]:
         """Generate an iterator of 3-tuple triple representations."""
