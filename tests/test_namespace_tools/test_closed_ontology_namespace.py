@@ -75,7 +75,7 @@ def test_closed_ns_delimited_iris():
     assert ns.mapping == expected
 
     # getitem checks
-    for k, v in ns.mapping.items():
+    for k in ns.mapping.keys():  # noqa
         assert ns[k] == expected[k]
 
 
@@ -130,7 +130,7 @@ def test_closed_ns_attribute_error():
     ns = ClosedOntologyNamespace(source=g)
 
     with pytest.raises(AttributeError):
-        ns.dne
+        ns.dne  # noqa
 
     with pytest.raises(AttributeError):
         ns["dne"]

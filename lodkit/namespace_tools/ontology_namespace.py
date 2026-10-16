@@ -70,7 +70,7 @@ class ClosedOntologyNamespace:
         graph: Graph = (
             self.source
             if isinstance(self.source, Graph)
-            else Graph().parse(source=self.source, *parse_args, **parse_kwargs)
+            else Graph().parse(*parse_args, source=self.source, **parse_kwargs)
         )
         sparql_result: Result = graph.query(self._query)
 
