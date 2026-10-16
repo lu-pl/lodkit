@@ -3,8 +3,8 @@
 import datetime
 import decimal
 from pathlib import PurePath
-from typing import Literal as TLiteral
 from typing import IO, TextIO
+from typing import Literal as TLiteral
 from xml.dom.minidom import Document
 
 from rdflib import BNode, Literal, URIRef
@@ -12,22 +12,21 @@ from rdflib.compat import long_type
 from rdflib.parser import InputSource
 from rdflib.xsd_datetime import Duration
 
-
 __all__ = (
-    "TripleSubject",
-    "TriplePredicate",
-    "RDFTerm",
-    "TripleObject",
-    "Triple",
-    "LiteralObjectTriple",
-    "URIObjectTriple",
     "BNodeObjectTriple",
     "GraphParseFormatOptions",
-    "TripleParseFormatOptions",
-    "QuadParseFormatOptions",
     "GraphSerializeFormatOptions",
-    "TripleSerializeFormatOptions",
+    "LiteralObjectTriple",
+    "QuadParseFormatOptions",
     "QuadSerializeFormatOptions",
+    "RDFTerm",
+    "Triple",
+    "TripleObject",
+    "TripleParseFormatOptions",
+    "TriplePredicate",
+    "TripleSerializeFormatOptions",
+    "TripleSubject",
+    "URIObjectTriple",
 )
 
 type TripleSubject = URIRef | BNode

@@ -3,7 +3,7 @@
 from typing import NamedTuple
 
 import pytest
-from rdflib import BNode, Graph, Literal, Namespace, RDF, URIRef
+from rdflib import RDF, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.compare import isomorphic
 
 from lodkit import ttl

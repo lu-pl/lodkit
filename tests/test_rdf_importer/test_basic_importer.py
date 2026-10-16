@@ -55,7 +55,7 @@ def test_basic_rdf_import(restore_meta_path):
 def test_rdf_import_isomorphy(restore_meta_path):
     enable_rdf_import()
 
-    from tests.data.graphs import ttl_graph, xml_graph, nt_graph, jsonld_graph
+    from tests.data.graphs import jsonld_graph, nt_graph, ttl_graph, xml_graph
 
     def _isomorphic(g1: Graph, g2: Graph) -> Graph:
         """Composable Graph isomorphy predicate."""

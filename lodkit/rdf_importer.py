@@ -1,10 +1,10 @@
 """Custom importer for RDF files."""
 
-from collections.abc import Sequence
 import importlib.abc
 import importlib.machinery
-from pathlib import Path
 import sys
+from collections.abc import Sequence
+from pathlib import Path
 from types import ModuleType
 
 from rdflib import Graph
@@ -73,7 +73,6 @@ class RDFImporter(importlib.abc.MetaPathFinder, importlib.abc.Loader):
         importlib.abc.Loader raises an ImportError if a concrete Loader does not define exec_module though.
         See https://github.com/python/cpython/blob/main/Lib/importlib/_abc.py.
         """
-        pass
 
 
 def enable_rdf_import() -> None:

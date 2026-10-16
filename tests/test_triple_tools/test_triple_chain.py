@@ -1,7 +1,8 @@
-from lodkit import TripleChain, ttl
 import pytest
 from rdflib import Namespace
 from rdflib.compare import isomorphic
+
+from lodkit import TripleChain, ttl
 
 ex = Namespace("https://example.com/")
 
@@ -16,12 +17,10 @@ def generate_chain_params() -> list[TripleChain]:
         TripleChain(t1, t2).chain(t3),
         TripleChain(t1).chain(t2, t3),
         TripleChain().chain(t1, t2, t3),
-        #
         TripleChain().chain(t1, t2, t3).chain(),
         TripleChain().chain(t1, t2).chain(t3),
         TripleChain().chain(t1).chain(t2, t3),
         TripleChain().chain().chain(t1, t2, t3),
-        #
         TripleChain(t1).chain(t2).chain(t3),
     ]
 

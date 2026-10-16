@@ -1,5 +1,5 @@
-from collections.abc import Iterable
 import itertools
+from collections.abc import Iterable
 from typing import Self
 
 from lodkit.triple_tools.utils import _ToGraphMixin

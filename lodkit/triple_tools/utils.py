@@ -1,7 +1,7 @@
 """LODKit triple tools utils."""
 
-from collections.abc import Iterable
 import warnings
+from collections.abc import Iterable
 
 from rdflib import Graph
 
