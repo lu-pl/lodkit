@@ -7,7 +7,7 @@ from rdflib import RDF, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.compare import isomorphic
 
 from lodkit import ttl
-from lodkit.triple_tools.ttl_constructor import TPredicateObjectPair
+from lodkit.triple_tools.ttl_constructor import PredicateObjectPair
 from lodkit.types import TripleObject, TripleSubject
 
 

@@ -8,15 +8,15 @@ from rdflib import RDF, BNode, Literal, URIRef
 from lodkit.triple_tools.utils import _ToGraphMixin
 from lodkit.types import Triple, TripleObject, TripleSubject
 
-type TPredicateObjectPairObject = (
+type PredicateObjectPairObject = (
     TripleObject
     | str
-    | list[TPredicateObjectPair]
-    | tuple[TPredicateObjectPairObject, ...]
+    | list[PredicateObjectPair]
+    | tuple[PredicateObjectPairObject, ...]
     | ttl
 )
 
-type TPredicateObjectPair = tuple[URIRef, *tuple[TPredicateObjectPairObject, ...]]
+type PredicateObjectPair = tuple[URIRef, *tuple[PredicateObjectPairObject, ...]]
 
 
 class ttl(Iterable[Triple], _ToGraphMixin):
@@ -25,7 +25,7 @@ class ttl(Iterable[Triple], _ToGraphMixin):
     def __init__(
         self,
         subject: TripleSubject | list[Never],
-        *predicate_object_pairs: TPredicateObjectPair,
+        *predicate_object_pairs: PredicateObjectPair,
     ) -> None:
         self.subject = BNode() if subject == [] else subject
         self.predicate_object_pairs = predicate_object_pairs
