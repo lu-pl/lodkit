@@ -13,7 +13,7 @@ from lodkit.types import TripleObject, TripleSubject
 
 class TripleConstructorTestParameter(NamedTuple):
     s: TripleSubject
-    po: list[TPredicateObjectPair]
+    po: list[PredicateObjectPair]
     expected: list[tuple[TripleSubject, URIRef, TripleObject]]
     comment: str | None = None
 
