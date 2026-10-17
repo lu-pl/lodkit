@@ -1,10 +1,15 @@
 """Pytest entry point for basic lodkit.ttl tests."""
 
+import datetime
+import decimal
+from fractions import Fraction
 from typing import NamedTuple
+from xml.dom.minidom import Document
 
 import pytest
 from inline_snapshot import snapshot
 from rdflib import Literal, Namespace, URIRef
+from rdflib.xsd_datetime import Duration
 
 from lodkit import ttl
 from tests.test_triple_tools.helpers import canonical_triples
@@ -468,6 +473,111 @@ params: list[TripleConstructorTestParameter] = [
             ]
         ),
     ),
+    # Python object -> typed Literal conversion
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, 1)),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .'
+            ]
+        ),
+        comment="int object converts to an xsd:integer Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, 3.14)),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "3.14"^^<http://www.w3.org/2001/XMLSchema#double> .'
+            ]
+        ),
+        comment="float object converts to an xsd:double Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, True)),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .'
+            ]
+        ),
+        comment="bool object converts to an xsd:boolean Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, decimal.Decimal("1.5"))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "1.5"^^<http://www.w3.org/2001/XMLSchema#decimal> .'
+            ]
+        ),
+        comment="decimal.Decimal object converts to an xsd:decimal Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, datetime.date(2024, 1, 1))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "2024-01-01"^^<http://www.w3.org/2001/XMLSchema#date> .'
+            ]
+        ),
+        comment="datetime.date object converts to an xsd:date Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, datetime.datetime(2024, 1, 1, 12, 30, 0))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "2024-01-01T12:30:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .'
+            ]
+        ),
+        comment="datetime.datetime object converts to an xsd:dateTime Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, datetime.time(12, 30, 0))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "12:30:00"^^<http://www.w3.org/2001/XMLSchema#time> .'
+            ]
+        ),
+        comment="datetime.time object converts to an xsd:time Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, datetime.timedelta(days=1))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "P1D"^^<http://www.w3.org/2001/XMLSchema#dayTimeDuration> .'
+            ]
+        ),
+        comment="datetime.timedelta object converts to an xsd:dayTimeDuration Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, Duration(days=1, seconds=3600))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "P1DT1H"^^<http://www.w3.org/2001/XMLSchema#duration> .'
+            ]
+        ),
+        comment="rdflib.xsd_datetime.Duration object converts to an xsd:duration Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, Document())),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> ""^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .'
+            ]
+        ),
+        comment="xml.dom.minidom.Document object converts to an rdf:XMLLiteral Literal.",
+    ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, Fraction(1, 2))),
+        expected=snapshot(
+            [
+                '<https://example.coms> <https://example.comp> "1/2"^^<http://www.w3.org/2002/07/owl#rational> .'
+            ]
+        ),
+        comment=(
+            "fractions.Fraction object converts to an owl:rational Literal. "
+            "Note this does not round-trip generically via .toPython() - see "
+            "lodkit.types.TypedLiteral's docstring - but that is out of scope "
+            "for ttl's object coercion, which is an encode-only concern."
+        ),
+    ),
 ]
 
 
@@ -482,8 +592,15 @@ def test_ttl_triples(param):
     assert canonical_triples(graph) == param.expected
 
 
-@pytest.mark.parametrize("invalid_object", [1, None, type("Foo", (), {})])
+@pytest.mark.parametrize("invalid_object", [None, type("Foo", (), {}), b"bytes"])
 def test_fail_ttl(invalid_object):
+    """None, an unrecognized class and bytes must all raise.
+
+    bytes is a deliberate negative case, not an oversight: it is excluded
+    from lodkit.types.TypedLiteral even though rdflib.Literal round-trips
+    it in the opposite direction (see TypedLiteral's docstring), and ttl's
+    object coercion is enforced against exactly that union.
+    """
     with pytest.raises(ValueError):
         list(ttl(URIRef("urn:s"), (URIRef("urn:p"), invalid_object)))
 
