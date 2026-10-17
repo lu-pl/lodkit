@@ -484,11 +484,11 @@ def test_ttl_triples(param):
 
 @pytest.mark.parametrize("invalid_object", [1, None, type("Foo", (), {})])
 def test_fail_ttl(invalid_object):
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         list(ttl(URIRef("urn:s"), (URIRef("urn:p"), invalid_object)))
 
 
 def test_fail_ttl_single_element_pair():
     """A predicate-object pair without an object must raise, not silently yield nothing."""
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         list(ttl(URIRef("urn:s"), (URIRef("urn:p"),)))
