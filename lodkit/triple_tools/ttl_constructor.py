@@ -16,7 +16,9 @@ type PredicateObjectPairObject = (
     | ttl
 )
 
-type PredicateObjectPair = tuple[URIRef, *tuple[PredicateObjectPairObject, ...]]
+type PredicateObjectPair = tuple[
+    URIRef, PredicateObjectPairObject, *tuple[PredicateObjectPairObject, ...]
+]
 
 
 class ttl(Iterable[Triple], _ToGraphMixin):
@@ -34,6 +36,12 @@ class ttl(Iterable[Triple], _ToGraphMixin):
         """Generate an iterator of 3-tuple triple representations."""
 
         for pred, *objs in self.predicate_object_pairs:
+            if not objs:
+                raise TypeError(
+                    f"Predicate-object pair for predicate '{pred}' has no object. "
+                    "A property_value_pair must specify at least one object."
+                )
+
             for obj in objs:
                 match obj:
                     case ttl():
