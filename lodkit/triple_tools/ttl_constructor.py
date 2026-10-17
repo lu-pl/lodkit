@@ -37,7 +37,7 @@ class ttl(Iterable[Triple], _ToGraphMixin):
 
         for pred, *objs in self.predicate_object_pairs:
             if not objs:
-                raise TypeError(
+                raise ValueError(
                     f"Predicate-object pair for predicate '{pred}' has no object. "
                     "A property_value_pair must specify at least one object."
                 )
@@ -72,7 +72,7 @@ class ttl(Iterable[Triple], _ToGraphMixin):
                     case str():
                         yield (self.subject, pred, Literal(obj))
                     case _:
-                        raise TypeError(
+                        raise ValueError(
                             f"Unable to process triple object '{obj}'. "
                             "See the ttl docs and type annotation for applicable object types."
                         )
