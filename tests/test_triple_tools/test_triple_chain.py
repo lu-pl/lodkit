@@ -1,8 +1,8 @@
 import pytest
 from rdflib import Namespace
-from rdflib.compare import isomorphic
 
 from lodkit import TripleChain, ttl
+from tests.test_triple_tools.helpers import canonical_triples
 
 ex = Namespace("https://example.com/")
 
@@ -38,7 +38,7 @@ def test_basic_triple_chain_to_graph(chain):
     """Chain ttl objects and check if chains contain the same triples."""
 
     triples = ttl(ex.s, (ex.p, ex.o), (ex.p2, ex.o2), (ex.p3, ex.o3))
-    assert isomorphic(triples.to_graph(), chain.to_graph())
+    assert canonical_triples(triples.to_graph()) == canonical_triples(chain.to_graph())
 
 
 @pytest.mark.parametrize("chain", generate_chain_params())
