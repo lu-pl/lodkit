@@ -19,6 +19,7 @@ dev = [
     "pytest-randomly>=3.15.0,<4",
     "ruff>=0.14.6",
     "deptry>=0.24.0",
+    "inline-snapshot>=0.36.1",
 ]
 
 [build-system]
