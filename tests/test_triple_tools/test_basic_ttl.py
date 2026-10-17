@@ -460,6 +460,14 @@ params: list[TripleConstructorTestParameter] = [
         ),
         comment="Recursive collection.",
     ),
+    TripleConstructorTestParameter(
+        ttl_obj=ttl(ex.s, (ex.p, ())),
+        expected=snapshot(
+            [
+                "<https://example.coms> <https://example.comp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> ."
+            ]
+        ),
+    ),
 ]
 
 
