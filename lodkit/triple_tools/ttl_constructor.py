@@ -44,6 +44,10 @@ class ttl(Iterable[Triple], _ToGraphMixin):
                         yield (self.subject, pred, _b)
                         yield from ttl(_b, *obj)
                     case tuple():
+                        if not obj:
+                            yield (self.subject, pred, RDF.nil)
+                            continue
+
                         first, *rest = obj
                         yield from ttl(
                             self.subject,
