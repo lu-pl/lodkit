@@ -1,6 +1,6 @@
 .direnv
 notes.org
-scratch.py
+scratch*.py
 .claude/
 
 # Byte-compiled / optimized / DLL files
