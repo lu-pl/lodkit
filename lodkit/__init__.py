@@ -11,6 +11,7 @@ from lodkit.triple_tools.triple_chain import TripleChain
 from lodkit.triple_tools.ttl_constructor import (
     PredicateObjectPair,
     PredicateObjectPairObject,
+    TripleSubjectFactory,
     ttl,
 )
 from lodkit.uri_tools.uri_constructor import URIConstructor
