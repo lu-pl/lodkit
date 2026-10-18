@@ -8,7 +8,7 @@ from xml.dom.minidom import Document
 
 import pytest
 from inline_snapshot import snapshot
-from rdflib import Literal, Namespace, URIRef
+from rdflib import BNode, Literal, Namespace, URIRef
 from rdflib.xsd_datetime import Duration
 
 from lodkit import ttl
@@ -609,3 +609,69 @@ def test_fail_ttl_single_element_pair():
     """A predicate-object pair without an object must raise, not silently yield nothing."""
     with pytest.raises(ValueError):
         list(ttl(URIRef("urn:s"), (URIRef("urn:p"),)))
+
+
+# The following subject factory tests compare for len instead of a canonicalized snapshot
+# because the nodes of interest are structurally and thus canonically equal;
+# canonicalization resolves the structural tie-break by assigning generated nodes;
+# a snapshot would thus record dynamic and arbitrary values.
+
+
+def test_ttl_empty_list_subject_fresh_per_iteration():
+    """ttl([], ...) must generate a fresh BNode on every separate consumption.
+
+    Regression test for #74: the blank node used to be generated once in
+    __init__ and reused for the lifetime of the ttl instance. Two separately
+    generated graphs union to two distinct triples rather than deduplicating
+    to one, since each to_graph() call gets its own fresh blank node.
+    """
+    triples = ttl([], (ex.p, ex.o))
+    graph = triples.to_graph() + triples.to_graph()
+    assert len(graph) == 2
+
+
+def test_ttl_subject_factory():
+    """A zero-argument callable subject (here: the bare BNode class) is called fresh each access.
+
+    BNode itself is a valid factory simply because classes are callable;
+    calling it constructs a new instance, exactly like any other factory.
+    """
+    triples = ttl(BNode, (ex.p, ex.o))
+    graph = triples.to_graph() + triples.to_graph()
+    assert len(graph) == 2
+
+
+def test_ttl_fixed_bnode_instance_subject_is_stable():
+    """A concrete BNode() instance (as opposed to the BNode class) is a fixed, non-factory subject.
+
+    Contrasts with test_ttl_subject_factory: two separately generated graphs
+    union to a single triple, since both use the exact same subject.
+    """
+    triples = ttl(BNode(), (ex.p, ex.o))
+    graph = triples.to_graph() + triples.to_graph()
+    assert len(graph) == 1
+
+
+def test_ttl_nested_object_factory_subject_consistency():
+    """A nested ttl object with a factory subject must use one resolved value consistently.
+
+    The subject factory is resolved once per use; the link triple to the
+    nested object and the nested object's own triples must agree on the
+    same concrete subject rather than each independently re-invoking the
+    factory (which would produce two different, mismatched blank nodes).
+    """
+    inner = ttl(BNode, (ex.p2, Literal("x")))
+    outer = ttl(ex.s, (ex.p, inner))
+
+    triples = list(outer)
+    link_object = next(o for _, p, o in triples if p == ex.p)
+    nested_subject = next(s for s, p, _ in triples if p == ex.p2)
+
+    assert link_object == nested_subject
+
+
+@pytest.mark.parametrize("invalid_subject", [None, "not a subject", 1])
+def test_fail_ttl_invalid_subject(invalid_subject):
+    """A subject that is neither a TripleSubject, a factory, nor [] must raise ValueError."""
+    with pytest.raises(ValueError):
+        list(ttl(invalid_subject, (ex.p, ex.o)))
