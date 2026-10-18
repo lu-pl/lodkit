@@ -45,7 +45,7 @@ The following examples show features of the `lodkit.ttl` triple constructor and 
 
 The `lodkit.ttl` constructor takes a triple subject and an arbitrary number of triple predicate-object constellations as input; this aims to emulate Turtle Predicate List notation.
 
-The constructor accepts any RDFLib-compliant triple object in the object position, plain strings are interpreted as `rdflib.Literal`.
+The constructor accepts any RDFLib-compliant triple object in the object position; plain strings are interpreted as `rdflib.Literal`, other Python objects are converted to an appropriately typed `rdflib.Literal` - see [Typed Literal notation](#typed-literal-notation) below.
 
 ```python
 from lodkit import ttl
@@ -83,6 +83,43 @@ triples = ttl(
 
 ex:s ex:p ex:o1, ex:o2, "literal" .
 ```
+
+#### Typed Literal notation
+
+Plain Python objects in the object position are converted to an appropriately typed `rdflib.Literal`. The supported types are exactly `lodkit.types.TypedLiteral`:
+
+- `int`
+- `float`
+- `bool`
+- `decimal.Decimal`
+- `datetime.date`
+- `datetime.datetime`
+- `datetime.time`
+- `datetime.timedelta`
+- `rdflib.xsd_datetime.Duration`
+- `xml.dom.minidom.Document`
+- `fractions.Fraction`
+
+```python
+import datetime
+
+triples = ttl(
+    ex.s,
+    (ex.p, 1, 3.14, True, datetime.date(2024, 1, 1))
+)
+```
+
+```ttl
+@prefix ex: <https://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:s ex:p true,
+        "2024-01-01"^^xsd:date,
+        1,
+        3.14e+00 .
+```
+
+An object that `rdflib.Literal` cannot assign a real datatype to - `None`, or an arbitrary unsupported object - raises a `ValueError` rather than silently producing an untyped literal; pass an explicit `rdflib.Literal` if an untyped literal is actually intended.
 
 #### Blank Node notation
 
