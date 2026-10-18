@@ -6,6 +6,7 @@ from lodkit.namespace_tools.ontology_namespace import (
     NoSolutionException,
 )
 from lodkit.rdf_importer import RDFImporter, enable_rdf_import
+from lodkit.triple_tools.literal import literal
 from lodkit.triple_tools.triple_chain import TripleChain
 from lodkit.triple_tools.ttl_constructor import (
     PredicateObjectPair,
