@@ -121,6 +121,8 @@ ex:s ex:p true,
 
 An object that `rdflib.Literal` cannot assign a real datatype to - `None`, or an arbitrary unsupported object - raises a `ValueError` rather than silently producing an untyped literal; pass an explicit `rdflib.Literal` if an untyped literal is actually intended.
 
+This conversion is also available standalone as `lodkit.literal`, see [Literal Constructor](#literal-constructor).
+
 #### Blank Node notation
 
 Python lists (of predicate-object constellations) in the object position of predicate-object constellations are interpreted as Turtle Blank Nodes.
@@ -246,6 +248,23 @@ class TripleGenerator:
         )
 
 triples: Iterator[Triple] = itertools.chain(TripleGenerator(), ...)
+```
+
+## Literal Constructor
+
+`lodkit.literal` exposes `lodkit.ttl`'s object-to-`Literal` conversion (see [Typed Literal notation](#typed-literal-notation)) as a standalone callable, for use outside of `ttl`-based triple generation.
+
+`rdflib.Literal` and `str` objects are forwarded as-is (`str` yields an untyped literal); any other Python object is checked against `lodkit.types.TypedLiteral` and converted to a typed `rdflib.Literal`, raising `ValueError` for objects that `rdflib.Literal` cannot assign a real datatype to.
+
+```python
+import datetime
+
+from lodkit import literal
+
+literal(1)                        # rdflib.Literal("1", datatype=XSD.integer)
+literal(datetime.date(2024, 1, 1))  # rdflib.Literal("2024-01-01", datatype=XSD.date)
+literal("a string")               # rdflib.Literal("a string")
+literal(None)                     # raises ValueError
 ```
 
 ## TripleChain
