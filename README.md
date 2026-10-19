@@ -148,7 +148,7 @@ ex:s ex:p [
 ] .
 ```
 
-Also, `[]` as the subject position is resolved as `rdflib.BNode()`:
+Also, `lodkit.ttl` accepts `[]` in the subject position as blank node alias.
 
 
 ```python
@@ -159,6 +159,36 @@ triples = ttl([], (ex.p, ex.o))
 @prefix ns1: <https://example.com/> .
 
 [] ns1:p ns1:o .
+```
+
+`[]` is actually sugar for passing `rdflib.BNode` itself as subject: any zero-argument callable (a `lodkit.TripleSubjectFactory`) is accepted in the subject position and called fresh on every separate consumption of the `ttl` instance (e.g. every `to_graph()` call), rather than being resolved once. This is how `lodkit.ttl` avoids reusing the same blank node identifier across independent uses of the same `ttl` object:
+
+```python
+from rdflib import BNode
+
+factory_triples = ttl(BNode, (ex.p, ex.o))
+graph = factory_triples.to_graph() + factory_triples.to_graph()
+```
+
+```ttl
+@prefix ex: <https://example.com/> .
+
+[] ex:p ex:o .
+
+[] ex:p ex:o .
+```
+
+By contrast, a concrete `rdflib.BNode()` *instance* (as opposed to the `BNode` class) is a fixed, non-factory subject, so separately generated graphs collapse back into one triple on union:
+
+```python
+fixed_triples = ttl(BNode(), (ex.p, ex.o))
+graph = fixed_triples.to_graph() + fixed_triples.to_graph()
+```
+
+```ttl
+@prefix ex: <https://example.com/> .
+
+[] ex:p ex:o .
 ```
 
 
