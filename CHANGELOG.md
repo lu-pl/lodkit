@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.7.0](https://github.com/lu-pl/lodkit/compare/v0.6.0...v0.7.0) (2026-10-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ttl:** raise ValueError instead of TypeError
+* **types:** remove T-prefixes from `lodkit.ttl` type names
+
+### Features
+
+* add `literal` rdflib.Literal constructor ([5afd04f](https://github.com/lu-pl/lodkit/commit/5afd04f4325ece9acf5996a77e956afdeb037078))
+* add support for `[]` in subject position in the ttl constructor ([7c32566](https://github.com/lu-pl/lodkit/commit/7c325667697fac486505c73b19d8211f7b2fb20a))
+* add support for rdfs:Datatype to ClosedOntologyNamespace ([5354ad8](https://github.com/lu-pl/lodkit/commit/5354ad851a67a150123daaedcb057c5d7a063019))
+* **ttl:** add support for Python object literals ([51ff6a1](https://github.com/lu-pl/lodkit/commit/51ff6a128102d6218ce3b951ba86d44ba8327bde))
+* **types:** add `TypedLiteral` type and sync with `LiteralToPython` ([53584cf](https://github.com/lu-pl/lodkit/commit/53584cf576d415f2e73a532805d7d9b92395fa0e))
+
+
+### Bug Fixes
+
+* remove sha256 truncation in lodkit.URIConstructor ([97758dd](https://github.com/lu-pl/lodkit/commit/97758dd18225077a2f7174467c06632d12a4a7e2))
+* **ttl:** guard against single-element `PredicateObjectpair` ([06e484e](https://github.com/lu-pl/lodkit/commit/06e484e086fdb516890b83580e850eb3562dc172))
+* **ttl:** handle empty RDF lists correctly in `lodkit.ttl` ([c7301de](https://github.com/lu-pl/lodkit/commit/c7301de7caaa593030515279e723b1d674f3a48e))
+* **ttl:** raise ValueError instead of TypeError ([a865b7b](https://github.com/lu-pl/lodkit/commit/a865b7bbe2172c2af0bcba42b420f5f583b0f0b7))
+
+
+### Documentation
+
+* add docs section for `lodkit.literal` constructor ([b0739f1](https://github.com/lu-pl/lodkit/commit/b0739f1bdded5ec1c770b27b7f8a99a010581f48))
+* cleanup README ([b5fd597](https://github.com/lu-pl/lodkit/commit/b5fd59765a4e3ff156ae935302604fe1fb9420d8))
+* **readme:** add BNode subject factory section ([4dd8943](https://github.com/lu-pl/lodkit/commit/4dd89432ca0463bf84250d8392836e3f04af46c6))
+
+
+### Code Refactoring
+
+* **types:** remove T-prefixes from `lodkit.ttl` type names ([b468ec9](https://github.com/lu-pl/lodkit/commit/b468ec9d607395569d737b5599e01eec048b9ade))
+
 ## [0.6.0](https://github.com/lu-pl/lodkit/compare/v0.5.0...v0.6.0) (2026-01-15)
 
 
