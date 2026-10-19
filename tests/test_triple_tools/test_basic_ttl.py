@@ -652,6 +652,15 @@ def test_ttl_fixed_bnode_instance_subject_is_stable():
     assert len(graph) == 1
 
 
+def test_ttl_subject_setter():
+    """Reassigning .subject after construction changes the resolved subject."""
+    triples = ttl(ex.s1, (ex.p, ex.o))
+    triples.subject = ex.s2
+
+    (subject, _, _), *_ = list(triples)
+    assert subject == ex.s2
+
+
 def test_ttl_nested_object_factory_subject_consistency():
     """A nested ttl object with a factory subject must use one resolved value consistently.
 
