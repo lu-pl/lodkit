@@ -64,10 +64,27 @@
         "type": "github"
       }
     },
+    "qlue-ls-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792924768,
+        "narHash": "sha256-hfiFEAQG+o4PjaZ3rmNy/fAJ+wqX6487Mrp5q68hFB0=",
+        "owner": "IoannisNezis",
+        "repo": "Qlue-ls",
+        "rev": "79817f822b41d0fd46c826b20ed285885f63746f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "IoannisNezis",
+        "repo": "Qlue-ls",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
+        "qlue-ls-src": "qlue-ls-src",
         "swls": "swls"
       }
     },
